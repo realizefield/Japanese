@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>読解捜査室 — 消去法入門</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;background:#F7F6F3;color:#2C2C2A;min-height:100vh}
+.lesson-page{display:flex;flex-direction:column;height:100vh}
+.top-bar{background:linear-gradient(90deg,#1a202c,#2d3748);padding:10px 1.25rem;flex-shrink:0}
+.top-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.top-bar h2{font-size:15px;font-weight:600;white-space:nowrap;color:#fff}
+.prog-wrap{flex:1;height:5px;background:#4a5568;border-radius:3px}
+.prog-bar{height:100%;background:#f6ad55;border-radius:3px;transition:width .6s ease;width:0%}
+.columns{flex:1;display:flex;overflow:hidden;max-width:1200px;margin:0 auto;width:100%}
+.col-text{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;background:#fff;border-right:1px solid #E0DED8;scroll-behavior:smooth}
+.text-title{font-size:13px;color:#888780;margin-bottom:10px;font-weight:500}
+.intro-card{background:#1a202c;color:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;line-height:2.2;font-size:14px}
+.intro-card h3{font-size:16px;margin-bottom:8px;color:#f6ad55}
+.intro-card .red{color:#fc8181;font-weight:600}
+.intro-card .gold{color:#f6ad55;font-weight:600}
+.para-block{margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid #E8E7E3;border-radius:10px;background:#FAFAF8;line-height:2.4;font-size:15px}
+.para-label{font-size:11px;color:#888780;font-weight:600;margin-bottom:6px;display:block}
+.para-btns{display:flex;gap:6px;margin-top:10px}
+.para-btn{padding:5px 14px;border:1px solid #D3D1C7;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
+.para-btn:hover{background:#F0EFEB}
+.para-btn.done{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+.hl-point{background:#FFF9C4;border-radius:3px;padding:1px 3px}
+.hl-key{background:#E3F2FD;border-radius:3px;padding:1px 3px}
+.focus-glow{outline:3px solid #f6ad55;outline-offset:3px;border-radius:8px;animation:glowPulse 1.5s ease-in-out 2}
+@keyframes glowPulse{0%{outline-color:#f6ad55}50%{outline-color:#fbd38d}100%{outline-color:#f6ad55}}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem}
+.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#888780}
+.lg-dot{width:12px;height:12px;border-radius:3px;border:1px solid #ccc}
+.col-qa{width:440px;min-width:370px;overflow-y:auto;padding:1.25rem;background:#F7F6F3}
+.summary{background:#fff;border:1px solid #E0DED8;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;display:none}
+.sum-title{font-size:12px;color:#888780;margin-bottom:8px;font-weight:500}
+.sum-item{display:flex;align-items:flex-start;gap:7px;font-size:13px;margin-bottom:5px;animation:slideIn .5s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.popup{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid;display:none;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.popup.on{display:block}
+@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.p-para{background:#FAFAF8;border-color:#888780}
+.p-main{background:#E8F5E9;border-color:#2E7D32}
+.p-quiz{background:#2d3748;border-color:#f6ad55}
+.p-quiz .p-name{color:#f6ad55!important}
+.p-quiz .p-body{color:#e2e8f0}
+.p-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.p-icon{font-size:20px}.p-name{font-size:12px;font-weight:600;color:#555}
+.p-body{font-size:14px;line-height:1.9}
+.choices4,.choices5{display:grid;grid-template-columns:1fr;gap:6px;margin-top:.75rem}
+.cb{padding:.6rem .9rem;border:1px solid #D3D1C7;border-radius:8px;background:#fff;font-size:13px;color:#2C2C2A;cursor:pointer;text-align:left;line-height:1.6;transition:all .2s}
+.cb:hover:not(:disabled):not(.cb-elim){background:#F7F6F3;border-color:#888780}
+.cb:disabled{cursor:default;opacity:.85}
+.cb-ok{background:#E8F5E9!important;border-color:#2E7D32!important;color:#1B5E20!important;font-weight:500}
+.cb-ng{background:#FCE4EC!important;border-color:#C2185B!important;color:#880E4F!important}
+.cb-elim{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#BDBDBD!important;text-decoration:line-through;cursor:default;pointer-events:none}
+.elim-mode .cb:not(.cb-elim):not(:disabled){cursor:crosshair;border-color:#f6ad55;border-style:dashed}
+.elim-mode .cb:not(.cb-elim):not(:disabled):hover{background:#FFFBEB;border-color:#f6ad55}
+.fb{font-size:13px;margin-top:8px;padding:7px 10px;border-radius:7px;display:none;line-height:1.7}
+.fb.on{display:block;animation:popIn .3s ease}
+.fb-ok{background:#C8E6C9;color:#1B5E20}.fb-ng{background:#F8BBD0;color:#880E4F}.fb-warn{background:#FFFBEB;color:#92400e}
+.elim-btn{display:inline-block;padding:6px 16px;border:2px solid #f6ad55;border-radius:8px;background:#FFFBEB;font-size:13px;color:#92400e;cursor:pointer;margin-top:10px;font-weight:600}
+.elim-btn:hover{background:#fefcbf}
+.elim-btn.active{background:#f6ad55;color:#1a202c;animation:pulse .8s ease infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(246,173,85,.4)}70%{box-shadow:0 0 0 8px rgba(246,173,85,0)}100%{box-shadow:0 0 0 0 rgba(246,173,85,0)}}
+.elim-btn.used{opacity:.5;cursor:default;background:#E0E0E0;color:#888;animation:none}
+.elim-count{font-size:12px;color:#92400e;margin-top:6px;display:none}
+.answer-btn-area{margin-top:10px;display:none}
+.answer-btn{width:100%;padding:.6rem;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#2d3748;border:none;color:#f6ad55}
+.answer-btn:hover{background:#1a202c}
+.btn-next{width:100%;padding:.75rem;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #D3D1C7;color:#2C2C2A;display:none;margin-top:.5rem}
+.btn-next:hover{background:#F0EFEB}
+.btn-start{width:100%;padding:.85rem;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;background:#2d3748;border:none;color:#f6ad55}
+.btn-start:hover{background:#1a202c}
+.final-qa{text-align:center;padding:2rem 1rem;font-size:15px;line-height:2.4;display:none;animation:popIn .6s ease}
+.final-qa strong{color:#2b6cb0}
+.section-divider{border:none;border-top:2px dashed #D3D1C7;margin:1rem 0}
+.rule-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid #f6ad55}
+.rule-card h4{font-size:13px;color:#92400e;margin-bottom:6px}
+.rule-card p{font-size:13px;line-height:1.8;color:#4a5568}
+@media(max-width:768px){
+.columns{flex-direction:column}
+.col-text{flex:none;height:40vh;min-height:200px;border-right:none;border-bottom:2px solid #f6ad55;padding:1rem}
+.col-qa{width:100%;min-width:unset;flex:1;padding:1rem}
+.para-block{font-size:14px;line-height:2.2}
+}
+</style></head><body>
+<div class="lesson-page">
+<div class="top-bar"><div class="top-bar-inner"><h2>🔍 読解捜査室 — 消去法入門</h2><div class="prog-wrap"><div class="prog-bar" id="prog"></div></div></div></div>
+<div class="columns">
+<div class="col-text" id="colText">
+
+<div class="intro-card">
+<h3>🔍 読解捜査室へようこそ</h3>
+国語の問題には<span class="red">正解を「当てる」必要はありません</span>。<br><br>
+代わりに、<span class="gold">「これは違う」を見つけて消す</span>。<br>
+5つの選択肢から2つ消せば、残りは3つ。<br>
+3つから選ぶほうが、ずっと当たりやすい。<br><br>
+これが<span class="gold">消去法</span>です。<br><br>
+消去の3つのルール：<br>
+① 本文に書いていないことは消す<br>
+② 本文と逆のことが書いてあれば消す<br>
+③ 「絶対」「必ず」など極端な言葉は疑う
+</div>
+
+<div class="text-title">📖 練習用の本文 — この文を読んで捜査してください</div>
+<div class="legend"><div class="lg"><div class="lg-dot" style="background:#FFF9C4"></div>ポイント</div><div class="lg"><div class="lg-dot" style="background:#E3F2FD"></div>keyword</div></div>
+
+<div class="para-block" id="para1"><span class="para-label">段落①</span>
+太郎は<span class="pt1">毎朝、近所の公園を走るのが日課</span>だった。雨の日も風の日も、<span class="pt1">一日も休まず走り続けていた</span>。
+<div class="para-btns"><button class="para-btn" id="btn_pt1" onclick="showPoint(1)">💡 ポイント</button></div></div>
+
+<div class="para-block" id="para2"><span class="para-label">段落②</span>
+ある朝、公園のベンチに<span class="pt2">一匹の猫が座っていた</span>。太郎は足を止めた。猫はじっとこちらを見ている。太郎は<span class="pt2">しゃがんで手を差し出した</span>。猫は逃げなかった。
+<div class="para-btns"><button class="para-btn" id="btn_pt2" onclick="showPoint(2)">💡 ポイント</button></div></div>
+
+<div class="para-block" id="para3"><span class="para-label">段落③</span>
+それから毎朝、太郎が公園に行くと、<span class="pt3">猫は同じベンチに座っていた</span>。太郎は走る前に必ず猫に声をかけるようになった。<span class="kw3">しかし</span>、<span class="pt3">猫は一度も太郎に近づこうとはしなかった</span>。いつも同じ距離を保っていた。
+<div class="para-btns"><button class="para-btn" id="btn_pt3" onclick="showPoint(3)">💡 ポイント</button><button class="para-btn" id="btn_kw3" onclick="showKeyword(3)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para4"><span class="para-label">段落④</span>
+ある日、猫がいなかった。次の日も、その次の日もいなかった。太郎は<span class="pt4">走りながら何度もベンチのほうを振り返った</span>。<span class="kw4">そのとき</span>、太郎は気づいた。<span class="pt4">あの猫は自分にとって、走る理由の一つになっていたのだ</span>。
+<div class="para-btns"><button class="para-btn" id="btn_pt4" onclick="showPoint(4)">💡 ポイント</button><button class="para-btn" id="btn_kw4" onclick="showKeyword(4)">🔑 keyword</button></div></div>
+</div>
+
+<div class="col-qa" id="colQa">
+<div class="summary" id="summary"><div class="sum-title">📝 捜査メモ</div><div id="sumItems"></div></div>
+
+<!-- q1 正解:③(idx2) -->
+<div class="popup p-para" id="q1"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落①の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q1c">
+<button class="cb" onclick="answerQ('q1',0)">太郎は毎朝友達と一緒に公園で遊んでいた</button>
+<button class="cb" onclick="answerQ('q1',1)">太郎は雨の日は走らずに家で休んでいた</button>
+<button class="cb" onclick="answerQ('q1',2)">太郎は毎朝欠かさず公園を走るのが日課だった</button>
+<button class="cb" onclick="answerQ('q1',3)">太郎は公園で猫を探すのが日課になっていた</button>
+</div>
+<div class="fb fb-ok" id="q1ok">そう。「毎朝」「一日も休まず」がポイントです。</div>
+<div class="fb fb-ng" id="q1ng">ポイントを確認してください。「友達と」「雨の日は休む」「猫を探す」は書いてありますか？</div></div></div>
+
+<!-- q2 正解:①(idx0) -->
+<div class="popup p-para" id="q2"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落②の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q2c">
+<button class="cb" onclick="answerQ('q2',0)">公園のベンチに猫がいて、太郎が手を差し出しても逃げなかった</button>
+<button class="cb" onclick="answerQ('q2',1)">太郎が猫を捕まえて家に連れて帰ろうとした場面</button>
+<button class="cb" onclick="answerQ('q2',2)">猫が太郎に飛びついて甘えてきた場面を描いている</button>
+<button class="cb" onclick="answerQ('q2',3)">太郎が走るのをやめて猫と遊び始めた場面である</button>
+</div>
+<div class="fb fb-ok" id="q2ok">そう。「逃げなかった」がポイント。近づかないけど逃げない。この距離感が大事です。</div>
+<div class="fb fb-ng" id="q2ng">「連れて帰る」「飛びついた」「遊び始めた」は本文に書いてありますか？ 確認してください。</div></div></div>
+
+<!-- q3 正解:④(idx3) -->
+<div class="popup p-para" id="q3"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落③の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q3c">
+<button class="cb" onclick="answerQ('q3',0)">猫が毎日太郎に近づいてきて仲良くなった場面</button>
+<button class="cb" onclick="answerQ('q3',1)">太郎が猫を追いかけて走るようになった場面を描く</button>
+<button class="cb" onclick="answerQ('q3',2)">猫が他の場所に移動してしまった場面を描いている</button>
+<button class="cb" onclick="answerQ('q3',3)">毎朝同じベンチにいるが一度も近づかず距離を保っていた</button>
+</div>
+<div class="fb fb-ok" id="q3ok">そう。「しかし」の後がポイント。いつも来るけど近づかない。この矛盾が大事です。</div>
+<div class="fb fb-ng" id="q3ng">keyword「しかし」の後を読んでください。「近づいた」ですか「近づかなかった」ですか？</div></div></div>
+
+<!-- q4 正解:②(idx1) -->
+<div class="popup p-para" id="q4"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落④の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q4c">
+<button class="cb" onclick="answerQ('q4',0)">猫が戻ってきて太郎はとても喜んだ場面を描いている</button>
+<button class="cb" onclick="answerQ('q4',1)">猫がいなくなって初めて、猫が走る理由の一つだったと気づいた</button>
+<button class="cb" onclick="answerQ('q4',2)">太郎が走るのをやめて猫を探しに行く場面を描いている</button>
+<button class="cb" onclick="answerQ('q4',3)">太郎が新しい猫を見つけて飼い始めた場面を述べている</button>
+</div>
+<div class="fb fb-ok" id="q4ok">そう。「そのとき気づいた」がポイント。いなくなって初めて大切さに気づいた。</div>
+<div class="fb fb-ng" id="q4ng">「戻ってきた」「探しに行く」「新しい猫」は本文に書いてありますか？</div></div></div>
+
+<hr class="section-divider">
+
+<!-- 全体の要点 正解:③(idx2) -->
+<div class="popup p-main" id="qMain"><div class="p-head"><div class="p-icon">🎯</div><div class="p-name">この文章全体の要点はどれですか？</div></div><div class="p-body">
+<div class="choices5" id="qMainc">
+<button class="cb" onclick="answerQ('qMain',0)">猫を飼うことの楽しさを伝えている文章である</button>
+<button class="cb" onclick="answerQ('qMain',1)">毎日走ることが健康に良いという話を伝えている</button>
+<button class="cb" onclick="answerQ('qMain',2)">日常の中で気づかないうちに大切になっていた存在を失って初めて気づく話</button>
+<button class="cb" onclick="answerQ('qMain',3)">太郎と猫が親友になるまでの物語を描いている</button>
+<button class="cb" onclick="answerQ('qMain',4)">公園の自然環境の大切さを訴えている文章である</button>
+</div>
+<div class="fb fb-ok" id="qMainok">その通りです。捜査メモを見返してください。要点がつながっています。</div>
+<div class="fb fb-ng" id="qMainng">捜査メモを上から順に読んでみてください。全体の流れが見えます。</div></div></div>
+
+<hr class="section-divider">
+
+<div class="rule-card" id="rule1" style="display:none">
+<h4>🔍 消去ルール① — 本文に書いていないことは消す</h4>
+<p>選択肢の中に「本文に書かれていない内容」が混ざっています。<br>本文に戻って確認し、書いていないものを消しましょう。</p>
+</div>
+
+<!-- quiz1 正解:④(idx3) -->
+<div class="popup p-quiz" id="quiz1"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題1 — 「書いていないこと」を消す</div></div><div class="p-body">
+太郎が公園を走り続けた理由として本文に書かれていることはどれですか。
+<div class="choices5" id="quiz1c">
+<button class="cb" id="quiz1_0" onclick="quizClick('quiz1',0)">健康診断で医者に走るように言われたからである</button>
+<button class="cb" id="quiz1_1" onclick="quizClick('quiz1',1)">マラソン大会に出場するために練習していたから</button>
+<button class="cb" id="quiz1_2" onclick="quizClick('quiz1',2)">友達に誘われて一緒に走るようになったからだ</button>
+<button class="cb" id="quiz1_3" onclick="quizClick('quiz1',3)">毎朝走ることが日課で雨の日も風の日も休まなかった</button>
+<button class="cb" id="quiz1_4" onclick="quizClick('quiz1',4)">猫に会うために走り始めたと最初から書いてある</button>
+</div>
+<button class="elim-btn" id="elim_quiz1" onclick="startElim('quiz1')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz1_count">あと <span id="elim_quiz1_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz1warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz1_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz1')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz1ok">正解です。「医者」「大会」「友達」「猫のために走り始めた」はすべて本文に書かれていません。本文に書いてあることだけを選ぶ。これが基本です。</div>
+<div class="fb fb-ng" id="quiz1ng">段落①をもう一度読んでください。走る理由として書かれていることは何ですか。</div></div></div>
+
+<div class="rule-card" id="rule2" style="display:none">
+<h4>🔍 消去ルール② — 本文と逆のことは消す</h4>
+<p>選択肢の中に「本文と反対のこと」が混ざっています。<br>本文の内容と矛盾していないか確認しましょう。</p>
+</div>
+
+<!-- quiz2 正解:①(idx0) -->
+<div class="popup p-quiz" id="quiz2"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題2 — 「逆のこと」を消す</div></div><div class="p-body">
+太郎と猫の関係について本文の内容と合っているのはどれですか。
+<div class="choices5" id="quiz2c">
+<button class="cb" id="quiz2_0" onclick="quizClick('quiz2',0)">猫は毎朝同じベンチにいたが太郎には近づかなかった</button>
+<button class="cb" id="quiz2_1" onclick="quizClick('quiz2',1)">猫は毎日太郎に近づいて甘えるようになっていった</button>
+<button class="cb" id="quiz2_2" onclick="quizClick('quiz2',2)">太郎は猫に興味がなくいつも無視して走り過ぎた</button>
+<button class="cb" id="quiz2_3" onclick="quizClick('quiz2',3)">猫は太郎を見ると怖がって毎回逃げてしまっていた</button>
+<button class="cb" id="quiz2_4" onclick="quizClick('quiz2',4)">太郎は猫を捕まえて自分の家で飼い始めたのである</button>
+</div>
+<button class="elim-btn" id="elim_quiz2" onclick="startElim('quiz2')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz2_count">あと <span id="elim_quiz2_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz2warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz2_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz2')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz2ok">正解です。「近づいて甘えた」「無視した」「逃げた」「飼い始めた」は本文と逆か、書かれていません。本文と矛盾する選択肢を消す。これが2つ目のルールです。</div>
+<div class="fb fb-ng" id="quiz2ng">段落③を読んでください。猫は太郎に「近づいた」ですか「近づかなかった」ですか。</div></div></div>
+
+<div class="rule-card" id="rule3" style="display:none">
+<h4>🔍 消去ルール③ — 極端な言葉を疑う</h4>
+<p>「絶対」「必ず」「すべて」「一番」などの極端な言葉がある選択肢は要注意。<br>本文にそこまで強い表現がなければ、消去の候補です。</p>
+</div>
+
+<!-- quiz3 正解:③(idx2) -->
+<div class="popup p-quiz" id="quiz3"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題3 — 「極端な言葉」を疑う</div></div><div class="p-body">
+太郎が猫がいなくなって気づいたこととして最も適当なものはどれですか。
+<div class="choices5" id="quiz3c">
+<button class="cb" id="quiz3_0" onclick="quizClick('quiz3',0)">猫がいなければ絶対に走れないと確信した</button>
+<button class="cb" id="quiz3_1" onclick="quizClick('quiz3',1)">猫はすべての人間にとって最も大切な存在である</button>
+<button class="cb" id="quiz3_2" onclick="quizClick('quiz3',2)">猫が自分にとって走る理由の一つになっていた</button>
+<button class="cb" id="quiz3_3" onclick="quizClick('quiz3',3)">猫がいない公園には何の価値もないと思い知った</button>
+<button class="cb" id="quiz3_4" onclick="quizClick('quiz3',4)">猫は必ず戻ってくると太郎は強く信じていた</button>
+</div>
+<button class="elim-btn" id="elim_quiz3" onclick="startElim('quiz3')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz3_count">あと <span id="elim_quiz3_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz3warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz3_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz3')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz3ok">正解です。「絶対に走れない」「すべての人間にとって最も」「何の価値もない」「必ず戻ってくる」。これらはすべて極端すぎます。本文は「理由の一つ」と控えめに書いています。極端な言葉を疑う。これが3つ目のルールです。</div>
+<div class="fb fb-ng" id="quiz3ng">段落④を読んでください。「理由の一つ」と書いてあります。「絶対」「すべて」「必ず」は本文にありますか。</div></div></div>
+
+<div class="final-qa" id="final">
+消去法の3つのルール、身につきました。<br><br>
+<strong>① 本文に書いていないことは消す</strong><br>
+<strong>② 本文と逆のことは消す</strong><br>
+<strong>③ 極端な言葉を疑う</strong><br><br>
+この3つだけで、<br>
+選択肢を確実に減らせます。<br><br>
+では、「読んでいこう」第1回へ進みましょう。
+</div>
+
+<button class="btn-start" id="btnStart" onclick="startLesson()">🔍 捜査開始 →</button>
+<button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button>
+</div></div></div>
+
+<script>
+var correctAnswers={q1:2,q2:0,q3:3,q4:1,qMain:2,quiz1:3,quiz2:0,quiz3:2};
+var summaryTexts={q1:'① 太郎は毎朝欠かさず公園を走っていた',q2:'② ベンチの猫は手を差し出しても逃げなかった',q3:'③ 毎朝いるが一度も近づかず距離を保っていた',q4:'④ いなくなって初めて猫が走る理由の一つだったと気づいた'};
+var ruleCards={quiz1:'rule1',quiz2:'rule2',quiz3:'rule3'};
+var stepOrder=['q1','q2','q3','q4','qMain','quiz1','quiz2','quiz3'];
+var currentStep=0,waiting=false;
+var progValues={q1:10,q2:22,q3:34,q4:46,qMain:56,quiz1:72,quiz2:86,quiz3:98};
+var focusParas={q1:'para1',q2:'para2',q3:'para3',q4:'para4',qMain:null,quiz1:'para1',quiz2:'para3',quiz3:'para4'};
+var prevFocus=null,elimState={};
+function startLesson(){document.getElementById('btnStart').style.display='none';nextStep();}
+function nextStep(){
+if(waiting)return;if(currentStep>=stepOrder.length){showFinal();return;}
+var sid=stepOrder[currentStep];
+document.getElementById('prog').style.width=progValues[sid]+'%';
+hideAllPopups();
+if(prevFocus){document.getElementById(prevFocus).classList.remove('focus-glow');prevFocus=null;}
+// Show rule card if applicable
+if(ruleCards[sid]){document.getElementById(ruleCards[sid]).style.display='block';}
+var fp=focusParas[sid];
+if(fp){var el=document.getElementById(fp);el.classList.add('focus-glow');prevFocus=fp;
+var c=document.getElementById('colText');c.scrollTo({top:el.offsetTop-c.clientHeight/4,behavior:'smooth'});}
+var p=document.getElementById(sid);if(p)p.classList.add('on');
+waiting=true;document.getElementById('btnNext').style.display='none';
+setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'nearest'});},200);
+currentStep++;
+}
+function hideAllPopups(){document.querySelectorAll('.popup').forEach(function(p){p.classList.remove('on');});}
+function showPoint(n){document.querySelectorAll('.pt'+n).forEach(function(e){e.classList.add('hl-point');});var b=document.getElementById('btn_pt'+n);b.classList.add('done');b.textContent='✓ ポイント';b.onclick=null;}
+function showKeyword(n){document.querySelectorAll('.kw'+n).forEach(function(e){e.classList.add('hl-key');});var b=document.getElementById('btn_kw'+n);b.classList.add('done');b.textContent='✓ keyword';b.onclick=null;}
+function addSummary(t){var p=document.getElementById('summary');p.style.display='block';var d=document.createElement('div');d.className='sum-item';d.innerHTML='<span>🔍</span><span>'+t+'</span>';document.getElementById('sumItems').appendChild(d);}
+function disableAllBtns(id){document.querySelectorAll('#'+id+'c .cb').forEach(function(b){b.disabled=true;b.onclick=null;});}
+function answerQ(id,idx){var c=correctAnswers[id],bs=document.querySelectorAll('#'+id+'c .cb');disableAllBtns(id);if(idx===c){bs[idx].classList.add('cb-ok');document.getElementById(id+'ok').classList.add('on');}else{bs[idx].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(id+'ng').classList.add('on');}if(summaryTexts[id])addSummary(summaryTexts[id]);setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1200);}
+function startElim(q){var b=document.getElementById('elim_'+q);if(b.classList.contains('used'))return;b.classList.add('active');b.textContent='🔍 消去中...';document.getElementById('elim_'+q+'_count').style.display='block';elimState[q]={mode:'elim',eliminated:0,maxElim:2};document.getElementById(q+'c').classList.add('elim-mode');}
+function quizClick(q,i){var s=elimState[q];if(s&&s.mode==='elim'){var c=correctAnswers[q],w=document.getElementById(q+'warn');if(i===c){w.classList.add('on');setTimeout(function(){w.classList.remove('on');},2000);return;}document.getElementById(q+'_'+i).classList.add('cb-elim');s.eliminated++;document.getElementById('elim_'+q+'_remain').textContent=(s.maxElim-s.eliminated);if(s.eliminated>=s.maxElim){s.mode='answer';document.getElementById(q+'c').classList.remove('elim-mode');var eb=document.getElementById('elim_'+q);eb.classList.remove('active');eb.classList.add('used');eb.textContent='✓ 2つ消去しました';document.getElementById('elim_'+q+'_count').style.display='none';document.getElementById(q+'_answerbtn').style.display='block';}return;}if(s&&s.mode==='answer'){answerQuiz(q,i);return;}}
+function enterAnswerMode(q){document.getElementById(q+'_answerbtn').style.display='none';}
+function answerQuiz(q,i){var c=correctAnswers[q],bs=document.querySelectorAll('#'+q+'c .cb');disableAllBtns(q);if(i===c){bs[i].classList.add('cb-ok');document.getElementById(q+'ok').classList.add('on');}else{bs[i].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(q+'ng').classList.add('on');}if(q==='quiz3'){document.getElementById('prog').style.width='100%';setTimeout(function(){hideAllPopups();showFinal();},2000);return;}setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1500);}
+function showFinal(){document.getElementById('btnNext').style.display='none';if(prevFocus)document.getElementById(prevFocus).classList.remove('focus-glow');document.getElementById('final').style.display='block';document.getElementById('final').scrollIntoView({behavior:'smooth',block:'center'});}
+</script></body></html>

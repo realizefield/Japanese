@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>読んでいこう 第6回 — 走れメロス</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;background:#F7F6F3;color:#2C2C2A;min-height:100vh}.lesson-page{display:flex;flex-direction:column;height:100vh}.top-bar{background:#fff;border-bottom:1px solid #E0DED8;padding:10px 1.25rem;flex-shrink:0}.top-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}.top-bar h2{font-size:15px;font-weight:600;white-space:nowrap}.prog-wrap{flex:1;height:5px;background:#D3D1C7;border-radius:3px}.prog-bar{height:100%;background:#378ADD;border-radius:3px;transition:width .6s ease;width:0%}.columns{flex:1;display:flex;overflow:hidden;max-width:1200px;margin:0 auto;width:100%}.col-text{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;background:#fff;border-right:1px solid #E0DED8;scroll-behavior:smooth}.text-title{font-size:13px;color:#888780;margin-bottom:10px;font-weight:500}.para-block{margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid #E8E7E3;border-radius:10px;background:#FAFAF8;line-height:2.4;font-size:15px}.para-label{font-size:11px;color:#888780;font-weight:600;margin-bottom:6px;display:block}.para-btns{display:flex;gap:6px;margin-top:10px}.para-btn{padding:5px 14px;border:1px solid #D3D1C7;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}.para-btn:hover{background:#F0EFEB}.para-btn.done{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}.hl-point{background:#FFF9C4;border-radius:3px;padding:1px 3px}.hl-key{background:#E3F2FD;border-radius:3px;padding:1px 3px}.focus-glow{outline:3px solid #378ADD;outline-offset:3px;border-radius:8px;animation:glowPulse 1.5s ease-in-out 2}@keyframes glowPulse{0%{outline-color:#378ADD}50%{outline-color:#90CAF9}100%{outline-color:#378ADD}}.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem}.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#888780}.lg-dot{width:12px;height:12px;border-radius:3px;border:1px solid #ccc}.col-qa{width:440px;min-width:370px;overflow-y:auto;padding:1.25rem;background:#F7F6F3}.summary{background:#fff;border:1px solid #E0DED8;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;display:none}.sum-title{font-size:12px;color:#888780;margin-bottom:8px;font-weight:500}.sum-item{display:flex;align-items:flex-start;gap:7px;font-size:13px;margin-bottom:5px;animation:slideIn .5s ease}@keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}.popup{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid;display:none;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}.popup.on{display:block}@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}.p-para{background:#FAFAF8;border-color:#888780}.p-main{background:#E8F5E9;border-color:#2E7D32}.p-quiz{background:#E3F2FD;border-color:#1565C0}.p-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}.p-icon{font-size:20px}.p-name{font-size:12px;font-weight:600;color:#555}.p-body{font-size:14px;line-height:1.9}.choices4,.choices5{display:grid;grid-template-columns:1fr;gap:6px;margin-top:.75rem}.cb{padding:.6rem .9rem;border:1px solid #D3D1C7;border-radius:8px;background:#fff;font-size:13px;color:#2C2C2A;cursor:pointer;text-align:left;line-height:1.6;transition:all .2s}.cb:hover:not(:disabled):not(.cb-elim){background:#F7F6F3;border-color:#888780}.cb:disabled{cursor:default;opacity:.85}.cb-ok{background:#E8F5E9!important;border-color:#2E7D32!important;color:#1B5E20!important;font-weight:500}.cb-ng{background:#FCE4EC!important;border-color:#C2185B!important;color:#880E4F!important}.cb-elim{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#BDBDBD!important;text-decoration:line-through;cursor:default;pointer-events:none}.elim-mode .cb:not(.cb-elim):not(:disabled){cursor:crosshair;border-color:#F57F17;border-style:dashed}.elim-mode .cb:not(.cb-elim):not(:disabled):hover{background:#FFF8E1}.fb{font-size:13px;margin-top:8px;padding:7px 10px;border-radius:7px;display:none;line-height:1.7}.fb.on{display:block;animation:popIn .3s ease}.fb-ok{background:#C8E6C9;color:#1B5E20}.fb-ng{background:#F8BBD0;color:#880E4F}.fb-warn{background:#FFF8E1;color:#E65100}.elim-btn{display:inline-block;padding:6px 16px;border:2px solid #F57F17;border-radius:8px;background:#FFF8E1;font-size:13px;color:#E65100;cursor:pointer;margin-top:10px;font-weight:600}.elim-btn:hover{background:#FFECB3}.elim-btn.active{background:#F57F17;color:#fff;animation:pulse .8s ease infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,127,23,.4)}70%{box-shadow:0 0 0 8px rgba(245,127,23,0)}100%{box-shadow:0 0 0 0 rgba(245,127,23,0)}}.elim-btn.used{opacity:.5;cursor:default;background:#E0E0E0;color:#888;animation:none}.elim-count{font-size:12px;color:#E65100;margin-top:6px;display:none}.answer-btn-area{margin-top:10px;display:none}.answer-btn{width:100%;padding:.6rem;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#1565C0;border:none;color:#fff}.btn-next{width:100%;padding:.75rem;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #D3D1C7;color:#2C2C2A;display:none;margin-top:.5rem}.btn-next:hover{background:#F0EFEB}.btn-start{width:100%;padding:.85rem;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;background:#1565C0;border:none;color:#fff}.btn-start:hover{background:#0D47A1}.final-qa{text-align:center;padding:2rem 1rem;font-size:15px;line-height:2.4;display:none;animation:popIn .6s ease}.final-qa strong{color:#1565C0}.section-divider{border:none;border-top:2px dashed #D3D1C7;margin:1rem 0}@media(max-width:768px){.columns{flex-direction:column}.col-text{flex:none;height:40vh;min-height:200px;border-right:none;border-bottom:2px solid #378ADD;padding:1rem}.col-qa{width:100%;min-width:unset;flex:1;padding:1rem}.para-block{font-size:14px;line-height:2.2}}
+</style></head><body>
+<div class="lesson-page">
+<div class="top-bar"><div class="top-bar-inner"><h2>📖 読んでいこう 第6回</h2><div class="prog-wrap"><div class="prog-bar" id="prog"></div></div></div></div>
+<div class="columns">
+<div class="col-text" id="colText">
+<div class="text-title">📖 本文 — 走れメロス</div>
+<div class="legend"><div class="lg"><div class="lg-dot" style="background:#FFF9C4"></div>ポイント</div><div class="lg"><div class="lg-dot" style="background:#E3F2FD"></div>keyword</div></div>
+
+<div class="para-block" id="para1"><span class="para-label">段落①　暴君の背景</span>
+この国の王ディオニスは、<span class="pt1">かつては穏やかな人だった</span>。<span class="kw1">しかし</span>、あるとき<span class="pt1">最も信頼していた側近に裏切られた</span>。それ以来、王は人を信じることができなくなった。妹の夫を殺し、甥を殺し、側近たちを次々と処刑した。理由はいつも同じだった。「<span class="pt1">あいつも、いつか自分を裏切る</span>。」信じて裏切られるくらいなら、先に殺してしまうほうがいい。王はそう思い込んでいた。
+<div class="para-btns"><button class="para-btn" id="btn_pt1" onclick="showPoint(1)">💡 ポイント</button><button class="para-btn" id="btn_kw1" onclick="showKeyword(1)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para2"><span class="para-label">段落②　約束と信頼</span>
+メロスは王の前に立ち、「お前のような人間を生かしておくわけにはいかない」と言い放った。王は冷たく笑い、「<span class="pt2">帰ってくるものか。お前も結局、友を見捨てるだろう。人間とはそういうものだ</span>」と嘲笑した。メロスは三日で戻ると約束し、友人セリヌンティウスを人質として預けた。<span class="pt2">メロスは自分が戻ることを一片も疑っていなかった</span>。セリヌンティウスも、<span class="pt2">何も言わず、静かにうなずいた</span>。
+<div class="para-btns"><button class="para-btn" id="btn_pt2" onclick="showPoint(2)">💡 ポイント</button></div></div>
+
+<div class="para-block" id="para3"><span class="para-label">段落③　挫折と暗い声</span>
+メロスは走った。<span class="kw3">しかし</span>、川の氾濫、山賊、そして体の限界が次々と立ちはだかった。ついに地面に膝をついたとき、心に<span class="pt3">暗い声がささやいた</span>。「もう走らなくてもいいのではないか。」「自分は十分に頑張った。」「<span class="pt3">セリヌンティウスは、自分を許してくれるだろう</span>。」メロスは草の上に倒れた。「<span class="pt3">もう、どうでもいい</span>。」
+<div class="para-btns"><button class="para-btn" id="btn_pt3" onclick="showPoint(3)">💡 ポイント</button><button class="para-btn" id="btn_kw3" onclick="showKeyword(3)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para4"><span class="para-label">段落④　罪悪感と再起</span>
+<span class="kw4">しかし</span>、泉の水が体に染み込み、力がかすかに戻った。そしてメロスは気づいた。<span class="pt4">「許してくれるだろう」と思った瞬間、自分はセリヌンティウスの信頼を裏切ったのだ</span>。問題は王でも川でも山賊でもなかった。<span class="pt4">自分自身だった</span>。そのとき王の言葉がよみがえった。「お前も結局、友を見捨てるだろう。」<span class="pt4">あの王の言葉が正しかったことになる。それだけは、絶対に許せなかった</span>。メロスは立ち上がり、走った。
+<div class="para-btns"><button class="para-btn" id="btn_pt4" onclick="showPoint(4)">💡 ポイント</button><button class="para-btn" id="btn_kw4" onclick="showKeyword(4)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para5"><span class="para-label">段落⑤　告白と再生</span>
+メロスは広場にたどり着いた。セリヌンティウスはまだ立っていた。メロスは叫んだ。「<span class="pt5">殴れ。俺は途中で一度、お前を裏切ろうとした</span>。」セリヌンティウスは静かに微笑み、言った。「<span class="pt5">俺も一度だけ、お前を疑った。俺もお前に殴られる資格がある</span>。」二人は抱き合い、声を上げて泣いた。<br><br>王の目には涙が浮かんでいた。王は玉座を降り、言った。「<span class="pt5">お前たちの信頼に、私は負けた。私は間違っていた。人を信じることを、恐れていただけだった</span>。私も、お前たちの仲間に入れてくれないか。」群衆から歓声が湧き上がった。
+<div class="para-btns"><button class="para-btn" id="btn_pt5" onclick="showPoint(5)">💡 ポイント</button></div></div>
+</div>
+
+<div class="col-qa" id="colQa">
+<div class="summary" id="summary"><div class="sum-title">📝 三人の感情の地図</div><div id="sumItems"></div></div>
+
+<!-- q1 正解:③(idx2) -->
+<div class="popup p-para" id="q1"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落①の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q1c">
+<button class="cb" onclick="answerQ('q1',0)">王は生まれつき残酷な性格の人物だった</button>
+<button class="cb" onclick="answerQ('q1',1)">王は国を守るために厳しい政治をしていた</button>
+<button class="cb" onclick="answerQ('q1',2)">穏やかだった王が裏切られて人を信じられなくなった</button>
+<button class="cb" onclick="answerQ('q1',3)">王はメロスに対して最初から好意を持っていた</button>
+</div>
+<div class="fb fb-ok" id="q1ok">そう。「かつては穏やか」「しかし裏切られた」。暴君には理由があった。</div>
+<div class="fb fb-ng" id="q1ng">keyword「しかし」の前後を比べてください。王はどう変わりましたか。</div></div></div>
+
+<!-- q2 正解:④(idx3) -->
+<div class="popup p-para" id="q2"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落②の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q2c">
+<button class="cb" onclick="answerQ('q2',0)">メロスが王を倒す計画を立てて準備した場面</button>
+<button class="cb" onclick="answerQ('q2',1)">セリヌンティウスが人質になることを拒否した場面</button>
+<button class="cb" onclick="answerQ('q2',2)">王がメロスの約束を信じてすぐに許した場面である</button>
+<button class="cb" onclick="answerQ('q2',3)">王は「裏切る」と嘲笑し、メロスは疑わず友はうなずいた</button>
+</div>
+<div class="fb fb-ok" id="q2ok">そう。王の予言、メロスの確信、セリヌンティウスの沈黙の信頼。三者三様です。</div>
+<div class="fb fb-ng" id="q2ng">ポイントを確認してください。三人それぞれの行動を見比べましょう。</div></div></div>
+
+<!-- q3 正解:①(idx0) -->
+<div class="popup p-para" id="q3"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落③の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q3c">
+<button class="cb" onclick="answerQ('q3',0)">障害に追い詰められ自分に言い訳をして走るのをやめた</button>
+<button class="cb" onclick="answerQ('q3',1)">セリヌンティウスが裏切ったのでメロスが怒った場面</button>
+<button class="cb" onclick="answerQ('q3',2)">王がメロスの帰りを待っている場面を描いている</button>
+<button class="cb" onclick="answerQ('q3',3)">メロスが山賊と友達になって助けてもらった場面</button>
+</div>
+<div class="fb fb-ok" id="q3ok">そう。「暗い声」＝自分への言い訳。「どうでもいい」＝信念の放棄です。</div>
+<div class="fb fb-ng" id="q3ng">ポイントの「暗い声」は誰の声ですか。メロスの心の中です。</div></div></div>
+
+<!-- q4 正解:②(idx1) -->
+<div class="popup p-para" id="q4"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落④の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q4c">
+<button class="cb" onclick="answerQ('q4',0)">泉の水で体力が完全に回復してメロスは元気になった</button>
+<button class="cb" onclick="answerQ('q4',1)">「許してくれるだろう」と思ったこと自体が裏切りだと気づき、王の予言を否定するため走った</button>
+<button class="cb" onclick="answerQ('q4',2)">セリヌンティウスが助けに来てくれた場面を描いている</button>
+<button class="cb" onclick="answerQ('q4',3)">王がメロスを許して処刑を取りやめた場面を描いている</button>
+</div>
+<div class="fb fb-ok" id="q4ok">そう。罪悪感＋王の予言を否定する怒りが再起の二つの動力です。</div>
+<div class="fb fb-ng" id="q4ng">keyword「しかし」の後を読んでください。メロスの気づきが書いてあります。</div></div></div>
+
+<!-- q5 正解:③(idx2) -->
+<div class="popup p-para" id="q5"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落⑤の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q5c">
+<button class="cb" onclick="answerQ('q5',0)">メロスだけが弱さを告白してセリヌンティウスは完璧だった</button>
+<button class="cb" onclick="answerQ('q5',1)">王がメロスを処刑してセリヌンティウスを解放した場面</button>
+<button class="cb" onclick="answerQ('q5',2)">二人が互いの弱さを告白し合い、王も自分の恐怖を認めて変わった</button>
+<button class="cb" onclick="answerQ('q5',3)">群衆が王を倒して新しい政治を始めた場面を描いている</button>
+</div>
+<div class="fb fb-ok" id="q5ok">そう。三人とも弱さを持っていた。しかし正直に向き合ったことで信頼が生まれた。</div>
+<div class="fb fb-ng" id="q5ng">ポイントを確認してください。メロス、セリヌンティウス、王、それぞれ何を言いましたか。</div></div></div>
+
+<hr class="section-divider">
+
+<!-- 全体の要点 正解:④(idx3) -->
+<div class="popup p-main" id="qMain"><div class="p-head"><div class="p-icon">🎯</div><div class="p-name">この文章全体の要点はどれですか？</div></div><div class="p-body">
+<div class="choices5" id="qMainc">
+<button class="cb" onclick="answerQ('qMain',0)">友を絶対に疑ってはいけないという厳しい教訓の話</button>
+<button class="cb" onclick="answerQ('qMain',1)">体力を鍛えることが友情を守る最も大切なことだ</button>
+<button class="cb" onclick="answerQ('qMain',2)">暴君は必ず最後に改心するものだという話を描いている</button>
+<button class="cb" onclick="answerQ('qMain',3)">弱さを持つ人間が正直に向き合うことで、傷ついた人の心さえ変える力になる</button>
+<button class="cb" onclick="answerQ('qMain',4)">約束を守ることだけが友情の証明であるという物語だ</button>
+</div>
+<div class="fb fb-ok" id="qMainok">その通りです。完璧でなくても正直であれば信頼は成り立つ。</div>
+<div class="fb fb-ng" id="qMainng">三人とも弱さを持っていました。しかし友情は壊れましたか？</div></div></div>
+
+<hr class="section-divider">
+
+<!-- quiz1 正解:②(idx1) -->
+<div class="popup p-quiz" id="quiz1"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題1</div></div><div class="p-body">
+メロスが再び走り始めた本当の原因として最も適当なものはどれですか。
+<div class="choices5" id="quiz1c">
+<button class="cb" id="quiz1_0" onclick="quizClick('quiz1',0)">泉の水で体力が完全に回復したことが直接の原因</button>
+<button class="cb" id="quiz1_1" onclick="quizClick('quiz1',1)">「自分が自分を許せない」罪悪感と王の予言を否定する怒り</button>
+<button class="cb" id="quiz1_2" onclick="quizClick('quiz1',2)">セリヌンティウスの声が聞こえた気がしたことが原因</button>
+<button class="cb" id="quiz1_3" onclick="quizClick('quiz1',3)">時間に間に合いそうだとわかったことが走る動機になった</button>
+<button class="cb" id="quiz1_4" onclick="quizClick('quiz1',4)">誰かに励まされて立ち上がる勇気をもらったからだ</button>
+</div>
+<button class="elim-btn" id="elim_quiz1" onclick="startElim('quiz1')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz1_count">あと <span id="elim_quiz1_remain">2</span> つ消去できます。</div>
+<div class="fb fb-warn" id="quiz1warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz1_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz1')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz1ok">正解です。泉はきっかけ。走る原因は罪悪感と怒りです。</div>
+<div class="fb fb-ng" id="quiz1ng">段落④を確認してください。「問題は…自分自身だった」の後に何が書いてありますか。</div></div></div>
+
+<!-- quiz2 正解:⑤(idx4) -->
+<div class="popup p-quiz" id="quiz2"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題2</div></div><div class="p-body">
+セリヌンティウスが「俺も一度だけお前を疑った」と告白した意味として最も適当なものはどれですか。
+<div class="choices5" id="quiz2c">
+<button class="cb" id="quiz2_0" onclick="quizClick('quiz2',0)">メロスを責めて友情を終わらせるために告白した</button>
+<button class="cb" id="quiz2_1" onclick="quizClick('quiz2',1)">メロスに同情して慰めるために嘘の告白をしたのだ</button>
+<button class="cb" id="quiz2_2" onclick="quizClick('quiz2',2)">最初からメロスを信じていなかったことを認めた告白</button>
+<button class="cb" id="quiz2_3" onclick="quizClick('quiz2',3)">自分は完璧だったとメロスに見せつけるための告白</button>
+<button class="cb" id="quiz2_4" onclick="quizClick('quiz2',4)">互いの弱さを認め合うことで友情がさらに深くなる告白</button>
+</div>
+<button class="elim-btn" id="elim_quiz2" onclick="startElim('quiz2')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz2_count">あと <span id="elim_quiz2_remain">2</span> つ消去できます。</div>
+<div class="fb fb-warn" id="quiz2warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz2_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz2')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz2ok">正解です。二人とも弱い。しかし正直に差し出した。それが本当の信頼です。</div>
+<div class="fb fb-ng" id="quiz2ng">告白の後、二人はどうしましたか。抱き合って泣いています。</div></div></div>
+
+<!-- quiz3 正解:③(idx2) -->
+<div class="popup p-quiz" id="quiz3"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題3</div></div><div class="p-body">
+王が「仲間に入れてくれないか」と言った理由として最も適当なものはどれですか。
+<div class="choices5" id="quiz3c">
+<button class="cb" id="quiz3_0" onclick="quizClick('quiz3',0)">メロスが強かったので王は恐怖を感じて降伏した</button>
+<button class="cb" id="quiz3_1" onclick="quizClick('quiz3',1)">群衆の圧力で仕方なく態度を変えることにしたから</button>
+<button class="cb" id="quiz3_2" onclick="quizClick('quiz3',2)">弱さを見せ合っても壊れない信頼を目にし、自分の恐怖を認められた</button>
+<button class="cb" id="quiz3_3" onclick="quizClick('quiz3',3)">メロスが約束通りに戻ったことだけに感動したからだ</button>
+<button class="cb" id="quiz3_4" onclick="quizClick('quiz3',4)">セリヌンティウスが王に直接許しを求めたことが理由</button>
+</div>
+<button class="elim-btn" id="elim_quiz3" onclick="startElim('quiz3')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz3_count">あと <span id="elim_quiz3_remain">2</span> つ消去できます。</div>
+<div class="fb fb-warn" id="quiz3warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz3_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz3')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz3ok">正解です。王の過去＝裏切られた恐怖。目の前の光景＝弱さを見せ合っても壊れない信頼。王は自分の恐怖を認められた。</div>
+<div class="fb fb-ng" id="quiz3ng">王の過去（段落①）と最後の台詞を比べてみてください。何がどう変わりましたか。</div></div></div>
+
+<div class="final-qa" id="final">おつかれさまでした。<br><br><strong>第7回へ進みましょう。</strong></div>
+<button class="btn-start" id="btnStart" onclick="startLesson()">はじめる →</button>
+<button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button>
+</div></div></div>
+
+<script>
+var correctAnswers={q1:2,q2:3,q3:0,q4:1,q5:2,qMain:3,quiz1:1,quiz2:4,quiz3:2};
+var summaryTexts={q1:'① 穏やかだった王が裏切られて暴君になった',q2:'② 王は「裏切る」と予言。メロスは疑わず友はうなずいた',q3:'③ 暗い声＝自分への言い訳。「どうでもいい」で信念放棄',q4:'④ 「思ったこと自体が裏切り」と気づき、王の予言を否定するため走った',q5:'⑤ 二人が弱さを告白し合い、王も自分の恐怖を認めて変わった'};
+var stepOrder=['q1','q2','q3','q4','q5','qMain','quiz1','quiz2','quiz3'];
+var currentStep=0,waiting=false;
+var progValues={q1:8,q2:18,q3:28,q4:38,q5:48,qMain:58,quiz1:72,quiz2:86,quiz3:98};
+var focusParas={q1:'para1',q2:'para2',q3:'para3',q4:'para4',q5:'para5',qMain:null,quiz1:'para4',quiz2:'para5',quiz3:'para5'};
+var prevFocus=null,elimState={};
+function startLesson(){document.getElementById('btnStart').style.display='none';nextStep();}
+function nextStep(){if(waiting)return;if(currentStep>=stepOrder.length){showFinal();return;}var sid=stepOrder[currentStep];document.getElementById('prog').style.width=progValues[sid]+'%';hideAllPopups();if(prevFocus){document.getElementById(prevFocus).classList.remove('focus-glow');prevFocus=null;}var fp=focusParas[sid];if(fp){var el=document.getElementById(fp);el.classList.add('focus-glow');prevFocus=fp;var c=document.getElementById('colText');c.scrollTo({top:el.offsetTop-c.clientHeight/4,behavior:'smooth'});}var p=document.getElementById(sid);if(p)p.classList.add('on');waiting=true;document.getElementById('btnNext').style.display='none';setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'nearest'});},200);currentStep++;}
+function hideAllPopups(){document.querySelectorAll('.popup').forEach(function(p){p.classList.remove('on');});}
+function showPoint(n){document.querySelectorAll('.pt'+n).forEach(function(e){e.classList.add('hl-point');});var b=document.getElementById('btn_pt'+n);b.classList.add('done');b.textContent='✓ ポイント';b.onclick=null;}
+function showKeyword(n){document.querySelectorAll('.kw'+n).forEach(function(e){e.classList.add('hl-key');});var b=document.getElementById('btn_kw'+n);b.classList.add('done');b.textContent='✓ keyword';b.onclick=null;}
+function addSummary(t){var p=document.getElementById('summary');p.style.display='block';var d=document.createElement('div');d.className='sum-item';d.innerHTML='<span>📝</span><span>'+t+'</span>';document.getElementById('sumItems').appendChild(d);}
+function disableAllBtns(id){document.querySelectorAll('#'+id+'c .cb').forEach(function(b){b.disabled=true;b.onclick=null;});}
+function answerQ(id,idx){var c=correctAnswers[id],bs=document.querySelectorAll('#'+id+'c .cb');disableAllBtns(id);if(idx===c){bs[idx].classList.add('cb-ok');document.getElementById(id+'ok').classList.add('on');}else{bs[idx].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(id+'ng').classList.add('on');}if(summaryTexts[id])addSummary(summaryTexts[id]);setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1200);}
+function startElim(q){var b=document.getElementById('elim_'+q);if(b.classList.contains('used'))return;b.classList.add('active');b.textContent='🔍 消去中...';document.getElementById('elim_'+q+'_count').style.display='block';elimState[q]={mode:'elim',eliminated:0,maxElim:2};document.getElementById(q+'c').classList.add('elim-mode');}
+function quizClick(q,i){var s=elimState[q];if(s&&s.mode==='elim'){var c=correctAnswers[q],w=document.getElementById(q+'warn');if(i===c){w.classList.add('on');setTimeout(function(){w.classList.remove('on');},2000);return;}document.getElementById(q+'_'+i).classList.add('cb-elim');s.eliminated++;document.getElementById('elim_'+q+'_remain').textContent=(s.maxElim-s.eliminated);if(s.eliminated>=s.maxElim){s.mode='answer';document.getElementById(q+'c').classList.remove('elim-mode');var eb=document.getElementById('elim_'+q);eb.classList.remove('active');eb.classList.add('used');eb.textContent='✓ 2つ消去しました';document.getElementById('elim_'+q+'_count').style.display='none';document.getElementById(q+'_answerbtn').style.display='block';}return;}if(s&&s.mode==='answer'){answerQuiz(q,i);return;}}
+function enterAnswerMode(q){document.getElementById(q+'_answerbtn').style.display='none';}
+function answerQuiz(q,i){var c=correctAnswers[q],bs=document.querySelectorAll('#'+q+'c .cb');disableAllBtns(q);if(i===c){bs[i].classList.add('cb-ok');document.getElementById(q+'ok').classList.add('on');}else{bs[i].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(q+'ng').classList.add('on');}if(q==='quiz3'){document.getElementById('prog').style.width='100%';setTimeout(function(){hideAllPopups();showFinal();},2000);return;}setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1500);}
+function showFinal(){document.getElementById('btnNext').style.display='none';if(prevFocus)document.getElementById(prevFocus).classList.remove('focus-glow');document.getElementById('final').style.display='block';document.getElementById('final').scrollIntoView({behavior:'smooth',block:'center'});}
+</script></body></html>

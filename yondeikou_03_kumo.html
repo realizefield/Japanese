@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>読んでいこう 第3回 — 蜘蛛の糸</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;background:#F7F6F3;color:#2C2C2A;min-height:100vh}.lesson-page{display:flex;flex-direction:column;height:100vh}.top-bar{background:#fff;border-bottom:1px solid #E0DED8;padding:10px 1.25rem;flex-shrink:0}.top-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}.top-bar h2{font-size:15px;font-weight:600;white-space:nowrap}.prog-wrap{flex:1;height:5px;background:#D3D1C7;border-radius:3px}.prog-bar{height:100%;background:#378ADD;border-radius:3px;transition:width .6s ease;width:0%}.columns{flex:1;display:flex;overflow:hidden;max-width:1200px;margin:0 auto;width:100%}.col-text{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;background:#fff;border-right:1px solid #E0DED8;scroll-behavior:smooth}.text-title{font-size:13px;color:#888780;margin-bottom:10px;font-weight:500}.para-block{margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid #E8E7E3;border-radius:10px;background:#FAFAF8;line-height:2.4;font-size:15px}.para-label{font-size:11px;color:#888780;font-weight:600;margin-bottom:6px;display:block}.para-btns{display:flex;gap:6px;margin-top:10px}.para-btn{padding:5px 14px;border:1px solid #D3D1C7;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}.para-btn:hover{background:#F0EFEB}.para-btn.done{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}.hl-point{background:#FFF9C4;border-radius:3px;padding:1px 3px}.hl-key{background:#E3F2FD;border-radius:3px;padding:1px 3px}.focus-glow{outline:3px solid #378ADD;outline-offset:3px;border-radius:8px;animation:glowPulse 1.5s ease-in-out 2}@keyframes glowPulse{0%{outline-color:#378ADD}50%{outline-color:#90CAF9}100%{outline-color:#378ADD}}.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem}.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#888780}.lg-dot{width:12px;height:12px;border-radius:3px;border:1px solid #ccc}.col-qa{width:440px;min-width:370px;overflow-y:auto;padding:1.25rem;background:#F7F6F3}.summary{background:#fff;border:1px solid #E0DED8;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;display:none}.sum-title{font-size:12px;color:#888780;margin-bottom:8px;font-weight:500}.sum-item{display:flex;align-items:flex-start;gap:7px;font-size:13px;margin-bottom:5px;animation:slideIn .5s ease}@keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}.popup{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid;display:none;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}.popup.on{display:block}@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}.p-para{background:#FAFAF8;border-color:#888780}.p-main{background:#E8F5E9;border-color:#2E7D32}.p-quiz{background:#E3F2FD;border-color:#1565C0}.p-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}.p-icon{font-size:20px}.p-name{font-size:12px;font-weight:600;color:#555}.p-body{font-size:14px;line-height:1.9}.choices4,.choices5{display:grid;grid-template-columns:1fr;gap:6px;margin-top:.75rem}.cb{padding:.6rem .9rem;border:1px solid #D3D1C7;border-radius:8px;background:#fff;font-size:13px;color:#2C2C2A;cursor:pointer;text-align:left;line-height:1.6;transition:all .2s}.cb:hover:not(:disabled):not(.cb-elim){background:#F7F6F3;border-color:#888780}.cb:disabled{cursor:default;opacity:.85}.cb-ok{background:#E8F5E9!important;border-color:#2E7D32!important;color:#1B5E20!important;font-weight:500}.cb-ng{background:#FCE4EC!important;border-color:#C2185B!important;color:#880E4F!important}.cb-elim{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#BDBDBD!important;text-decoration:line-through;cursor:default;pointer-events:none}.elim-mode .cb:not(.cb-elim):not(:disabled){cursor:crosshair;border-color:#F57F17;border-style:dashed}.elim-mode .cb:not(.cb-elim):not(:disabled):hover{background:#FFF8E1;border-color:#F57F17}.fb{font-size:13px;margin-top:8px;padding:7px 10px;border-radius:7px;display:none;line-height:1.7}.fb.on{display:block;animation:popIn .3s ease}.fb-ok{background:#C8E6C9;color:#1B5E20}.fb-ng{background:#F8BBD0;color:#880E4F}.fb-warn{background:#FFF8E1;color:#E65100}.elim-btn{display:inline-block;padding:6px 16px;border:2px solid #F57F17;border-radius:8px;background:#FFF8E1;font-size:13px;color:#E65100;cursor:pointer;margin-top:10px;font-weight:600}.elim-btn:hover{background:#FFECB3}.elim-btn.active{background:#F57F17;color:#fff;animation:pulse .8s ease infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,127,23,.4)}70%{box-shadow:0 0 0 8px rgba(245,127,23,0)}100%{box-shadow:0 0 0 0 rgba(245,127,23,0)}}.elim-btn.used{opacity:.5;cursor:default;background:#E0E0E0;color:#888;animation:none}.elim-count{font-size:12px;color:#E65100;margin-top:6px;display:none}.answer-btn-area{margin-top:10px;display:none}.answer-btn{width:100%;padding:.6rem;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#1565C0;border:none;color:#fff}.btn-next{width:100%;padding:.75rem;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #D3D1C7;color:#2C2C2A;display:none;margin-top:.5rem}.btn-next:hover{background:#F0EFEB}.btn-start{width:100%;padding:.85rem;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;background:#1565C0;border:none;color:#fff}.btn-start:hover{background:#0D47A1}.final-qa{text-align:center;padding:2rem 1rem;font-size:15px;line-height:2.4;display:none;animation:popIn .6s ease}.final-qa strong{color:#1565C0}.section-divider{border:none;border-top:2px dashed #D3D1C7;margin:1rem 0}@media(max-width:768px){.columns{flex-direction:column}.col-text{flex:none;height:40vh;min-height:200px;border-right:none;border-bottom:2px solid #378ADD;padding:1rem}.col-qa{width:100%;min-width:unset;flex:1;padding:1rem}.para-block{font-size:14px;line-height:2.2}}
+</style></head><body>
+<div class="lesson-page">
+<div class="top-bar"><div class="top-bar-inner"><h2>📖 読んでいこう 第3回</h2><div class="prog-wrap"><div class="prog-bar" id="prog"></div></div></div></div>
+<div class="columns">
+<div class="col-text" id="colText">
+<div class="text-title">📖 本文 — 蜘蛛の糸</div>
+<div class="legend"><div class="lg"><div class="lg-dot" style="background:#FFF9C4"></div>ポイント</div><div class="lg"><div class="lg-dot" style="background:#E3F2FD"></div>keyword</div></div>
+
+<div class="para-block" id="para1"><span class="para-label">段落①</span>
+ある日、お釈迦さまが地獄をのぞいた。血の池や針の山の底で、<span class="pt1">カンダタという男が、ほかの罪人たちと一緒にもがいていた</span>。
+<div class="para-btns"><button class="para-btn" id="btn_pt1" onclick="showPoint(1)">💡 ポイント</button></div></div>
+
+<div class="para-block" id="para2"><span class="para-label">段落②</span>
+カンダタは生前、人を殺し、家に火をつけ、さまざまな悪事を重ねた大泥棒だった。<span class="kw2">しかし</span>、<span class="pt2">たった一つだけ、よいことをした記憶がある</span>。ある日、道端で小さな蜘蛛を見つけたとき、踏み殺そうとした足を止めて、<span class="pt2">命を助けてやった</span>のだ。
+<div class="para-btns"><button class="para-btn" id="btn_pt2" onclick="showPoint(2)">💡 ポイント</button><button class="para-btn" id="btn_kw2" onclick="showKeyword(2)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para3"><span class="para-label">段落③</span>
+お釈迦さまはそのことを思い出し、<span class="pt3">できることなら、この男を地獄から救い出してやろう</span>と考えた。<span class="kw3">そこで</span>、極楽にいた蜘蛛の銀色の糸を一本、<span class="pt3">地獄の底へ静かに降ろした</span>。
+<div class="para-btns"><button class="para-btn" id="btn_pt3" onclick="showPoint(3)">💡 ポイント</button><button class="para-btn" id="btn_kw3" onclick="showKeyword(3)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para4"><span class="para-label">段落④</span>
+カンダタは糸をつかみ、一生懸命に上へ登り始めた。ずいぶん登ったところでふと下を見ると、<span class="pt4">数えきれないほどの罪人たちが自分のあとに続いて糸を登ってくる</span>。カンダタは<span class="pt4">驚き、そして恐ろしくなった</span>。こんなに大勢が登ったら、細い糸は切れてしまう。<span class="kw4">そこで</span>カンダタは大声で叫んだ。「<span class="pt4">この糸は俺のものだ。お前たちは降りろ</span>。」
+<div class="para-btns"><button class="para-btn" id="btn_pt4" onclick="showPoint(4)">💡 ポイント</button><button class="para-btn" id="btn_kw4" onclick="showKeyword(4)">🔑 keyword</button></div></div>
+
+<div class="para-block" id="para5"><span class="para-label">段落⑤</span>
+<span class="pt5">その瞬間、糸がカンダタのぶら下がっているところから、ぷつりと切れた</span>。カンダタは暗い地獄の底へ、まっさかさまに落ちていった。あとには、ただ極楽の蜘蛛の糸が、きらきらと光りながら短く垂れているばかりだった。お釈迦さまは<span class="pt5">悲しそうなお顔</span>をされて、また歩き始めた。
+<div class="para-btns"><button class="para-btn" id="btn_pt5" onclick="showPoint(5)">💡 ポイント</button></div></div>
+</div>
+
+<div class="col-qa" id="colQa">
+<div class="summary" id="summary"><div class="sum-title">📝 段落の要点まとめ</div><div id="sumItems"></div></div>
+
+<!-- q1 正解:②(idx1) -->
+<div class="popup p-para" id="q1"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落①の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q1c">
+<button class="cb" onclick="answerQ('q1',0)">お釈迦さまが極楽で蜘蛛と話している場面</button>
+<button class="cb" onclick="answerQ('q1',1)">カンダタという罪人が地獄でもがいている場面</button>
+<button class="cb" onclick="answerQ('q1',2)">地獄の景色を美しく描写している場面</button>
+<button class="cb" onclick="answerQ('q1',3)">罪人たちが地獄から脱出した場面を描いている</button>
+</div>
+<div class="fb fb-ok" id="q1ok">そう。カンダタが地獄にいる。これが物語の出発点です。</div>
+<div class="fb fb-ng" id="q1ng">ポイントを確認してください。誰がどこにいますか。</div></div></div>
+
+<!-- q2 正解:④(idx3) -->
+<div class="popup p-para" id="q2"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落②の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q2c">
+<button class="cb" onclick="answerQ('q2',0)">カンダタは善人で誤って地獄に落ちた人物だった</button>
+<button class="cb" onclick="answerQ('q2',1)">カンダタは蜘蛛を踏み殺して地獄に落ちた人物</button>
+<button class="cb" onclick="answerQ('q2',2)">カンダタの悪事を詳しく列挙している段落である</button>
+<button class="cb" onclick="answerQ('q2',3)">悪事を重ねた大泥棒だが蜘蛛の命を一度だけ助けた</button>
+</div>
+<div class="fb fb-ok" id="q2ok">そう。「しかし」の前は悪事、後は善行。この対比が物語を動かします。</div>
+<div class="fb fb-ng" id="q2ng">keyword「しかし」の前と後を比べてください。</div></div></div>
+
+<!-- q3 正解:①(idx0) -->
+<div class="popup p-para" id="q3"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落③の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q3c">
+<button class="cb" onclick="answerQ('q3',0)">蜘蛛を助けた善行を理由に糸を降ろしてチャンスを与えた</button>
+<button class="cb" onclick="answerQ('q3',1)">お釈迦さまがカンダタの反省を見て糸を降ろした場面</button>
+<button class="cb" onclick="answerQ('q3',2)">蜘蛛がお釈迦さまに頼んでカンダタを助ける場面</button>
+<button class="cb" onclick="answerQ('q3',3)">カンダタが自分で糸を見つけて登り始めた場面</button>
+</div>
+<div class="fb fb-ok" id="q3ok">そう。善行への報いとしてチャンスが与えられた。これが物語の転機です。</div>
+<div class="fb fb-ng" id="q3ng">お釈迦さまが「思い出した」ことは何でしたか。ポイントを確認してください。</div></div></div>
+
+<!-- q4 正解:③(idx2) -->
+<div class="popup p-para" id="q4"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落④の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q4c">
+<button class="cb" onclick="answerQ('q4',0)">カンダタが罪人たちを助けながら一緒に登った場面</button>
+<button class="cb" onclick="answerQ('q4',1)">糸が重さに耐えられず自然に切れた場面を描いている</button>
+<button class="cb" onclick="answerQ('q4',2)">恐怖から「俺のものだ」と叫び他の罪人を拒んだ場面</button>
+<button class="cb" onclick="answerQ('q4',3)">罪人たちがカンダタを引きずり下ろした場面である</button>
+</div>
+<div class="fb fb-ok" id="q4ok">そう。恐怖→利己的な叫び。これが事件の核心です。</div>
+<div class="fb fb-ng" id="q4ng">keyword「そこで」の後にカンダタは何をしましたか。</div></div></div>
+
+<!-- q5 正解:②(idx1) -->
+<div class="popup p-para" id="q5"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落⑤の要点は？</div></div><div class="p-body">
+<div class="choices4" id="q5c">
+<button class="cb" onclick="answerQ('q5',0)">お釈迦さまがカンダタを罰するために糸を切った場面</button>
+<button class="cb" onclick="answerQ('q5',1)">叫んだ直後に糸が切れ、お釈迦さまは悲しんだ場面</button>
+<button class="cb" onclick="answerQ('q5',2)">カンダタが別の方法で地獄から脱出した場面を描く</button>
+<button class="cb" onclick="answerQ('q5',3)">極楽の蜘蛛がカンダタを恨んでいる場面を描いている</button>
+</div>
+<div class="fb fb-ok" id="q5ok">そう。叫んだ直後に切れた。この時間の流れが因果関係の証拠です。</div>
+<div class="fb fb-ng" id="q5ng">ポイントを確認してください。糸はいつ切れましたか。</div></div></div>
+
+<hr class="section-divider">
+
+<!-- 全体の要点 正解:③(idx2) -->
+<div class="popup p-main" id="qMain"><div class="p-head"><div class="p-icon">🎯</div><div class="p-name">この文章全体の要点はどれですか？</div></div><div class="p-body">
+<div class="choices5" id="qMainc">
+<button class="cb" onclick="answerQ('qMain',0)">悪いことをした人は絶対に救われないという話である</button>
+<button class="cb" onclick="answerQ('qMain',1)">蜘蛛を助けることが人生で一番大事だという教訓</button>
+<button class="cb" onclick="answerQ('qMain',2)">善行でチャンスを得たが利己心で失い、自分だけが助かろうとする心がチャンスを壊す話</button>
+<button class="cb" onclick="answerQ('qMain',3)">お釈迦さまの力が足りなかったという話を描いている</button>
+<button class="cb" onclick="answerQ('qMain',4)">地獄から出るには体力と忍耐が最も重要だという話</button>
+</div>
+<div class="fb fb-ok" id="qMainok">その通りです。善行→チャンス→利己心→失敗。この因果関係が全体の流れです。</div>
+<div class="fb fb-ng" id="qMainng">段落の要点まとめを順に読んでください。流れが見えます。</div></div></div>
+
+<hr class="section-divider">
+
+<!-- quiz1 正解:④(idx3) -->
+<div class="popup p-quiz" id="quiz1"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題1</div></div><div class="p-body">
+お釈迦さまが蜘蛛の糸を降ろした動機として最も適当なものを選んでください。
+<div class="choices5" id="quiz1c">
+<button class="cb" id="quiz1_0" onclick="quizClick('quiz1',0)">カンダタが地獄で反省している姿を見たから</button>
+<button class="cb" id="quiz1_1" onclick="quizClick('quiz1',1)">蜘蛛がお釈迦さまに直接頼んで助けを求めたから</button>
+<button class="cb" id="quiz1_2" onclick="quizClick('quiz1',2)">カンダタが地獄の中で他の罪人を助けていたから</button>
+<button class="cb" id="quiz1_3" onclick="quizClick('quiz1',3)">カンダタが蜘蛛の命を助けた善行を思い出したから</button>
+<button class="cb" id="quiz1_4" onclick="quizClick('quiz1',4)">すべての罪人を救うための計画の一部だったから</button>
+</div>
+<button class="elim-btn" id="elim_quiz1" onclick="startElim('quiz1')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz1_count">あと <span id="elim_quiz1_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz1warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz1_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz1')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz1ok">正解です。動機は「蜘蛛を助けた善行」です。本文に明確に書かれています。</div>
+<div class="fb fb-ng" id="quiz1ng">段落③を確認してください。お釈迦さまが「思い出した」ことは何ですか。</div></div></div>
+
+<!-- quiz2 正解:①(idx0) -->
+<div class="popup p-quiz" id="quiz2"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題2</div></div><div class="p-body">
+糸が切れた直接の原因として最も適当なものを選んでください。
+<div class="choices5" id="quiz2c">
+<button class="cb" id="quiz2_0" onclick="quizClick('quiz2',0)">カンダタが「俺のものだ」と叫んだ直後に切れている</button>
+<button class="cb" id="quiz2_1" onclick="quizClick('quiz2',1)">罪人たちの重さに糸が耐えられなかったから切れた</button>
+<button class="cb" id="quiz2_2" onclick="quizClick('quiz2',2)">お釈迦さまがカンダタに失望して糸を切ったからだ</button>
+<button class="cb" id="quiz2_3" onclick="quizClick('quiz2',3)">蜘蛛の糸がもともと弱い材質でできていたからだ</button>
+<button class="cb" id="quiz2_4" onclick="quizClick('quiz2',4)">カンダタが糸を強く引っ張りすぎて切れたからだ</button>
+</div>
+<button class="elim-btn" id="elim_quiz2" onclick="startElim('quiz2')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz2_count">あと <span id="elim_quiz2_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz2warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz2_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz2')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz2ok">正解です。「叫んだ→その瞬間→切れた」。時間の流れが因果関係を証明しています。</div>
+<div class="fb fb-ng" id="quiz2ng">段落⑤の最初を確認してください。「その瞬間」は何の直後ですか。</div></div></div>
+
+<!-- quiz3 正解:⑤(idx4) -->
+<div class="popup p-quiz" id="quiz3"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題3</div></div><div class="p-body">
+お釈迦さまが「悲しそうなお顔」をされた理由として最も適当なものを選んでください。
+<div class="choices5" id="quiz3c">
+<button class="cb" id="quiz3_0" onclick="quizClick('quiz3',0)">糸が細すぎてカンダタを助けられなかったから</button>
+<button class="cb" id="quiz3_1" onclick="quizClick('quiz3',1)">蜘蛛に申し訳ないと感じたから悲しんでいる</button>
+<button class="cb" id="quiz3_2" onclick="quizClick('quiz3',2)">地獄がなくならないことを残念に思ったからだ</button>
+<button class="cb" id="quiz3_3" onclick="quizClick('quiz3',3)">他の罪人たちが巻き添えになったことを悲しんだ</button>
+<button class="cb" id="quiz3_4" onclick="quizClick('quiz3',4)">チャンスを与えたのにカンダタが利己心で失ったから</button>
+</div>
+<button class="elim-btn" id="elim_quiz3" onclick="startElim('quiz3')">🔍 2つ消去しよう</button>
+<div class="elim-count" id="elim_quiz3_count">あと <span id="elim_quiz3_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
+<div class="fb fb-warn" id="quiz3warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
+<div class="answer-btn-area" id="quiz3_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz3')">消去完了！ 答えを選ぶ →</button></div>
+<div class="fb fb-ok" id="quiz3ok">正解です。善行で得たチャンスを利己心で失った。それがお釈迦さまの悲しみの理由です。</div>
+<div class="fb fb-ng" id="quiz3ng">物語の流れを振り返ってください。お釈迦さまは何をして、カンダタは何をしましたか。</div></div></div>
+
+<div class="final-qa" id="final">おつかれさまでした。<br><br><strong>第4回へ進みましょう。</strong></div>
+<button class="btn-start" id="btnStart" onclick="startLesson()">はじめる →</button>
+<button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button>
+</div></div></div>
+
+<script>
+var correctAnswers={q1:1,q2:3,q3:0,q4:2,q5:1,qMain:2,quiz1:3,quiz2:0,quiz3:4};
+var summaryTexts={q1:'① カンダタが地獄でもがいている',q2:'② 悪人だが蜘蛛の命を一度だけ助けた',q3:'③ 善行を理由に糸でチャンスを与えた',q4:'④ 恐怖から「俺のものだ」と他者を拒んだ',q5:'⑤ 叫んだ直後に糸が切れた'};
+var stepOrder=['q1','q2','q3','q4','q5','qMain','quiz1','quiz2','quiz3'];
+var currentStep=0,waiting=false;
+var progValues={q1:8,q2:18,q3:28,q4:38,q5:48,qMain:58,quiz1:72,quiz2:86,quiz3:98};
+var focusParas={q1:'para1',q2:'para2',q3:'para3',q4:'para4',q5:'para5',qMain:null,quiz1:'para3',quiz2:'para4',quiz3:'para5'};
+var prevFocus=null,elimState={};
+function startLesson(){document.getElementById('btnStart').style.display='none';nextStep();}
+function nextStep(){if(waiting)return;if(currentStep>=stepOrder.length){showFinal();return;}var sid=stepOrder[currentStep];document.getElementById('prog').style.width=progValues[sid]+'%';hideAllPopups();if(prevFocus){document.getElementById(prevFocus).classList.remove('focus-glow');prevFocus=null;}var fp=focusParas[sid];if(fp){var el=document.getElementById(fp);el.classList.add('focus-glow');prevFocus=fp;var c=document.getElementById('colText');c.scrollTo({top:el.offsetTop-c.clientHeight/4,behavior:'smooth'});}var p=document.getElementById(sid);if(p)p.classList.add('on');waiting=true;document.getElementById('btnNext').style.display='none';setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'nearest'});},200);currentStep++;}
+function hideAllPopups(){document.querySelectorAll('.popup').forEach(function(p){p.classList.remove('on');});}
+function showPoint(n){document.querySelectorAll('.pt'+n).forEach(function(e){e.classList.add('hl-point');});var b=document.getElementById('btn_pt'+n);b.classList.add('done');b.textContent='✓ ポイント';b.onclick=null;}
+function showKeyword(n){document.querySelectorAll('.kw'+n).forEach(function(e){e.classList.add('hl-key');});var b=document.getElementById('btn_kw'+n);b.classList.add('done');b.textContent='✓ keyword';b.onclick=null;}
+function addSummary(t){var p=document.getElementById('summary');p.style.display='block';var d=document.createElement('div');d.className='sum-item';d.innerHTML='<span>📝</span><span>'+t+'</span>';document.getElementById('sumItems').appendChild(d);}
+function disableAllBtns(id){document.querySelectorAll('#'+id+'c .cb').forEach(function(b){b.disabled=true;b.onclick=null;});}
+function answerQ(id,idx){var c=correctAnswers[id],bs=document.querySelectorAll('#'+id+'c .cb');disableAllBtns(id);if(idx===c){bs[idx].classList.add('cb-ok');document.getElementById(id+'ok').classList.add('on');}else{bs[idx].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(id+'ng').classList.add('on');}if(summaryTexts[id])addSummary(summaryTexts[id]);setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1200);}
+function startElim(q){var b=document.getElementById('elim_'+q);if(b.classList.contains('used'))return;b.classList.add('active');b.textContent='🔍 消去中...';document.getElementById('elim_'+q+'_count').style.display='block';elimState[q]={mode:'elim',eliminated:0,maxElim:2};document.getElementById(q+'c').classList.add('elim-mode');}
+function quizClick(q,i){var s=elimState[q];if(s&&s.mode==='elim'){var c=correctAnswers[q],w=document.getElementById(q+'warn');if(i===c){w.classList.add('on');setTimeout(function(){w.classList.remove('on');},2000);return;}document.getElementById(q+'_'+i).classList.add('cb-elim');s.eliminated++;document.getElementById('elim_'+q+'_remain').textContent=(s.maxElim-s.eliminated);if(s.eliminated>=s.maxElim){s.mode='answer';document.getElementById(q+'c').classList.remove('elim-mode');var eb=document.getElementById('elim_'+q);eb.classList.remove('active');eb.classList.add('used');eb.textContent='✓ 2つ消去しました';document.getElementById('elim_'+q+'_count').style.display='none';document.getElementById(q+'_answerbtn').style.display='block';}return;}if(s&&s.mode==='answer'){answerQuiz(q,i);return;}}
+function enterAnswerMode(q){document.getElementById(q+'_answerbtn').style.display='none';}
+function answerQuiz(q,i){var c=correctAnswers[q],bs=document.querySelectorAll('#'+q+'c .cb');disableAllBtns(q);if(i===c){bs[i].classList.add('cb-ok');document.getElementById(q+'ok').classList.add('on');}else{bs[i].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(q+'ng').classList.add('on');}if(q==='quiz3'){document.getElementById('prog').style.width='100%';setTimeout(function(){hideAllPopups();showFinal();},2000);return;}setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1500);}
+function showFinal(){document.getElementById('btnNext').style.display='none';if(prevFocus)document.getElementById(prevFocus).classList.remove('focus-glow');document.getElementById('final').style.display='block';document.getElementById('final').scrollIntoView({behavior:'smooth',block:'center'});}
+</script></body></html>
