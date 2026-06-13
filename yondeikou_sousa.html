@@ -1,302 +1,1682 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>読解捜査室 — 消去法入門</title>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>読解捜査室　～ネコ警部と新人捜査官～</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;background:#F7F6F3;color:#2C2C2A;min-height:100vh}
-.lesson-page{display:flex;flex-direction:column;height:100vh}
-.top-bar{background:linear-gradient(90deg,#1a202c,#2d3748);padding:10px 1.25rem;flex-shrink:0}
-.top-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px}
-.top-bar h2{font-size:15px;font-weight:600;white-space:nowrap;color:#fff}
-.prog-wrap{flex:1;height:5px;background:#4a5568;border-radius:3px}
-.prog-bar{height:100%;background:#f6ad55;border-radius:3px;transition:width .6s ease;width:0%}
-.columns{flex:1;display:flex;overflow:hidden;max-width:1200px;margin:0 auto;width:100%}
-.col-text{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;background:#fff;border-right:1px solid #E0DED8;scroll-behavior:smooth}
-.text-title{font-size:13px;color:#888780;margin-bottom:10px;font-weight:500}
-.intro-card{background:#1a202c;color:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;line-height:2.2;font-size:14px}
-.intro-card h3{font-size:16px;margin-bottom:8px;color:#f6ad55}
-.intro-card .red{color:#fc8181;font-weight:600}
-.intro-card .gold{color:#f6ad55;font-weight:600}
-.para-block{margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid #E8E7E3;border-radius:10px;background:#FAFAF8;line-height:2.4;font-size:15px}
-.para-label{font-size:11px;color:#888780;font-weight:600;margin-bottom:6px;display:block}
-.para-btns{display:flex;gap:6px;margin-top:10px}
-.para-btn{padding:5px 14px;border:1px solid #D3D1C7;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
-.para-btn:hover{background:#F0EFEB}
-.para-btn.done{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
-.hl-point{background:#FFF9C4;border-radius:3px;padding:1px 3px}
-.hl-key{background:#E3F2FD;border-radius:3px;padding:1px 3px}
-.focus-glow{outline:3px solid #f6ad55;outline-offset:3px;border-radius:8px;animation:glowPulse 1.5s ease-in-out 2}
-@keyframes glowPulse{0%{outline-color:#f6ad55}50%{outline-color:#fbd38d}100%{outline-color:#f6ad55}}
-.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem}
-.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#888780}
-.lg-dot{width:12px;height:12px;border-radius:3px;border:1px solid #ccc}
-.col-qa{width:440px;min-width:370px;overflow-y:auto;padding:1.25rem;background:#F7F6F3}
-.summary{background:#fff;border:1px solid #E0DED8;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;display:none}
-.sum-title{font-size:12px;color:#888780;margin-bottom:8px;font-weight:500}
-.sum-item{display:flex;align-items:flex-start;gap:7px;font-size:13px;margin-bottom:5px;animation:slideIn .5s ease}
-@keyframes slideIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-.popup{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid;display:none;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
-.popup.on{display:block}
-@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.p-para{background:#FAFAF8;border-color:#888780}
-.p-main{background:#E8F5E9;border-color:#2E7D32}
-.p-quiz{background:#2d3748;border-color:#f6ad55}
-.p-quiz .p-name{color:#f6ad55!important}
-.p-quiz .p-body{color:#e2e8f0}
-.p-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.p-icon{font-size:20px}.p-name{font-size:12px;font-weight:600;color:#555}
-.p-body{font-size:14px;line-height:1.9}
-.choices4,.choices5{display:grid;grid-template-columns:1fr;gap:6px;margin-top:.75rem}
-.cb{padding:.6rem .9rem;border:1px solid #D3D1C7;border-radius:8px;background:#fff;font-size:13px;color:#2C2C2A;cursor:pointer;text-align:left;line-height:1.6;transition:all .2s}
-.cb:hover:not(:disabled):not(.cb-elim){background:#F7F6F3;border-color:#888780}
-.cb:disabled{cursor:default;opacity:.85}
-.cb-ok{background:#E8F5E9!important;border-color:#2E7D32!important;color:#1B5E20!important;font-weight:500}
-.cb-ng{background:#FCE4EC!important;border-color:#C2185B!important;color:#880E4F!important}
-.cb-elim{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#BDBDBD!important;text-decoration:line-through;cursor:default;pointer-events:none}
-.elim-mode .cb:not(.cb-elim):not(:disabled){cursor:crosshair;border-color:#f6ad55;border-style:dashed}
-.elim-mode .cb:not(.cb-elim):not(:disabled):hover{background:#FFFBEB;border-color:#f6ad55}
-.fb{font-size:13px;margin-top:8px;padding:7px 10px;border-radius:7px;display:none;line-height:1.7}
-.fb.on{display:block;animation:popIn .3s ease}
-.fb-ok{background:#C8E6C9;color:#1B5E20}.fb-ng{background:#F8BBD0;color:#880E4F}.fb-warn{background:#FFFBEB;color:#92400e}
-.elim-btn{display:inline-block;padding:6px 16px;border:2px solid #f6ad55;border-radius:8px;background:#FFFBEB;font-size:13px;color:#92400e;cursor:pointer;margin-top:10px;font-weight:600}
-.elim-btn:hover{background:#fefcbf}
-.elim-btn.active{background:#f6ad55;color:#1a202c;animation:pulse .8s ease infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(246,173,85,.4)}70%{box-shadow:0 0 0 8px rgba(246,173,85,0)}100%{box-shadow:0 0 0 0 rgba(246,173,85,0)}}
-.elim-btn.used{opacity:.5;cursor:default;background:#E0E0E0;color:#888;animation:none}
-.elim-count{font-size:12px;color:#92400e;margin-top:6px;display:none}
-.answer-btn-area{margin-top:10px;display:none}
-.answer-btn{width:100%;padding:.6rem;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#2d3748;border:none;color:#f6ad55}
-.answer-btn:hover{background:#1a202c}
-.btn-next{width:100%;padding:.75rem;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #D3D1C7;color:#2C2C2A;display:none;margin-top:.5rem}
-.btn-next:hover{background:#F0EFEB}
-.btn-start{width:100%;padding:.85rem;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;background:#2d3748;border:none;color:#f6ad55}
-.btn-start:hover{background:#1a202c}
-.final-qa{text-align:center;padding:2rem 1rem;font-size:15px;line-height:2.4;display:none;animation:popIn .6s ease}
-.final-qa strong{color:#2b6cb0}
-.section-divider{border:none;border-top:2px dashed #D3D1C7;margin:1rem 0}
-.rule-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid #f6ad55}
-.rule-card h4{font-size:13px;color:#92400e;margin-bottom:6px}
-.rule-card p{font-size:13px;line-height:1.8;color:#4a5568}
-@media(max-width:768px){
-.columns{flex-direction:column}
-.col-text{flex:none;height:40vh;min-height:200px;border-right:none;border-bottom:2px solid #f6ad55;padding:1rem}
-.col-qa{width:100%;min-width:unset;flex:1;padding:1rem}
-.para-block{font-size:14px;line-height:2.2}
-}
-</style></head><body>
-<div class="lesson-page">
-<div class="top-bar"><div class="top-bar-inner"><h2>🔍 読解捜査室 — 消去法入門</h2><div class="prog-wrap"><div class="prog-bar" id="prog"></div></div></div></div>
-<div class="columns">
-<div class="col-text" id="colText">
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;700&display=swap');
 
-<div class="intro-card">
-<h3>🔍 読解捜査室へようこそ</h3>
-国語の問題には<span class="red">正解を「当てる」必要はありません</span>。<br><br>
-代わりに、<span class="gold">「これは違う」を見つけて消す</span>。<br>
-5つの選択肢から2つ消せば、残りは3つ。<br>
-3つから選ぶほうが、ずっと当たりやすい。<br><br>
-これが<span class="gold">消去法</span>です。<br><br>
-消去の3つのルール：<br>
-① 本文に書いていないことは消す<br>
-② 本文と逆のことが書いてあれば消す<br>
-③ 「絶対」「必ず」など極端な言葉は疑う
+  :root {
+    --dark:    #1E1747;
+    --purple:  #534AB7;
+    --light:   #EEEDFE;
+    --mid:     #CECBF6;
+    --txt:     #26215C;
+    --muted:   #6B6880;
+    --bg:      #F8F7FF;
+    --card:    #FFFFFF;
+    --border:  rgba(83,74,183,0.15);
+    --g-bg:    #EAF3DE; --g-txt: #27500A; --g-br: #3B6D11;
+    --a-bg:    #FAEEDA; --a-txt: #412402; --a-br: #854F0B;
+    --r-bg:    #FCEBEB; --r-txt: #501313; --r-br: #A32D2D;
+    --tec1: #FF6B6B;
+    --tec2: #4ECDC4;
+    --tec3: #A8A8A8;
+    --tec4: #F7DC6F;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+
+  /* ━━━ ヘッダー ━━━ */
+  .hdr {
+    background: var(--dark);
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 10px;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 16px rgba(30,23,71,.4);
+  }
+  .hdr-ic  { font-size: 22px; }
+  .hdr-ttl { color: #fff; font-size: 15px; font-weight: 700; }
+  .hdr-sub { color: var(--mid); font-size: 11px; margin-left: auto; }
+  .prog-out { height: 3px; background: rgba(83,74,183,.2); }
+  .prog-in  { height: 100%; background: var(--purple); transition: width .5s ease; }
+
+  /* ━━━ 単元タブ ━━━ */
+  .unit-tabs {
+    display: flex; overflow-x: auto; background: var(--dark);
+    border-top: 1px solid rgba(255,255,255,.08); scrollbar-width: none;
+  }
+  .unit-tabs::-webkit-scrollbar { display: none; }
+  .unit-tab {
+    flex-shrink: 0; padding: 9px 16px; font-size: 12px; font-weight: 700;
+    color: rgba(255,255,255,.45); cursor: pointer;
+    border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap;
+  }
+  .unit-tab:hover { color: rgba(255,255,255,.75); }
+  .unit-tab.active { color: #fff; border-bottom-color: var(--mid); }
+  .unit-tab.done   { color: rgba(255,255,255,.6); border-bottom-color: var(--g-br); }
+
+  /* ━━━ コンテナ ━━━ */
+  .wrap { max-width: 700px; margin: 0 auto; padding: 16px 16px 60px; }
+
+  /* ━━━ ステップバー ━━━ */
+  .stepbar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; }
+  .sp {
+    padding: 3px 9px; border-radius: 999px; font-size: 10px; white-space: nowrap;
+    border: 1px solid rgba(83,74,183,.2); color: var(--muted);
+  }
+  .sp.done   { background: var(--g-bg); color: var(--g-txt); border-color: var(--g-br); }
+  .sp.active { background: var(--light); color: var(--txt); border-color: var(--purple); font-weight: 700; }
+
+  /* ━━━ キャラクターバブル ━━━ */
+  .nb {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--light); border: 1.5px solid var(--purple);
+    border-radius: 16px; padding: 14px 16px; margin-bottom: 16px;
+  }
+  .nb-face {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: var(--mid); border: 2px solid var(--purple);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .nb-name { font-size: 10px; font-weight: 700; color: var(--purple); letter-spacing: .1em; margin-bottom: 4px; }
+  .nb-txt  { font-size: 14px; color: var(--txt); line-height: 1.85; }
+  .nb-txt em { font-style: normal; font-weight: 700; color: var(--purple); }
+
+  /* バブル内現場表示 */
+  .nb-scene { margin-top: 10px; border-top: 1px dashed rgba(83,74,183,.3); padding-top: 10px; }
+  .nb-scene-label { font-size: 9px; font-weight: 700; color: var(--purple); letter-spacing: .1em; margin-bottom: 4px; }
+  .nb-scene-text  { font-family: 'Noto Serif JP', serif; font-size: 13px; line-height: 2; color: var(--txt); margin-bottom: 8px; }
+  .nb-scene-text mark {
+    background: linear-gradient(180deg, transparent 52%, rgba(255,210,0,.75) 52%);
+    border-radius: 2px; padding: 0 1px; font-weight: 700; color: inherit;
+    animation: markGlow .6s ease;
+  }
+  mark.qword {
+    background: linear-gradient(180deg, transparent 45%, rgba(255,120,120,.55) 45%);
+    border-radius: 2px; padding: 0 2px; font-weight: 700; color: #8B0000;
+    animation: markGlow .6s ease;
+  }
+  @keyframes markGlow {
+    0%   { background-color: rgba(255,180,0,.0); }
+    40%  { background-color: rgba(255,180,0,.5); }
+    100% { background-color: transparent; }
+  }
+
+  /* ━━━ カード ━━━ */
+  .card {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 16px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(83,74,183,.07);
+  }
+  .badge {
+    display: inline-block; background: var(--light); color: var(--purple);
+    border: 0.5px solid var(--purple); font-size: 10px; font-weight: 700;
+    padding: 2px 9px; border-radius: 999px; margin-bottom: 10px; letter-spacing: .05em;
+  }
+  .card-ttl  { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card-hint { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+
+  /* ━━━ ボタン ━━━ */
+  .btn {
+    display: block; width: 100%; padding: 12px;
+    background: var(--purple); color: white;
+    border: none; border-radius: 10px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+    transition: opacity .15s; margin-top: 12px;
+  }
+  .btn:hover { opacity: .88; }
+
+  /* ━━━ チェックアイテム ━━━ */
+  .ci {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    border: 0.5px solid rgba(83,74,183,.2);
+    cursor: pointer; margin-bottom: 8px; transition: all .15s;
+  }
+  .ci:hover { background: var(--light); }
+  .ci.ck { background: var(--g-bg); border-color: var(--g-br); }
+  .cbox {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 1.5px solid #ccc; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .ci.ck .cbox { background: var(--g-br); border-color: var(--g-br); color: white; }
+  .clabel { font-size: 14px; line-height: 1.6; }
+
+  /* ━━━ 本文ブロック ━━━ */
+  .tblock {
+    background: #F8F7FF; border: 0.5px solid rgba(83,74,183,.15);
+    border-radius: 12px; padding: 14px; margin-bottom: 14px;
+    font-family: 'Noto Serif JP', serif; font-size: 14px; line-height: 2.1;
+  }
+  .para { padding: 8px 10px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; margin-bottom: 10px; transition: all .15s; }
+  .para:hover { border-color: rgba(83,74,183,.3); background: white; }
+  .para.hl  { border-color: var(--purple); background: var(--light); }
+  .plabel   { font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 4px; font-family: 'Noto Sans JP', sans-serif; letter-spacing: .05em; }
+  mark {
+    background: linear-gradient(180deg, transparent 55%, rgba(255,220,0,.65) 55%);
+    border-radius: 2px; padding: 0 1px; font-weight: 700; color: inherit;
+  }
+
+  /* ━━━ 捜査手帳 ━━━ */
+  .memo-opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    border: 1.5px solid rgba(83,74,183,.25);
+    cursor: pointer; margin-bottom: 7px; font-size: 13px;
+    transition: all .15s; line-height: 1.6;
+  }
+  .memo-opt:hover { background: var(--light); border-color: var(--purple); }
+  .memo-opt.sel     { background: var(--light); border-color: var(--purple); }
+  .memo-opt.m-ok    { background: var(--g-bg); border-color: var(--g-br); cursor: default; }
+  .memo-opt.m-ng    { background: var(--r-bg); border-color: var(--r-br); cursor: default; }
+  .memo-onum { font-weight: 700; color: var(--purple); flex-shrink: 0; }
+  .hint-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #FFFDE7; color: #7B6000; border: 1px solid #D4AC0D;
+    border-radius: 8px; font-size: 12px; font-weight: 700;
+    padding: 5px 12px; cursor: pointer; margin-bottom: 10px;
+    font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s;
+  }
+  .hint-btn:hover { opacity: .82; }
+  .hint-note {
+    background: #FFFDE7; border-left: 3px solid #D4AC0D;
+    border-radius: 0 8px 8px 0; padding: 8px 12px;
+    font-size: 12px; color: #5D4200; margin-bottom: 10px; line-height: 1.7;
+  }
+  .para-quiz { padding: 10px 12px; border-radius: 10px; border: 1.5px solid rgba(83,74,183,.18); margin-bottom: 14px; background: #FAFAFE; }
+  .para-text { font-family: 'Noto Serif JP', serif; font-size: 13px; line-height: 2; margin-bottom: 10px; color: var(--dark); }
+
+  /* ━━━ 流し読み ━━━ */
+  .skim-para {
+    background: #FAFAFE; border: 1.5px solid rgba(83,74,183,.2);
+    border-radius: 14px; padding: 16px 16px 14px; margin-bottom: 0;
+  }
+  .skim-plabel { font-size: 10px; font-weight: 700; color: var(--purple); letter-spacing: .1em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .skim-text { font-family: 'Noto Serif JP', serif; font-size: 14px; line-height: 2.1; color: var(--dark); margin-bottom: 14px; }
+  .skim-text mark {
+    background: linear-gradient(180deg, transparent 52%, rgba(255,210,0,.75) 52%);
+    border-radius: 2px; padding: 0 1px; font-weight: 700; color: inherit;
+  }
+  .skim-done-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 11px; border-radius: 10px;
+    background: var(--dark); color: white; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s;
+  }
+  .skim-done-btn:hover { opacity: .85; }
+  .skim-done-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--g-bg); color: var(--g-txt); border: 1px solid var(--g-br);
+    border-radius: 6px; font-size: 11px; font-weight: 700; padding: 2px 8px;
+  }
+  .skim-progress { display: flex; gap: 5px; margin-bottom: 14px; }
+  .skim-dot { height: 4px; flex: 1; border-radius: 2px; background: rgba(83,74,183,.15); transition: background .3s; }
+  .skim-dot.done   { background: var(--purple); }
+  .skim-dot.active { background: var(--mid); }
+  .abc-wrap { display: flex; gap: 8px; margin-top: 12px; }
+  .abc-btn {
+    flex: 1; padding: 10px 6px; border-radius: 10px; border: 1.5px solid;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .abc-a { background: #EAF3DE; color: #27500A; border-color: #3B6D11; }
+  .abc-b { background: #FAEEDA; color: #412402; border-color: #854F0B; }
+  .abc-c { background: #FCEBEB; color: #501313; border-color: #A32D2D; }
+  .abc-a:hover { background: #c8e6b0; }
+  .abc-b:hover { background: #f5dbb0; }
+  .abc-c:hover { background: #f5c0c0; }
+  .abc-a.selected,.abc-b.selected,.abc-c.selected { box-shadow: 0 0 0 3px rgba(83,74,183,.35); }
+  .explain-box {
+    background: #F0EEFF; border: 1.5px solid var(--purple);
+    border-radius: 12px; padding: 13px 14px; margin-top: 12px;
+    font-size: 13px; color: var(--txt); line-height: 1.85;
+    animation: fadeInUp .25s ease;
+  }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .explain-icon { font-size: 16px; margin-right: 4px; }
+  .next-para-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 11px; border-radius: 10px; margin-top: 10px;
+    background: var(--purple); color: white; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s;
+    animation: fadeInUp .25s ease;
+  }
+  .next-para-btn:hover { opacity: .88; }
+
+  /* ━━━ 解答 ━━━ */
+  .qbanner {
+    background: var(--dark); color: white; border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 12px; font-size: 13px; line-height: 1.7;
+  }
+  .qbanner-lbl { font-size: 10px; color: var(--mid); font-weight: 700; display: block; margin-bottom: 3px; letter-spacing: .08em; }
+  .hint-box {
+    background: var(--a-bg); border-left: 3px solid var(--a-br);
+    padding: 9px 12px; border-radius: 6px; font-size: 13px; color: var(--a-txt); margin-bottom: 12px; line-height: 1.7;
+  }
+  .aopt {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; border: 1.5px solid rgba(83,74,183,.25);
+    cursor: pointer; margin-bottom: 8px; font-size: 14px; transition: all .15s; line-height: 1.6;
+  }
+  .aopt:hover { background: var(--light); border-color: var(--purple); }
+  .aopt.sel { background: var(--light); border-color: var(--purple); }
+  .aopt.ok  { background: var(--g-bg); border-color: var(--g-br); cursor: default; }
+  .aopt.ng  { background: var(--r-bg); border-color: var(--r-br); cursor: default; }
+  .onum { font-weight: 700; color: var(--purple); flex-shrink: 0; }
+  .fb { padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.8; margin-top: 8px; }
+  .fb.ok { background: var(--g-bg); color: var(--g-txt); border: 1px solid var(--g-br); }
+  .fb.ng { background: var(--r-bg); color: var(--r-txt); border: 1px solid var(--r-br); }
+
+  /* ━━━ 消去法 ━━━ */
+  .elim-phase {
+    background: #F8F7FF; border: 1px dashed rgba(83,74,183,.3);
+    border-radius: 12px; padding: 14px; margin-bottom: 12px;
+  }
+  .elim-title { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: .08em; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+  .elim-opt {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 9px 11px; border-radius: 8px; border: 1px solid rgba(83,74,183,.2);
+    margin-bottom: 7px; font-size: 13px; line-height: 1.6;
+    cursor: pointer; transition: all .15s; background: white;
+  }
+  .elim-opt:hover { background: var(--light); border-color: var(--purple); }
+  .elim-opt.eliminated { background: #FFF0F0; border-color: #F5A0A0; text-decoration: line-through; color: #999; cursor: default; }
+  .elim-opt.kept { background: var(--light); border-color: var(--purple); cursor: default; }
+  .elim-comment { font-size: 12px; color: #7B2020; margin-top: 5px; padding: 6px 10px; background: #FFF0F0; border-radius: 6px; line-height: 1.7; animation: fadeInUp .2s ease; }
+  .elim-comment.kept-comment { color: var(--txt); background: var(--light); }
+  .elim-onum { font-weight: 700; flex-shrink: 0; color: var(--purple); }
+  .elim-onum.x { color: #CC4444; }
+
+  /* ━━━ テクニックパネル ━━━ */
+  .tech-toggle-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--dark); color: white;
+    border: none; border-radius: 8px; font-size: 12px; font-weight: 700;
+    padding: 7px 14px; cursor: pointer; margin-bottom: 12px;
+    font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s;
+  }
+  .tech-toggle-btn:hover { opacity: .85; }
+  .tech-panel { background: #1a1640; border: 1px solid rgba(206,203,246,.25); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; animation: fadeInUp .2s ease; }
+  .tech-panel-title { font-size: 10px; font-weight: 700; letter-spacing: .12em; color: var(--mid); margin-bottom: 10px; }
+  .tech-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; animation: fadeInUp .25s ease both; }
+  .tech-item.t1 { background: rgba(255,107,107,.18); }
+  .tech-item.t2 { background: rgba(78,205,196,.18); }
+  .tech-item.t3 { background: rgba(168,168,168,.18); }
+  .tech-item.t4 { background: rgba(247,220,111,.18); }
+  .tech-item.tx { background: rgba(130,100,255,.22); }
+  .tech-item.ty { background: rgba(50,200,100,.18); }
+  .tech-badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; color: white; flex-shrink: 0; margin-top: 1px; }
+  .b1 { background: #FF6B6B; } .b2 { background: #4ECDC4; }
+  .b3 { background: #888; }    .b4 { background: #D4AC0D; }
+  .bx { background: #7B52FF; } .by { background: #27AE60; }
+  .tech-text { font-size: 12px; color: #E0E0FF; line-height: 1.65; }
+  .tech-new-badge { font-size: 9px; background: #FF6B6B; color: white; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; }
+
+  /* ━━━ 褒めバナー ━━━ */
+  .neko-praise { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; margin-bottom: 12px; animation: fadeInUp .3s ease; }
+  .neko-praise.good    { background: #EAF3DE; border: 1px solid #3B6D11; }
+  .neko-praise.great   { background: #FFF8E1; border: 1px solid #D4AC0D; }
+  .neko-praise.perfect { background: linear-gradient(135deg,#E8F5E9,#FFF8E1); border: 1.5px solid #3B6D11; }
+  .neko-praise-icon { font-size: 28px; flex-shrink: 0; }
+  .neko-praise-text { font-size: 13px; line-height: 1.8; font-weight: 700; }
+  .neko-praise.good .neko-praise-text    { color: #27500A; }
+  .neko-praise.great .neko-praise-text   { color: #5D4200; }
+  .neko-praise.perfect .neko-praise-text { color: #1B5E20; }
+
+  /* ━━━ 現場フロート ━━━ */
+  .float-overlay { position: fixed; inset: 0; background: rgba(30,23,71,.55); z-index: 500; display: flex; align-items: flex-end; justify-content: center; animation: fadeInOv .18s ease; }
+  @keyframes fadeInOv { from{opacity:0} to{opacity:1} }
+  .float-panel { background: white; border-radius: 20px 20px 0 0; padding: 20px 18px 32px; width: 100%; max-width: 700px; max-height: 70vh; overflow-y: auto; animation: slideUp .22s ease; box-shadow: 0 -4px 30px rgba(30,23,71,.3); }
+  @keyframes slideUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .float-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .float-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: .08em; }
+  .float-close { width: 28px; height: 28px; border-radius: 50%; background: var(--light); border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: var(--purple); }
+  .float-body { font-family: 'Noto Serif JP', serif; font-size: 14px; line-height: 2.1; color: var(--dark); background: #F8F7FF; border-radius: 10px; padding: 12px 14px; }
+  .scene-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--dark); color: var(--mid); border: none; border-radius: 8px; font-size: 12px; font-weight: 700; padding: 6px 13px; cursor: pointer; margin-bottom: 12px; font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s; }
+  .scene-btn:hover { opacity: .82; }
+
+  /* ━━━ スコア・結果 ━━━ */
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .score-card { background: var(--light); border-radius: 10px; padding: 14px; text-align: center; }
+  .score-num  { font-size: 28px; font-weight: 900; color: var(--purple); }
+  .score-lbl  { font-size: 11px; color: var(--muted); }
+  .rule-box { background: var(--dark); border-radius: 12px; padding: 14px 16px; margin-top: 14px; }
+  .rule-ttl  { color: var(--mid); font-size: 11px; font-weight: 700; margin-bottom: 8px; letter-spacing: .08em; }
+  .rule-item { color: white; font-size: 13px; line-height: 2.1; }
+
+  /* ━━━ はじめにページ ━━━ */
+  .preface-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: 20px; padding: 26px 22px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(83,74,183,.08); }
+  .preface-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .18em; color: var(--purple); margin-bottom: 12px; }
+  .preface-title { font-size: 19px; font-weight: 900; color: var(--dark); line-height: 1.55; margin-bottom: 16px; }
+  .preface-title span { color: var(--purple); }
+  .preface-body { font-size: 14px; line-height: 2; color: #3a3660; margin-bottom: 20px; }
+  .preface-body p { margin-bottom: 12px; }
+  .preface-body p:last-child { margin-bottom: 0; }
+  .preface-note { background: var(--light); border-left: 3px solid var(--purple); border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; color: var(--txt); line-height: 1.85; margin-bottom: 20px; }
+  .preface-note strong { color: var(--purple); }
+  .preface-cast { display: flex; gap: 12px; margin-bottom: 22px; }
+  .cast-card { flex: 1; background: #F8F7FF; border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+  .cast-icon  { font-size: 32px; margin-bottom: 6px; }
+  .cast-name  { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .cast-role  { font-size: 11px; color: var(--purple); font-weight: 700; background: var(--light); border-radius: 4px; padding: 2px 6px; display: inline-block; margin-bottom: 6px; }
+  .cast-desc  { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* ━━━ イントロヒーロー ━━━ */
+  .intro-hero { background: var(--dark); border-radius: 20px; padding: 26px 22px; margin-bottom: 16px; color: white; text-align: center; position: relative; overflow: hidden; }
+  .intro-hero::before { content: '🔍'; position: absolute; right: 16px; top: 12px; font-size: 56px; opacity: .08; }
+  .intro-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .18em; color: var(--mid); border: 1px solid rgba(206,203,246,.3); padding: 3px 10px; border-radius: 4px; margin-bottom: 14px; }
+  .intro-hero h1 { font-size: 20px; font-weight: 900; line-height: 1.55; margin-bottom: 12px; }
+  .intro-hero p  { font-size: 13px; color: rgba(255,255,255,.8); line-height: 1.9; }
+  .stat-row { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+  .stat-box { background: rgba(255,255,255,.08); border-radius: 10px; padding: 10px 16px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 900; color: white; }
+  .stat-lbl { font-size: 10px; color: var(--mid); }
+
+  /* ━━━ 哲学ページ ━━━ */
+  .philosophy-hero { background: var(--dark); border-radius: 20px; padding: 28px 22px; margin-bottom: 16px; color: white; position: relative; overflow: hidden; }
+  .philosophy-hero::before { content: '🔍'; position: absolute; right: 20px; top: 20px; font-size: 64px; opacity: .08; }
+  .phil-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .18em; color: var(--mid); margin-bottom: 10px; }
+  .phil-headline { font-size: 20px; font-weight: 900; line-height: 1.55; margin-bottom: 14px; color: white; }
+  .phil-headline span { color: var(--mid); }
+  .phil-body { font-size: 13px; line-height: 1.95; color: rgba(255,255,255,.85); margin-bottom: 18px; }
+  .process-strip { display: flex; gap: 0; overflow-x: auto; padding-bottom: 6px; margin-bottom: 18px; }
+  .proc-step { flex-shrink: 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .proc-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.25); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .proc-label { font-size: 9px; color: var(--mid); margin-top: 5px; text-align: center; max-width: 52px; line-height: 1.3; }
+  .proc-arrow { flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 13px; color: rgba(255,255,255,.3); font-size: 14px; margin: 0 3px; }
+
+  /* ━━━ 武器カード ━━━ */
+  .weapons-title { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--purple); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .weapons-title::before { content: '⚔️'; }
+  .weapon-card { border-radius: 12px; padding: 13px 14px; margin-bottom: 10px; border-left: 4px solid; }
+  .w1 { background: #FFF0F0; border-color: var(--tec1); }
+  .w2 { background: #F0FFFE; border-color: var(--tec2); }
+  .w3 { background: #F5F5F5; border-color: var(--tec3); }
+  .w4 { background: #FFFDE7; border-color: #D4AC0D; }
+  .w-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .w-num { font-size: 10px; font-weight: 900; letter-spacing: .05em; padding: 1px 7px; border-radius: 4px; color: white; }
+  .n1 { background: var(--tec1); } .n2 { background: var(--tec2); } .n3 { background: var(--tec3); } .n4 { background: #D4AC0D; }
+  .w-keyword { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .w-body { font-size: 12px; line-height: 1.75; color: var(--txt); }
+  .w-body .key { font-weight: 700; }
+  .w-kw-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; color: white; }
+  .p1 { background: var(--tec1); } .p2 { background: var(--tec2); } .p3 { background: var(--tec3); } .p4 { background: #D4AC0D; }
+
+  /* ━━━ 3ステップカード ━━━ */
+  .step3-wrap { margin-bottom: 16px; }
+  .s3card { display: flex; align-items: flex-start; gap: 14px; background: var(--card); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 8px; }
+  .s3icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; background: var(--dark); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .s3ttl { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .s3sub { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .s3arr { color: var(--mid); font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .s3meta { font-size: 10px; color: var(--purple); font-weight: 700; margin-top: 2px; }
+
+  /* タイトル・note表示 */
+  .title-display { background: var(--light); border: 1.5px solid var(--purple); border-radius: 10px; padding: 12px 16px; font-size: 18px; font-weight: 700; color: var(--txt); text-align: center; margin-bottom: 14px; font-family: 'Noto Serif JP', serif; }
+  /* ━━━ 証拠マーク ステップ ━━━ */
+  .mark-progress { display:flex; gap:5px; margin-bottom:14px; }
+  .mark-dot { height:5px; flex:1; border-radius:3px; background:rgba(83,74,183,.15); transition:background .3s; }
+  .mark-dot.done   { background:var(--purple); }
+  .mark-dot.active { background:var(--mid); }
+
+  .mark-card {
+    background:var(--card); border:1.5px solid var(--border);
+    border-radius:16px; overflow:hidden; margin-bottom:14px;
+    box-shadow:0 1px 8px rgba(83,74,183,.07);
+  }
+  .mark-card-hdr {
+    background:var(--dark); padding:10px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .mark-card-hdr-lbl { font-size:11px; font-weight:700; color:var(--mid); letter-spacing:.1em; }
+  .mark-card-hdr-right { font-size:11px; color:rgba(255,255,255,.5); }
+  .mark-card-body { padding:16px; }
+  .mark-text {
+    font-family:'Noto Serif JP',serif; font-size:14px; line-height:2.1;
+    color:var(--txt); margin-bottom:16px;
+  }
+  .mark-text mark {
+    background:linear-gradient(180deg,transparent 52%,rgba(255,210,0,.8) 52%);
+    border-radius:2px; padding:0 2px; font-weight:700; color:inherit;
+    animation:markGlow .6s ease;
+  }
+
+  .mark-reveal-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:12px; border-radius:10px;
+    background:var(--light); color:var(--purple);
+    border:1.5px solid var(--purple); font-size:14px; font-weight:700;
+    cursor:pointer; font-family:'Noto Sans JP',sans-serif; transition:all .15s;
+    margin-bottom:12px;
+  }
+  .mark-reveal-btn:hover { background:var(--mid); }
+
+  .mark-tec-box {
+    border-radius:12px; padding:14px 16px; margin-bottom:14px;
+    animation:fadeInUp .25s ease;
+  }
+  .mark-tec-box.t1 { background:#FFF0F0; border-left:4px solid var(--tec1); }
+  .mark-tec-box.t2 { background:#F0FFFE; border-left:4px solid var(--tec2); }
+  .mark-tec-box.t3 { background:#F5F5F5; border-left:4px solid var(--tec3); }
+  .mark-tec-box.t4 { background:#FFFDE7; border-left:4px solid #D4AC0D; }
+  .mark-tec-badge {
+    display:inline-block; font-size:10px; font-weight:900;
+    padding:2px 8px; border-radius:4px; color:white; margin-bottom:8px;
+  }
+  .mark-tec-box.t1 .mark-tec-badge { background:var(--tec1); }
+  .mark-tec-box.t2 .mark-tec-badge { background:var(--tec2); }
+  .mark-tec-box.t3 .mark-tec-badge { background:var(--tec3); }
+  .mark-tec-box.t4 .mark-tec-badge { background:#D4AC0D; }
+  .mark-tec-kw {
+    font-size:15px; font-weight:700; color:var(--dark); margin-bottom:6px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .mark-tec-kw span { font-size:11px; color:var(--muted); font-weight:400; }
+  .mark-tec-explain { font-size:13px; line-height:1.85; color:var(--txt); }
+
+  .mark-next-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:12px; border-radius:10px;
+    background:var(--purple); color:white; border:none;
+    font-size:14px; font-weight:700; cursor:pointer;
+    font-family:'Noto Sans JP',sans-serif; transition:opacity .15s;
+    animation:fadeInUp .2s ease;
+  }
+  .mark-next-btn:hover { opacity:.88; }
+  .mark-next-btn.finish { background:var(--dark); }
+
+  .note-box { background:var(--a-bg); border-left: 3px solid var(--a-br); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: var(--a-txt); margin-bottom: 14px; line-height: 1.7; }
+
+  /* ━━━ 花吹雪 ━━━ */
+  #confetti-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 999;
+  }
+
+  /* ━━━ 不正解ヒントボックス ━━━ */
+  .wrong-hint-box {
+    background: #FFF3CD; border: 1.5px solid #D4AC0D;
+    border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+    font-size: 13px; line-height: 1.85; color: #5D4200;
+    animation: fadeInUp .3s ease;
+  }
+  .wrong-hint-box strong { color: var(--dark); }
+  .reset-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px; border-radius: 10px; margin-top: 10px;
+    background: white; color: var(--purple); border: 2px solid var(--purple);
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
+  }
+  .reset-btn:hover { background: var(--light); }
+
+  /* ━━━ 解答レイアウト（固定問題＋スライド本文） ━━━ */
+  .answer-layout {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  /* 上部固定エリア：本文スライダー */
+  .text-slider-wrap {
+    background: #F8F7FF; border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 14px; overflow: hidden;
+  }
+  .text-slider-header {
+    background: var(--dark); padding: 8px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .text-slider-label { font-size: 10px; font-weight: 700; color: var(--mid); letter-spacing: .1em; }
+  .text-slider-nav { display: flex; gap: 6px; align-items: center; }
+  .tsnav-btn {
+    background: rgba(255,255,255,.15); border: none; color: white;
+    border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background .15s;
+  }
+  .tsnav-btn:hover { background: rgba(255,255,255,.25); }
+  .tsnav-btn:disabled { opacity: .35; cursor: default; }
+  .tsnav-cur { font-size: 11px; color: var(--mid); }
+  .text-slider-body {
+    padding: 14px 16px;
+    font-family: 'Noto Serif JP', serif; font-size: 14px; line-height: 2.1;
+    color: var(--txt); min-height: 100px;
+    animation: slideIn .25s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateX(8px)} to{opacity:1;transform:translateX(0)} }
+  .text-slider-body mark {
+    background: linear-gradient(180deg, transparent 52%, rgba(255,210,0,.75) 52%);
+    border-radius: 2px; padding: 0 1px; font-weight: 700; color: inherit;
+  }
+  .text-slider-plabel {
+    font-size: 10px; font-weight: 700; color: var(--purple);
+    letter-spacing: .1em; margin-bottom: 8px;
+  }
+
+  /* ヒントポップアップ */
+  .hint-popup-overlay {
+    position: fixed; inset: 0; background: rgba(30,23,71,.5);
+    z-index: 600; display: flex; align-items: flex-end; justify-content: center;
+    animation: fadeInOv .18s ease;
+  }
+  .hint-popup {
+    background: white; border-radius: 20px 20px 0 0;
+    padding: 22px 20px 36px; width: 100%; max-width: 700px;
+    animation: slideUp .22s ease;
+    box-shadow: 0 -4px 30px rgba(30,23,71,.3);
+  }
+  .hint-popup-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  }
+  .hint-popup-title { font-size: 13px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 6px; }
+  .hint-popup-close {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--light); border: none; cursor: pointer;
+    font-size: 15px; display: flex; align-items: center; justify-content: center;
+    color: var(--purple);
+  }
+  .hint-popup-body {
+    font-size: 14px; line-height: 1.9; color: var(--txt);
+  }
+  .hint-popup-tec {
+    margin-top: 12px; background: var(--dark); border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; color: #E0E0FF; line-height: 1.8;
+  }
+  .hint-open-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #FFFDE7; color: #7B6000; border: 1px solid #D4AC0D;
+    border-radius: 8px; font-size: 12px; font-weight: 700;
+    padding: 6px 14px; cursor: pointer; margin-bottom: 12px;
+    font-family: 'Noto Sans JP', sans-serif; transition: opacity .15s;
+  }
+  .hint-open-btn:hover { opacity: .82; }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="hdr">
+  <div class="hdr-ic">🔍</div>
+  <div class="hdr-ttl">読解捜査室　— ネコ警部と新人</div>
+  <div class="hdr-sub" id="step-label">事件発生</div>
 </div>
-
-<div class="text-title">📖 練習用の本文 — この文を読んで捜査してください</div>
-<div class="legend"><div class="lg"><div class="lg-dot" style="background:#FFF9C4"></div>ポイント</div><div class="lg"><div class="lg-dot" style="background:#E3F2FD"></div>keyword</div></div>
-
-<div class="para-block" id="para1"><span class="para-label">段落①</span>
-太郎は<span class="pt1">毎朝、近所の公園を走るのが日課</span>だった。雨の日も風の日も、<span class="pt1">一日も休まず走り続けていた</span>。
-<div class="para-btns"><button class="para-btn" id="btn_pt1" onclick="showPoint(1)">💡 ポイント</button></div></div>
-
-<div class="para-block" id="para2"><span class="para-label">段落②</span>
-ある朝、公園のベンチに<span class="pt2">一匹の猫が座っていた</span>。太郎は足を止めた。猫はじっとこちらを見ている。太郎は<span class="pt2">しゃがんで手を差し出した</span>。猫は逃げなかった。
-<div class="para-btns"><button class="para-btn" id="btn_pt2" onclick="showPoint(2)">💡 ポイント</button></div></div>
-
-<div class="para-block" id="para3"><span class="para-label">段落③</span>
-それから毎朝、太郎が公園に行くと、<span class="pt3">猫は同じベンチに座っていた</span>。太郎は走る前に必ず猫に声をかけるようになった。<span class="kw3">しかし</span>、<span class="pt3">猫は一度も太郎に近づこうとはしなかった</span>。いつも同じ距離を保っていた。
-<div class="para-btns"><button class="para-btn" id="btn_pt3" onclick="showPoint(3)">💡 ポイント</button><button class="para-btn" id="btn_kw3" onclick="showKeyword(3)">🔑 keyword</button></div></div>
-
-<div class="para-block" id="para4"><span class="para-label">段落④</span>
-ある日、猫がいなかった。次の日も、その次の日もいなかった。太郎は<span class="pt4">走りながら何度もベンチのほうを振り返った</span>。<span class="kw4">そのとき</span>、太郎は気づいた。<span class="pt4">あの猫は自分にとって、走る理由の一つになっていたのだ</span>。
-<div class="para-btns"><button class="para-btn" id="btn_pt4" onclick="showPoint(4)">💡 ポイント</button><button class="para-btn" id="btn_kw4" onclick="showKeyword(4)">🔑 keyword</button></div></div>
-</div>
-
-<div class="col-qa" id="colQa">
-<div class="summary" id="summary"><div class="sum-title">📝 捜査メモ</div><div id="sumItems"></div></div>
-
-<!-- q1 正解:③(idx2) -->
-<div class="popup p-para" id="q1"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落①の要点は？</div></div><div class="p-body">
-<div class="choices4" id="q1c">
-<button class="cb" onclick="answerQ('q1',0)">太郎は毎朝友達と一緒に公園で遊んでいた</button>
-<button class="cb" onclick="answerQ('q1',1)">太郎は雨の日は走らずに家で休んでいた</button>
-<button class="cb" onclick="answerQ('q1',2)">太郎は毎朝欠かさず公園を走るのが日課だった</button>
-<button class="cb" onclick="answerQ('q1',3)">太郎は公園で猫を探すのが日課になっていた</button>
-</div>
-<div class="fb fb-ok" id="q1ok">そう。「毎朝」「一日も休まず」がポイントです。</div>
-<div class="fb fb-ng" id="q1ng">ポイントを確認してください。「友達と」「雨の日は休む」「猫を探す」は書いてありますか？</div></div></div>
-
-<!-- q2 正解:①(idx0) -->
-<div class="popup p-para" id="q2"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落②の要点は？</div></div><div class="p-body">
-<div class="choices4" id="q2c">
-<button class="cb" onclick="answerQ('q2',0)">公園のベンチに猫がいて、太郎が手を差し出しても逃げなかった</button>
-<button class="cb" onclick="answerQ('q2',1)">太郎が猫を捕まえて家に連れて帰ろうとした場面</button>
-<button class="cb" onclick="answerQ('q2',2)">猫が太郎に飛びついて甘えてきた場面を描いている</button>
-<button class="cb" onclick="answerQ('q2',3)">太郎が走るのをやめて猫と遊び始めた場面である</button>
-</div>
-<div class="fb fb-ok" id="q2ok">そう。「逃げなかった」がポイント。近づかないけど逃げない。この距離感が大事です。</div>
-<div class="fb fb-ng" id="q2ng">「連れて帰る」「飛びついた」「遊び始めた」は本文に書いてありますか？ 確認してください。</div></div></div>
-
-<!-- q3 正解:④(idx3) -->
-<div class="popup p-para" id="q3"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落③の要点は？</div></div><div class="p-body">
-<div class="choices4" id="q3c">
-<button class="cb" onclick="answerQ('q3',0)">猫が毎日太郎に近づいてきて仲良くなった場面</button>
-<button class="cb" onclick="answerQ('q3',1)">太郎が猫を追いかけて走るようになった場面を描く</button>
-<button class="cb" onclick="answerQ('q3',2)">猫が他の場所に移動してしまった場面を描いている</button>
-<button class="cb" onclick="answerQ('q3',3)">毎朝同じベンチにいるが一度も近づかず距離を保っていた</button>
-</div>
-<div class="fb fb-ok" id="q3ok">そう。「しかし」の後がポイント。いつも来るけど近づかない。この矛盾が大事です。</div>
-<div class="fb fb-ng" id="q3ng">keyword「しかし」の後を読んでください。「近づいた」ですか「近づかなかった」ですか？</div></div></div>
-
-<!-- q4 正解:②(idx1) -->
-<div class="popup p-para" id="q4"><div class="p-head"><div class="p-icon">📝</div><div class="p-name">段落④の要点は？</div></div><div class="p-body">
-<div class="choices4" id="q4c">
-<button class="cb" onclick="answerQ('q4',0)">猫が戻ってきて太郎はとても喜んだ場面を描いている</button>
-<button class="cb" onclick="answerQ('q4',1)">猫がいなくなって初めて、猫が走る理由の一つだったと気づいた</button>
-<button class="cb" onclick="answerQ('q4',2)">太郎が走るのをやめて猫を探しに行く場面を描いている</button>
-<button class="cb" onclick="answerQ('q4',3)">太郎が新しい猫を見つけて飼い始めた場面を述べている</button>
-</div>
-<div class="fb fb-ok" id="q4ok">そう。「そのとき気づいた」がポイント。いなくなって初めて大切さに気づいた。</div>
-<div class="fb fb-ng" id="q4ng">「戻ってきた」「探しに行く」「新しい猫」は本文に書いてありますか？</div></div></div>
-
-<hr class="section-divider">
-
-<!-- 全体の要点 正解:③(idx2) -->
-<div class="popup p-main" id="qMain"><div class="p-head"><div class="p-icon">🎯</div><div class="p-name">この文章全体の要点はどれですか？</div></div><div class="p-body">
-<div class="choices5" id="qMainc">
-<button class="cb" onclick="answerQ('qMain',0)">猫を飼うことの楽しさを伝えている文章である</button>
-<button class="cb" onclick="answerQ('qMain',1)">毎日走ることが健康に良いという話を伝えている</button>
-<button class="cb" onclick="answerQ('qMain',2)">日常の中で気づかないうちに大切になっていた存在を失って初めて気づく話</button>
-<button class="cb" onclick="answerQ('qMain',3)">太郎と猫が親友になるまでの物語を描いている</button>
-<button class="cb" onclick="answerQ('qMain',4)">公園の自然環境の大切さを訴えている文章である</button>
-</div>
-<div class="fb fb-ok" id="qMainok">その通りです。捜査メモを見返してください。要点がつながっています。</div>
-<div class="fb fb-ng" id="qMainng">捜査メモを上から順に読んでみてください。全体の流れが見えます。</div></div></div>
-
-<hr class="section-divider">
-
-<div class="rule-card" id="rule1" style="display:none">
-<h4>🔍 消去ルール① — 本文に書いていないことは消す</h4>
-<p>選択肢の中に「本文に書かれていない内容」が混ざっています。<br>本文に戻って確認し、書いていないものを消しましょう。</p>
-</div>
-
-<!-- quiz1 正解:④(idx3) -->
-<div class="popup p-quiz" id="quiz1"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題1 — 「書いていないこと」を消す</div></div><div class="p-body">
-太郎が公園を走り続けた理由として本文に書かれていることはどれですか。
-<div class="choices5" id="quiz1c">
-<button class="cb" id="quiz1_0" onclick="quizClick('quiz1',0)">健康診断で医者に走るように言われたからである</button>
-<button class="cb" id="quiz1_1" onclick="quizClick('quiz1',1)">マラソン大会に出場するために練習していたから</button>
-<button class="cb" id="quiz1_2" onclick="quizClick('quiz1',2)">友達に誘われて一緒に走るようになったからだ</button>
-<button class="cb" id="quiz1_3" onclick="quizClick('quiz1',3)">毎朝走ることが日課で雨の日も風の日も休まなかった</button>
-<button class="cb" id="quiz1_4" onclick="quizClick('quiz1',4)">猫に会うために走り始めたと最初から書いてある</button>
-</div>
-<button class="elim-btn" id="elim_quiz1" onclick="startElim('quiz1')">🔍 2つ消去しよう</button>
-<div class="elim-count" id="elim_quiz1_count">あと <span id="elim_quiz1_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
-<div class="fb fb-warn" id="quiz1warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
-<div class="answer-btn-area" id="quiz1_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz1')">消去完了！ 答えを選ぶ →</button></div>
-<div class="fb fb-ok" id="quiz1ok">正解です。「医者」「大会」「友達」「猫のために走り始めた」はすべて本文に書かれていません。本文に書いてあることだけを選ぶ。これが基本です。</div>
-<div class="fb fb-ng" id="quiz1ng">段落①をもう一度読んでください。走る理由として書かれていることは何ですか。</div></div></div>
-
-<div class="rule-card" id="rule2" style="display:none">
-<h4>🔍 消去ルール② — 本文と逆のことは消す</h4>
-<p>選択肢の中に「本文と反対のこと」が混ざっています。<br>本文の内容と矛盾していないか確認しましょう。</p>
-</div>
-
-<!-- quiz2 正解:①(idx0) -->
-<div class="popup p-quiz" id="quiz2"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題2 — 「逆のこと」を消す</div></div><div class="p-body">
-太郎と猫の関係について本文の内容と合っているのはどれですか。
-<div class="choices5" id="quiz2c">
-<button class="cb" id="quiz2_0" onclick="quizClick('quiz2',0)">猫は毎朝同じベンチにいたが太郎には近づかなかった</button>
-<button class="cb" id="quiz2_1" onclick="quizClick('quiz2',1)">猫は毎日太郎に近づいて甘えるようになっていった</button>
-<button class="cb" id="quiz2_2" onclick="quizClick('quiz2',2)">太郎は猫に興味がなくいつも無視して走り過ぎた</button>
-<button class="cb" id="quiz2_3" onclick="quizClick('quiz2',3)">猫は太郎を見ると怖がって毎回逃げてしまっていた</button>
-<button class="cb" id="quiz2_4" onclick="quizClick('quiz2',4)">太郎は猫を捕まえて自分の家で飼い始めたのである</button>
-</div>
-<button class="elim-btn" id="elim_quiz2" onclick="startElim('quiz2')">🔍 2つ消去しよう</button>
-<div class="elim-count" id="elim_quiz2_count">あと <span id="elim_quiz2_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
-<div class="fb fb-warn" id="quiz2warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
-<div class="answer-btn-area" id="quiz2_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz2')">消去完了！ 答えを選ぶ →</button></div>
-<div class="fb fb-ok" id="quiz2ok">正解です。「近づいて甘えた」「無視した」「逃げた」「飼い始めた」は本文と逆か、書かれていません。本文と矛盾する選択肢を消す。これが2つ目のルールです。</div>
-<div class="fb fb-ng" id="quiz2ng">段落③を読んでください。猫は太郎に「近づいた」ですか「近づかなかった」ですか。</div></div></div>
-
-<div class="rule-card" id="rule3" style="display:none">
-<h4>🔍 消去ルール③ — 極端な言葉を疑う</h4>
-<p>「絶対」「必ず」「すべて」「一番」などの極端な言葉がある選択肢は要注意。<br>本文にそこまで強い表現がなければ、消去の候補です。</p>
-</div>
-
-<!-- quiz3 正解:③(idx2) -->
-<div class="popup p-quiz" id="quiz3"><div class="p-head"><div class="p-icon">🔍</div><div class="p-name">読解捜査 問題3 — 「極端な言葉」を疑う</div></div><div class="p-body">
-太郎が猫がいなくなって気づいたこととして最も適当なものはどれですか。
-<div class="choices5" id="quiz3c">
-<button class="cb" id="quiz3_0" onclick="quizClick('quiz3',0)">猫がいなければ絶対に走れないと確信した</button>
-<button class="cb" id="quiz3_1" onclick="quizClick('quiz3',1)">猫はすべての人間にとって最も大切な存在である</button>
-<button class="cb" id="quiz3_2" onclick="quizClick('quiz3',2)">猫が自分にとって走る理由の一つになっていた</button>
-<button class="cb" id="quiz3_3" onclick="quizClick('quiz3',3)">猫がいない公園には何の価値もないと思い知った</button>
-<button class="cb" id="quiz3_4" onclick="quizClick('quiz3',4)">猫は必ず戻ってくると太郎は強く信じていた</button>
-</div>
-<button class="elim-btn" id="elim_quiz3" onclick="startElim('quiz3')">🔍 2つ消去しよう</button>
-<div class="elim-count" id="elim_quiz3_count">あと <span id="elim_quiz3_remain">2</span> つ消去できます。「違う」と思う選択肢をタップしてください。</div>
-<div class="fb fb-warn" id="quiz3warn">💡 それは合っていそうですよ。別のものを消去しましょう。</div>
-<div class="answer-btn-area" id="quiz3_answerbtn"><button class="answer-btn" onclick="enterAnswerMode('quiz3')">消去完了！ 答えを選ぶ →</button></div>
-<div class="fb fb-ok" id="quiz3ok">正解です。「絶対に走れない」「すべての人間にとって最も」「何の価値もない」「必ず戻ってくる」。これらはすべて極端すぎます。本文は「理由の一つ」と控えめに書いています。極端な言葉を疑う。これが3つ目のルールです。</div>
-<div class="fb fb-ng" id="quiz3ng">段落④を読んでください。「理由の一つ」と書いてあります。「絶対」「すべて」「必ず」は本文にありますか。</div></div></div>
-
-<div class="final-qa" id="final">
-消去法の3つのルール、身につきました。<br><br>
-<strong>① 本文に書いていないことは消す</strong><br>
-<strong>② 本文と逆のことは消す</strong><br>
-<strong>③ 極端な言葉を疑う</strong><br><br>
-この3つだけで、<br>
-選択肢を確実に減らせます。<br><br>
-では、「読んでいこう」第1回へ進みましょう。
-</div>
-
-<button class="btn-start" id="btnStart" onclick="startLesson()">🔍 捜査開始 →</button>
-<button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button>
-</div></div></div>
+<div class="prog-out"><div class="prog-in" id="prog" style="width:0%"></div></div>
+<div class="unit-tabs" id="unitTabs"></div>
+<div class="wrap" id="app"></div>
 
 <script>
-var correctAnswers={q1:2,q2:0,q3:3,q4:1,qMain:2,quiz1:3,quiz2:0,quiz3:2};
-var summaryTexts={q1:'① 太郎は毎朝欠かさず公園を走っていた',q2:'② ベンチの猫は手を差し出しても逃げなかった',q3:'③ 毎朝いるが一度も近づかず距離を保っていた',q4:'④ いなくなって初めて猫が走る理由の一つだったと気づいた'};
-var ruleCards={quiz1:'rule1',quiz2:'rule2',quiz3:'rule3'};
-var stepOrder=['q1','q2','q3','q4','qMain','quiz1','quiz2','quiz3'];
-var currentStep=0,waiting=false;
-var progValues={q1:10,q2:22,q3:34,q4:46,qMain:56,quiz1:72,quiz2:86,quiz3:98};
-var focusParas={q1:'para1',q2:'para2',q3:'para3',q4:'para4',qMain:null,quiz1:'para1',quiz2:'para3',quiz3:'para4'};
-var prevFocus=null,elimState={};
-function startLesson(){document.getElementById('btnStart').style.display='none';nextStep();}
-function nextStep(){
-if(waiting)return;if(currentStep>=stepOrder.length){showFinal();return;}
-var sid=stepOrder[currentStep];
-document.getElementById('prog').style.width=progValues[sid]+'%';
-hideAllPopups();
-if(prevFocus){document.getElementById(prevFocus).classList.remove('focus-glow');prevFocus=null;}
-// Show rule card if applicable
-if(ruleCards[sid]){document.getElementById(ruleCards[sid]).style.display='block';}
-var fp=focusParas[sid];
-if(fp){var el=document.getElementById(fp);el.classList.add('focus-glow');prevFocus=fp;
-var c=document.getElementById('colText');c.scrollTo({top:el.offsetTop-c.clientHeight/4,behavior:'smooth'});}
-var p=document.getElementById(sid);if(p)p.classList.add('on');
-waiting=true;document.getElementById('btnNext').style.display='none';
-setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'nearest'});},200);
-currentStep++;
+/* ════════════════════════════════════════
+   データ定義
+════════════════════════════════════════ */
+
+// 単元0：はじめに（固定）
+const UNIT0 = { label:'📖 はじめに', id:0 };
+
+// 単元データ（本文・問題）
+const UNITS = [
+  // ── 1: スロートラベル ──────────────────────
+  {
+    id: 1,
+    label: '🌍 スロートラベル',
+    title: 'スロートラベルの速さとは何か',
+    note: 'スロートラベル＝新幹線・飛行機を使わず、在来線・船・徒歩で移動し旅そのものを目的にするスタイル。',
+    paras: [
+      {
+        id:'p1', label:'第１段落', tec:{keyword:'という',badge:'テクニック1',color:'t1',explain:'「〜という言葉をよく耳にする」——定義を導く表現。この後に「スロートラベルとは何か」が続くよ。'},
+        text:'近ごろ、「スロートラベル」という言葉をよく耳にする。新幹線や飛行機を使わず、在来線や船、あるいは徒歩で移動することで、旅そのものを目的にしようという考え方だ。',
+        highlighted:'近ごろ、「スロートラベル」という言葉をよく耳にする。<mark>新幹線や飛行機を使わず、在来線や船、あるいは徒歩で移動することで、旅そのものを目的にしようという考え方だ。</mark>',
+        hint:'「スロートラベル」の定義がここに。「これは」「つまり」に続く部分——そこが要点よ。',
+        explain:'この段落は「スロートラベルとは何か」という定義を述べています。新幹線・飛行機を使わず、ゆっくり移動することで旅そのものを楽しもうという考え方です。',
+        opts:['新幹線や飛行機で素早く目的地に着く旅行スタイル','在来線・船・徒歩でゆっくり移動し旅そのものを目的にする考え方','SNSで話題のスポットをまわる効率的な観光スタイル','宿泊費を節約しながら多くの地域を巡るバックパッカー旅行'],
+        ans: 1
+      },
+      {
+        id:'p2', label:'第２段落', tec:{keyword:'目的地には着くが',badge:'テクニック2',color:'t2',explain:'「たしかに……が」——逆接の流れ。後ろの「道中が消えてしまった」が筆者の本音・要点だよ。'},
+        text:'たしかに、現代の旅はあまりに速くなりすぎたのかもしれない。東京から博多まで五時間。かつては二日がかりだった旅が、今は半日で終わる。目的地には着くが、「道中」がどこかに消えてしまった気がする。',
+        highlighted:'たしかに、現代の旅はあまりに速くなりすぎたのかもしれない。東京から博多まで五時間。かつては二日がかりだった旅が、今は半日で終わる。<mark>目的地には着くが、「道中」がどこかに消えてしまった気がする。</mark>',
+        hint:'「しかし」に似た逆接の流れ——後半に筆者の本音が出てくる。「道中」という言葉に注目して。',
+        explain:'この段落は「現代の旅の問題点」を述べています。速くなりすぎた結果、移動の途中の体験——「道中」が失われてしまったという筆者の問題提起です。',
+        opts:['旅の速さが増した結果、道中の体験が失われてしまった','現代の交通は以前と比べてほとんど変わっていない','東京から博多への旅はかつて半日で終わっていた','旅人の数が増えすぎて、在来線が混雑している'],
+        ans: 0
+      },
+      {
+        id:'p3', label:'第３段落', tec:{keyword:'「ゆっくり移動することで',badge:'テクニック4',color:'t4',explain:'カギカッコ「　」——支持者の言葉が引用されている。カギカッコの中が要点（証拠）だよ。'},
+        text:'スロートラベルの支持者は言う。「ゆっくり移動することで、土地の空気を吸い、人と話し、偶然の出会いを楽しめるのだ」と。たしかに、在来線の窓から見える田んぼや漁村の景色は、高速列車の車窓からは決して見えない。',
+        highlighted:'スロートラベルの支持者は言う。<mark>「ゆっくり移動することで、土地の空気を吸い、人と話し、偶然の出会いを楽しめるのだ」</mark>と。たしかに、在来線の窓から見える田んぼや漁村の景色は、高速列車の車窓からは決して見えない。',
+        hint:'支持者の主張がカギカッコで引用されているよ。そこが要点。',
+        explain:'この段落はスロートラベル支持者の主張を示しています。ゆっくり移動することで、土地の空気・人との会話・偶然の出会いが楽しめるという内容です。',
+        opts:['高速列車の方が在来線より窓からの景色がきれいだ','スロートラベルの支持者は主に高齢者に多い','ゆっくり移動することで土地の空気や人との出会いが楽しめる','在来線は新幹線より安全だという意見がある'],
+        ans: 2
+      },
+      {
+        id:'p4', label:'第４段落', tec:{keyword:'それでも',badge:'テクニック2',color:'t2',explain:'「それでも」——逆接。この後に筆者の核心的な主張が来るよ。「問い直すことは……問い直すことでもある」——これが動機！'},
+        text:'それでも筆者は思う。旅の「速さ」を問い直すことは、「自分が何を求めているか」を問い直すことでもある。速さをあえて手放すとき、人は何かを取り戻そうとしている——。',
+        highlighted:'それでも筆者は思う。<mark>旅の「速さ」を問い直すことは、「自分が何を求めているか」を問い直すことでもある。</mark>速さをあえて手放すとき、人は何かを取り戻そうとしている——。',
+        hint:'「それでも」は逆説の言葉——後ろが筆者の一番言いたいこと（主張）だよ。',
+        explain:'この段落は筆者の核心的な主張です。旅の速さを見直すことは、自分自身が何を求めているかを問い直すことでもある、という深いメッセージです。',
+        opts:['スロートラベルは贅沢な旅行であり、時間のある人だけが楽しめる','速い旅行は現代社会では避けられない必要悪だ','旅の速さを問い直すことは自分が何を求めているかを問い直すことでもある','すべての旅人はスロートラベルを実践すべきだ'],
+        ans: 2
+      }
+    ],
+    qs: [
+      {
+        paraId:'p2', keyword:'道中',
+        q:'第２段落の「道中がどこかに消えてしまった」とはどういうことか。',
+        clue:'【テクニック2】「たしかに……しかし」の流れの後半——筆者が「でも……」と言いたかった部分に注目してみて。',
+        opts:['旅をする人が減り、駅や港などの施設が閉鎖されていったということ','速くなりすぎた旅では、目的地の印象が薄れてしまうということ','新幹線が増えたせいで在来線の本数が減り、乗りたくても乗れなくなったということ','移動時間が短くなりすぎて、旅の途中の経験や過程が失われてしまったということ'],
+        elim:['「施設が閉鎖」は本文にまったく書かれていない。①と同じ罠だよ。',null,'「在来線の本数が減った」という内容は本文にない。本文が言っていないことを加えた選択肢——これはないな。',null],
+        ans:3,
+        neko_ok:'いいね！　「道中が消えた」の意味、ちゃんと本文で確認できたよ。',
+        neko_ng:'惜しかったよ。でも消去法で絞れてきてるよ。次に活かそう。',
+        ok:'✅ 正解。速くなりすぎた移動では「途中の体験・過程」が失われる——それが筆者の言いたかったことだよ。',
+        ng:'⚠️ もう一度。「道中」とは何だろう？　本文の文脈をもう少し確認してみよう。'
+      },
+      {
+        paraId:'p3', keyword:'偶然の出会い',
+        q:'スロートラベルの「支持者」が主張する内容として、本文に書かれているものはどれか。',
+        clue:'【テクニック4】第３段落のカギカッコ——支持者の言葉がそのまま引用されてるよ。',
+        opts:['新幹線や飛行機はCO₂排出量が多く、環境に悪影響を与えている','在来線の車窓からは高速列車では見えない景色が広がっている','ゆっくり移動することで、土地の空気や人との偶然の出会いが楽しめる','スロートラベルは安全性が高く、事故のリスクが少ない'],
+        elim:['「CO₂・環境問題」は本文にない。書いてないことを加えた罠——これは消去できるよ。',null,null,'「安全性・事故リスク」も本文にない。①と同じく本文の外の話だよ。'],
+        ans:2,
+        neko_ok:'やるな！　カギカッコの中——支持者の言葉をちゃんと探せたよ。',
+        neko_ng:'惜しい。第３段落のカギカッコの中にそのまま書いてあるよ。',
+        ok:'✅ 正解。第３段落の引用「土地の空気を吸い、人と話し、偶然の出会いを楽しめる」——証拠確定。',
+        ng:'⚠️ 第３段落のカギカッコ内をもう一度確認してみよう。'
+      },
+      {
+        paraId:'p4', keyword:'問い直す',
+        q:'この文章を通じた筆者の主張として、もっとも適切なものはどれか。',
+        clue:'【テクニック2】最終段落の「それでも筆者は思う」——「それでも」の後が筆者の核心的な主張だよ。',
+        opts:['現代人はすべての旅でスロートラベルを実践すべきだ','旅の「速さ」を手放すことで、人は失われた道中を取り戻そうとしている','旅の速さを問い直すことは、自分が何を求めているかを見つめ直す機会になりうる','スロートラベルは贅沢であり、経済的に豊かな人だけが楽しめるものだ'],
+        elim:['「すべての旅で実践すべき」——「すべて」という断言語が危険。本文はそこまで言っていないよ。',null,null,'筆者はスロートラベルを批判しているわけじゃないし、「贅沢」とも決めていない。'],
+        ans:2,
+        neko_ok:'すごいぞ！　最終段落の主張、完璧に捉えてくれたよ。',
+        neko_ng:'あともう少し。最終段落の「それでも」の後をもう一度見てみよう。',
+        ok:'✅ 正解。「旅の速さを問い直すことは、自分が何を求めているかを問い直すこと」——事件解決！',
+        ng:'⚠️ 最終段落の「それでも筆者は思う」の後に核心があるよ。'
+      }
+    ]
+  },
+
+  // ── 2: 虫の声とわびさび ──────────────────
+  {
+    id: 2,
+    label: '🎵 虫の声とわびさび',
+    title: '虫の声がつなぐもの',
+    note: 'わびさび＝不完全さや儚さの中に美しさを見出す、日本独自の美意識。',
+    paras: [
+      {
+        id:'p1', label:'第１段落', tec:{keyword:'そのものだ',badge:'テクニック1',color:'t1',explain:'「〜そのものだ」——断定の表現。「虫の声＝秋の情緒そのものだ」——要点は最後の一文にあるよ。'},
+        text:'秋の夜、窓を開けると虫の声が聞こえてくる。コオロギ、鈴虫、松虫——それぞれに異なる音色で鳴く虫たちは、日本人にとって「秋の情緒」そのものだ。',
+        highlighted:'秋の夜、窓を開けると虫の声が聞こえてくる。コオロギ、鈴虫、松虫——<mark>それぞれに異なる音色で鳴く虫たちは、日本人にとって「秋の情緒」そのものだ。</mark>',
+        hint:'最後の一文——「つまり」「そのものだ」で締まっているときは、そこが要点よ。',
+        explain:'この段落は「虫の声＝日本人にとっての秋の情緒」という話題の導入です。',
+        opts:['虫の声は日本人にとって秋の情緒そのものだ','虫の声は日本人にとって耳障りな雑音だ','虫の声は外国人にとっても心地よいものだ','コオロギは日本に生息する唯一の虫だ'],
+        ans: 0
+      },
+      {
+        id:'p2', label:'第２段落', tec:{keyword:'ところが',badge:'テクニック2',color:'t2',explain:'「ところが」——逆接の言葉。前の話をひっくり返す。この後に「文化によって受け取り方が異なる」という要点が出てくるよ。'},
+        text:'ところが、外国から来た人たちの多くは、この虫の声を「雑音」として聞くことがあるという。同じ音でも、育ってきた文化によって受け取り方がまったく異なるのだ。',
+        highlighted:'ところが、外国から来た人たちの多くは、この虫の声を「雑音」として聞くことがあるという。<mark>同じ音でも、育ってきた文化によって受け取り方がまったく異なるのだ。</mark>',
+        hint:'「ところが」は逆接——後ろに筆者が言いたかった本音が来るよ。',
+        explain:'この段落は「文化によって音の受け取り方が違う」という主張です。外国人の例はその証拠として使われています。',
+        opts:['外国人は日本の自然が好きではない','虫の声は科学的に騒音と証明されている','日本の虫は外国の虫より大きな声で鳴く','同じ音でも文化的背景によって受け取り方がまったく異なる'],
+        ans: 3
+      },
+      {
+        id:'p3', label:'第３段落', tec:{keyword:'それが',badge:'テクニック4',color:'t4',explain:'「それが「わびさび」の本質だ」——指示語「それ」の直前に答えがある。「不完全さや儚さの中に美しさを見出す感覚」——これが要点だよ。'},
+        text:'日本語には「わびさび」という言葉がある。この言葉は外国語にほとんど翻訳できない。不完全さや儚さの中に美しさを見出す感覚——それが「わびさび」の本質だ。',
+        highlighted:'日本語には「わびさび」という言葉がある。この言葉は外国語にほとんど翻訳できない。<mark>不完全さや儚さの中に美しさを見出す感覚——それが「わびさび」の本質だ。</mark>',
+        hint:'「それが〜の本質だ」——「それ」は何を指している？　直前を見てね。',
+        explain:'この段落は「わびさび」の定義を説明しています。不完全さや儚さの中に美を見出す感覚——これが本質です。',
+        opts:['日本語は外国語より翻訳が難しい言語だ','わびさびとは日本の伝統的な清潔概念だ','不完全さや儚さの中に美しさを見出す感覚がわびさびの本質だ','わびさびは現代では使われなくなった言葉だ'],
+        ans: 2
+      },
+      {
+        id:'p4', label:'第４段落', tec:{keyword:'筆者は思う',badge:'テクニック1',color:'t1',explain:'「筆者は思う」——主張の宣言。この直後が核心。「むしろ積極的に守り伝えていく必要がある」——これが動機！'},
+        text:'筆者は思う。グローバル化が進む今、それぞれの文化が育ててきた独自の美意識は、むしろ積極的に守り伝えていく必要があるのではないかと。虫の声ひとつにも、その文化の歴史と感性が凝縮されている。',
+        highlighted:'筆者は思う。<mark>グローバル化が進む今、それぞれの文化が育ててきた独自の美意識は、むしろ積極的に守り伝えていく必要があるのではないかと。</mark>虫の声ひとつにも、その文化の歴史と感性が凝縮されている。',
+        hint:'「筆者は思う」の後——これが主張の核心だよ。',
+        explain:'この段落は筆者の主張です。グローバル化の中でも、各文化の美意識を積極的に守り伝えていくべき、という結論です。',
+        opts:['グローバル化によってすべての文化は統一されるべきだ','各文化が育ててきた独自の美意識を積極的に守り伝えていく必要がある','虫の声は今後消滅していく可能性がある','日本文化は外国文化より優れている'],
+        ans: 1
+      }
+    ],
+    qs: [
+      {
+        paraId:'p2', keyword:'文化',
+        q:'「外国から来た人たちが虫の声を雑音として聞く」という事例は、本文でどのような主張の根拠として使われているか。',
+        clue:'【テクニック2】「ところが」の後——外国人の例は何を言うために出てきたのかな。',
+        opts:['外国人は日本の自然環境に慣れていないため、虫の声を不快に感じるということ','虫の声はもともと雑音であり、日本人が美化しすぎているということ','音の好みは個人の感覚の違いにすぎず、文化とは関係ないということ','同じ音でも文化的背景によって受け取り方がまったく異なるということ'],
+        elim:['「慣れていないから」という原因を付け加えた罠。本文はそこまで言っていないよ。','「もともと雑音」は本文の主旨と逆だよ。筆者は虫の声の価値を認めているの。',null,null],
+        ans:3,
+        neko_ok:'いいね！　外国人の例が何のために使われているか、ちゃんと読めてたよ。',
+        neko_ng:'惜しかったよ。「ところが」の後の結論文をもう一度確認してみよう。',
+        ok:'✅ 正解。「同じ音でも文化によって受け取り方がまったく異なる」——これが外国人の例の役割だよ。',
+        ng:'⚠️ 第２段落の最後の文に答えがあるよ。もう一度確認してみよう。'
+      },
+      {
+        paraId:'p3', keyword:'わびさび',
+        q:'本文での「わびさび」の説明として正しいものはどれか。',
+        clue:'【テクニック4】「それが『わびさび』の本質だ」——「それ」の直前を確認してみてね。',
+        opts:['消えゆくものへの哀愁を美として感じる、日本人だけが持つ特別な感情','不完全さや儚さの中に美しさを見出す感覚で、外国語にはほとんど翻訳できない','自然の壮大さや永遠性の中に美を見出す感覚で、外国語にはほとんど翻訳できない','古いものや汚れたものを大切にする日本独自の清潔概念'],
+        elim:[null,null,'「壮大さや永遠性」は本文と逆。わびさびは「儚さ・不完全さ」にあるんだよ。','「清潔概念」は本文にまったく書かれていない。これは消去できるね。'],
+        ans:1,
+        neko_ok:'やるな！　「それ」の直前——本文の定義をちゃんと見つけてくれたよ。',
+        neko_ng:'惜しい。第３段落の「——それが」の直前の部分をもう一度見てみよう。',
+        ok:'✅ 正解。「不完全さや儚さの中に美しさを見出す感覚」——証拠、一致。',
+        ng:'⚠️ 第３段落「不完全さや儚さの中に美しさを見出す感覚——それがわびさびの本質だ」を確認してみよう。'
+      },
+      {
+        paraId:'p4', keyword:'守り伝える',
+        q:'この文章を通じて筆者が最終的に訴えていることとして、もっとも適切なものはどれか。',
+        clue:'【テクニック1】最終段落の「筆者は思う」の後——そこが主張の核心。断言語「すべて」「完全に」に注意してみてね。',
+        opts:['各文化が育ててきた独自の美意識を、グローバル化の中でも積極的に守り伝えるべきだ','グローバル化を止め、日本の伝統文化を外国文化から完全に守るべきだ','虫の声ひとつにも文化の歴史と感性が凝縮されており、それを大切に伝えていくべきだ','日本人は虫の声に特別な感情を持つが、その感覚は現代では失われつつある'],
+        elim:[null,'「完全に守る」「グローバル化を止める」は断言語の罠。本文はそこまで言っていないよ。',null,'「失われつつある」は本文に書かれていない。本文は守り伝えることを訴えているの。'],
+        ans:0,
+        neko_ok:'すごいぞ！　断言語の罠を見抜いて、正確な主張を選べたよ。',
+        neko_ng:'あともう少し。最終段落の「筆者は思う」の後と、断言語の問題をもう一度確認してみよう。',
+        ok:'✅ 正解。「それぞれの文化が育ててきた独自の美意識は、むしろ積極的に守り伝えていく必要がある」——事件解決！',
+        ng:'⚠️ 最終段落の筆者の主張と、「完全に」「すべて」などの断言語に注意してみよう。'
+      }
+    ]
+  },
+
+  // ── 3: 靴が語る暮らし ──────────────────
+  {
+    id: 3,
+    label: '👟 靴が語る暮らし',
+    title: '靴が語る暮らし',
+    note: null,
+    paras: [
+      {
+        id:'p1', label:'第１段落', tec:{keyword:'とさえ言われる',badge:'テクニック1',color:'t1',explain:'「とさえ言われる」——強調表現。段落の最後に「靴底を見ればその人の生き方がわかる」——これが要点だよ。'},
+        text:'靴は、その人の「暮らし」を語る。古びた革靴の傷は、どれだけの距離を歩いてきたかを示す。スニーカーのすり減り方は、どんな姿勢で生きているかを映し出す。靴底を見れば、その人の生き方がわかる、とさえ言われる。',
+        highlighted:'靴は、その人の「暮らし」を語る。古びた革靴の傷は、どれだけの距離を歩いてきたかを示す。スニーカーのすり減り方は、どんな姿勢で生きているかを映し出す。<mark>靴底を見れば、その人の生き方がわかる</mark>、とさえ言われる。',
+        hint:'段落の締めの一文——「とさえ言われる」で締まっているときは、そこが主張の核心よ。',
+        explain:'この段落は「靴はその人の生き方を語る」という主題の提示です。',
+        opts:['靴はファッションのためだけに存在する','靴は毎年新しいものを買い替えるべきだ','スニーカーより革靴の方が長持ちする','靴底を見ればその人の生き方がわかるとさえ言われる'],
+        ans: 3
+      },
+      {
+        id:'p2', label:'第２段落', tec:{keyword:'「靴を見れば',badge:'テクニック4',color:'t4',explain:'カギカッコ「　」——職人の言葉が引用されている。この引用が「靴はその人の生き方を語る」の証拠として使われているよ。'},
+        text:'ある靴の修理職人は言っていた。「靴を見れば、その人がどんな人生を歩んできたかだいたいわかる。かかとがひどく擦り減っている人は、急いで生きている。つま先だけ傷んでいる人は、前のめりで物事に取り組む人だ」と。',
+        highlighted:'ある靴の修理職人は言っていた。<mark>「靴を見れば、その人がどんな人生を歩んできたかだいたいわかる。かかとがひどく擦り減っている人は、急いで生きている。つま先だけ傷んでいる人は、前のめりで物事に取り組む人だ」</mark>と。',
+        hint:'カギカッコの引用——職人の言葉は何の証拠として使われているかな。',
+        explain:'この段落は第１段落の主張「靴はその人の生き方を語る」の具体例です。職人の観察がその証拠になっています。',
+        opts:['靴の状態からその人の生き方がわかるという主張を裏付ける具体例だ','靴の修理職人はその職業を通じて特殊な技術を持っている','靴の修理を繰り返すことが健康に良いという医学的な根拠だ','かかとの擦り減りを放置すると健康に悪いという警告だ'],
+        ans: 0
+      },
+      {
+        id:'p3', label:'第３段落', tec:{keyword:'モノは人間のクセや習慣を記録する',badge:'テクニック1',color:'t1',explain:'最初の一文が主張——後は具体例。「手帳・財布・スマホ」はたとえば（テクニック3）。最初の一文が要点だよ。'},
+        text:'モノは人間のクセや習慣を記録する。手帳の書き込み方、財布の使い込み具合、スマートフォンの傷の入り方——いずれも、その人が日々どう生きているかを無言で証言する。',
+        highlighted:'<mark>モノは人間のクセや習慣を記録する。</mark>手帳の書き込み方、財布の使い込み具合、スマートフォンの傷の入り方——いずれも、その人が日々どう生きているかを無言で証言する。',
+        hint:'最初の一文が主張——後は具体例。「たとえば」と同じ役割をしているよ。',
+        explain:'この段落は「モノは人間の生き方を記録する」という主張の拡張です。靴だけでなく、手帳・財布・スマホも同様だと述べています。',
+        opts:['モノはただの道具であり、人の性格とは無関係だ','モノは人間のクセや習慣を記録し、生き方を証言する','手帳は紙のものよりデジタルの方が優れている','スマートフォンの傷は修理するべきだ'],
+        ans: 1
+      },
+      {
+        id:'p4', label:'第４段落', tec:{keyword:'筆者が言いたいのはこうだ',badge:'テクニック1',color:'t1',explain:'「筆者が言いたいのはこうだ」——主張の宣言！ この直後が核心。「モノを大切にすることは、自分自身の暮らしと向き合うことでもある」——事件の動機はここだよ。'},
+        text:'筆者が言いたいのはこうだ。モノを大切にするということは、自分自身の暮らしと向き合うことでもある。捨てずに使い続け、修理して使う——その積み重ねの中に、自分という人間の輪郭が浮かび上がる。',
+        highlighted:'筆者が言いたいのはこうだ。<mark>モノを大切にするということは、自分自身の暮らしと向き合うことでもある。</mark>捨てずに使い続け、修理して使う——その積み重ねの中に、自分という人間の輪郭が浮かび上がる。',
+        hint:'「筆者が言いたいのはこうだ」——これは主張の宣言。直後が核心よ。',
+        explain:'この段落は筆者の主張の核心です。モノを大切にすることは自分の暮らしと向き合うことでもある、という結論です。',
+        opts:['靴は毎年新しいものに買い替えるべきで、古い靴は不衛生だ','アナログな道具こそがデジタル社会での自己理解に役立つ','すべての人が靴を修理して使えば廃棄物問題が解決する','モノを大切にし使い続けることは、自分の暮らしや生き方と向き合うことでもある'],
+        ans: 3
+      }
+    ],
+    qs: [
+      {
+        paraId:'p2', keyword:'職人',
+        q:'靴の修理職人の発言（第２段落）は、本文でどのような役割を果たしているか。',
+        clue:'【テクニック3】具体例は要点そのものじゃない。何の「証拠・裏付け」として使われているかを確認してみてね。',
+        opts:['靴の職人が特殊な技術を持っていることを示すための職業紹介の事例','靴の修理職人の技術と観察眼が、靴の傷から多くのことを読み取れることを示す事例','靴の修理を繰り返すことが健康に良いという医学的な根拠','靴の状態からその人の生き方がわかるという筆者の主張を裏付ける具体例'],
+        elim:['「職業紹介の事例」という目的は本文にない。職人の話は何かを証明するために使われているよ。',null,'「医学的根拠」は本文に全くない。これは消去できるね。',null],
+        ans:3,
+        neko_ok:'いいね！　具体例がどの主張の証拠なのか、ちゃんと見抜けたよ。',
+        neko_ng:'惜しかったよ。職人の話は何を証明するために出てきたんだろう？',
+        ok:'✅ 正解。第１段落の主張「靴はその人の生き方を語る」の具体例——証拠確定。',
+        ng:'⚠️ 第１段落の主張と第２段落の関係を確認してみよう。'
+      },
+      {
+        paraId:'p3', keyword:'モノ',
+        q:'「モノが語ること」に気づくことで、本文ではどのような変化が起きると述べられているか。',
+        clue:'【テクニック1】本文に書いてあることだけが答え。書かれていない情報を加えた選択肢は消去してみてね。',
+        opts:['自分自身を少し客観的に見られるようになる','自分の持ち物をすべて新品に取り替えるようになる','靴底の傷に気づき、歩き方や姿勢を改善するようになる','他人の持ち物に興味を持つようになり、人間関係が深まる'],
+        elim:[null,'「すべて新品に取り替える」は本文の主旨と逆。本文は使い続けること・修理することを推している。',null,'「他人の持ち物・人間関係」は本文にない新情報——消去できるよ。'],
+        ans:0,
+        neko_ok:'やるな！　本文に書いてあることを正確に選べたよ。',
+        neko_ng:'惜しい。第４段落あたりに答えが書いてあるよ。確認してみよう。',
+        ok:'✅ 正解。「モノが語ることに気づいたとき、人は自分自身を少し客観的に見られるようになる」——証拠確定。',
+        ng:'⚠️ 本文の中から変化を示す表現を探してみよう。'
+      },
+      {
+        paraId:'p4', keyword:'向き合う',
+        q:'この文章を通じて筆者がもっとも言いたいこととして、適切なものはどれか。',
+        clue:'【テクニック1】「筆者が言いたいのはこうだ」——宣言の後の言葉が核心。断言語「すべて」にも注意してみてね。',
+        opts:['靴は毎年新しいものに買い替えるべきで、古い靴を使い続けるのは不衛生だ','モノを大切にし使い続けることは、自分の暮らしや生き方と向き合うことでもある','モノを修理して使い続けることで、自分という人間の輪郭が浮かび上がってくる','すべての人が靴を修理して使うようになれば、廃棄物問題が解決する'],
+        elim:['「毎年新しいものに買い替えるべき」は本文と逆の主張——消去できるよ。',null,null,'「すべての人が」「廃棄物問題が解決する」——断言語の罠。本文にない新たな主張だよ。'],
+        ans:1,
+        neko_ok:'すごいぞ！　断言語の罠を見抜いて、核心の主張をつかんでくれたよ。',
+        neko_ng:'あともう少し。「筆者が言いたいのはこうだ」の後と、断言語の問題をもう一度確認してみよう。',
+        ok:'✅ 正解。「モノを大切にするということは、自分自身の暮らしと向き合うことでもある」——事件解決！',
+        ng:'⚠️ 第４段落の「筆者が言いたいのはこうだ」の後と、断言語「すべて」に注意して選んでみよう。'
+      }
+    ]
+  },
+
+  // ── 4: 丸山集落 ──────────────────────────
+  {
+    id: 4,
+    label: '🏔️ 丸山集落',
+    title: '丸山集落の声',
+    note: '廃村＝かつて人が住んでいたが、全戸が離村して無人になった集落のこと。',
+    paras: [
+      {
+        id:'p1', label:'第１段落', tec:{keyword:'廃村となっている',badge:'テクニック1',color:'t1',explain:'「今は廃村となっている」——事実の提示。この段落は「丸山集落とは何か」を説明する導入。次に「なぜ？」が続くよ。'},
+        text:'長野県のある山あいに、丸山集落という集落跡がある。かつて三十戸ほどの家族が暮らしていたその場所は、一九七〇年代に全戸が離村し、今は廃村となっている。',
+        highlighted:'長野県のある山あいに、<mark>丸山集落</mark>という集落跡がある。かつて三十戸ほどの家族が暮らしていたその場所は、<mark>一九七〇年代に全戸が離村し、今は廃村となっている。</mark>',
+        hint:'導入の段落。「廃村」という事実が提示されているよ。',
+        explain:'この段落は「丸山集落は1970年代に廃村になった」という事実の提示です。',
+        opts:['丸山集落は現在も多くの家族が暮らす活気ある集落だ','丸山集落は観光地として整備され、多くの旅人が訪れる','丸山集落はかつて三十戸が暮らしたが、1970年代に廃村となった','丸山集落は長野県の都市部に位置する新興住宅地だ'],
+        ans: 2
+      },
+      {
+        id:'p2', label:'第２段落', tec:{keyword:'というのに',badge:'テクニック2',color:'t2',explain:'「〜というのに」——逆接の表現。「五十年経ったのに崩れない」——予想外の事実。この後に「先人たちの丁寧な仕事ぶり」という要点が来るよ。'},
+        text:'廃村となった集落跡を歩くと、石垣や水路の跡が残っている。人の手が入らなくなって五十年近く経つというのに、石組みはいまも崩れず、先人たちの丁寧な仕事ぶりが伝わってくる。',
+        highlighted:'廃村となった集落跡を歩くと、石垣や水路の跡が残っている。<mark>人の手が入らなくなって五十年近く経つというのに、石組みはいまも崩れず、先人たちの丁寧な仕事ぶりが伝わってくる。</mark>',
+        hint:'「〜というのに」は逆接——後ろに驚きや評価が来るよ。',
+        explain:'この段落は石垣が残っていることを通して、かつての人々の丁寧な仕事ぶりを伝えています。',
+        opts:['五十年近く経っても石組みが崩れず、先人たちの丁寧な仕事ぶりが伝わってくる','廃村の石垣は観光目的で最近修復されたものだ','山間部の気候は温暖で石が風化しにくい','廃村の石垣は危険なため近づかない方がよい'],
+        ans: 0
+      },
+      {
+        id:'p3', label:'第３段落', tec:{keyword:'なぜ人々は去ったのか',badge:'テクニック1',color:'t1',explain:'「なぜ〜のか」——疑問形で要点を示す表現。この段落全体が「廃村の理由」の説明。時系列で整理してみよう。'},
+        text:'なぜ人々は去ったのか。高度経済成長期、都市への人口集中が進んだ。山間部の農業は機械化が難しく、若者たちは次々と都市へ移り住んだ。残った老人たちも、やがて集落を維持できなくなり、最後の一家族が去ったのは一九七八年のことだという。',
+        highlighted:'なぜ人々は去ったのか。<mark>高度経済成長期、都市への人口集中が進んだ。山間部の農業は機械化が難しく、若者たちは次々と都市へ移り住んだ。</mark>残った老人たちも、やがて集落を維持できなくなり、最後の一家族が去ったのは一九七八年のことだという。',
+        hint:'時系列で出来事が並んでいるよ。「なぜ？」に答える段落。',
+        explain:'この段落は廃村の経緯を時系列で説明しています。①高度成長→都市集中②山間部は機械化困難→若者が都市へ③老人が残るも維持不能④1978年に最後の家族が去る。',
+        opts:['自然災害によって家屋が倒壊し、住民が避難を余儀なくされたため','国の政策により山間部の住民は強制的に都市へ移住させられたため','農業の機械化が急速に進んで山間部での農業が効率的になり住民が別の地域へ転出したため','高度経済成長期に都市へ人口が集中し、若者が去り、老人だけが残ったが維持できなくなったため'],
+        ans: 3
+      },
+      {
+        id:'p4', label:'第４段落', tec:{keyword:'〜のは、〜からだ',badge:'テクニック4',color:'t4',explain:'「〜のは、〜からだ」——理由を示す構文。「からだ」の直前が理由（要点）。「消えゆく声を記録したい」——これが筆者の動機だよ。'},
+        text:'筆者が廃村をめぐる旅を続けるのは、その「消えゆく声」を少しでも記録したいという思いからだ。記録されないものは、やがて存在しなかったことになる。場所を訪れることは、そこに生きた人たちへの、静かな敬意の表れでもあると筆者は信じている。',
+        highlighted:'筆者が廃村をめぐる旅を続けるのは、<mark>その「消えゆく声」を少しでも記録したいという思いからだ。</mark>記録されないものは、やがて存在しなかったことになる。<mark>場所を訪れることは、そこに生きた人たちへの、静かな敬意の表れでもある</mark>と筆者は信じている。',
+        hint:'「〜のは、〜からだ」——理由の構文。筆者の行動の動機が書かれているよ。',
+        explain:'この段落は筆者が廃村を旅する理由と、その行為の意味を述べています。消えゆく記憶を記録したい、訪れることは敬意の表れ——これが主題です。',
+        opts:['廃村問題の原因を政策的に分析し政府に提言するため','消えゆく声（そこで生きた人々の記憶）を少しでも記録したいという思いから','廃村を観光資源として再開発するための現地調査を行うため','廃村は危険な場所であるため訪れる人に注意を促すキャンペーンを行うため'],
+        ans: 1
+      }
+    ],
+    qs: [
+      {
+        paraId:'p2', keyword:'石組み',
+        q:'第２段落の「石組みはいまも崩れず」という記述は、何を伝えるために用いられているか。',
+        clue:'【テクニック3】「たとえば」の後は具体例——この石垣の話も何かを証明するための具体例だよ。何の証拠なのかを確認してみてね。',
+        opts:['山間部の気候は温暖で、石が風化しにくいという地理的特性を説明するため','五十年間、誰も手をつけていないことで自然保護の大切さを示すため','かつてそこに暮らした人々の丁寧な仕事ぶりや生活の質を伝えるため','廃村を観光地として整備する際に、石組みが活用できることを示すため'],
+        elim:['「地理的特性」の説明という目的は本文にない。筆者の関心は石垣ではなく、そこに生きた人たちにあるよ。',null,null,'「観光地整備」は本文に全くない——これは消去できるね。'],
+        ans:2,
+        neko_ok:'いいね！　石垣という具体例が、先人たちの丁寧さを伝えるためのものだとわかったよ。',
+        neko_ng:'惜しかったよ。石垣の話は何を伝えるために使われているんだろう。本文をもう一度見てみよう。',
+        ok:'✅ 正解。「先人たちの丁寧な仕事ぶりが伝わってくる」——証拠確定。',
+        ng:'⚠️ 第２段落の最後の一文「先人たちの丁寧な仕事ぶりが伝わってくる」を確認してみよう。'
+      },
+      {
+        paraId:'p3', keyword:'廃村',
+        q:'集落が廃村になった経緯として、本文の内容に合っているものはどれか。',
+        clue:'【テクニック2】時系列で整理してみよう。①高度成長→②若者が去る→③老人が残る→④最後の家族が去る、という流れだよ。',
+        opts:['自然災害によって家屋が倒壊し、住民が避難を余儀なくされたため','国の政策により、山間部の住民は強制的に都市へ移住させられたため','山間部での農業が難しくなり、若者が次々と都市へ移り住むようになったため','高度経済成長期に都市へ人口が集中し、若者が去り、老人だけが残ったが維持できなくなったため'],
+        elim:['「自然災害」は本文に書かれていない。書かれていないことを選んじゃいけないよ。','「強制移住」は本文にない。本文は自発的な移住として描かれているよ。',null,null],
+        ans:3,
+        neko_ok:'やるな！　時系列を整理しながら読めたよ。',
+        neko_ng:'惜しい。第３段落の時系列をもう一度整理してみよう。',
+        ok:'✅ 正解。高度成長→都市集中→若者が去る→老人が維持できなくなる——本文の流れ通りだよ。',
+        ng:'⚠️ 第３段落を時系列で整理してみよう。「なぜ？」に対する答えが書かれているよ。'
+      },
+      {
+        paraId:'p4', keyword:'消えゆく声',
+        q:'筆者が廃村をめぐる旅を続ける理由として、本文でもっとも適切に述べられているものはどれか。',
+        clue:'【テクニック4】「〜のは、〜からだ」という理由の構文——「からだ」の前に理由が書いてあるよ。',
+        opts:['消えゆく声、すなわちそこで生きた人々の記憶を少しでも記録したいという思いから','廃村を観光資源として再開発するための現地調査を行うため','場所を訪れることで、そこに生きた人たちへの敬意を表したいという思いから','廃村問題の原因を政策的に分析し、政府に提言するため'],
+        elim:[null,'「観光資源として再開発」は本文にない。筆者の目的は記録と敬意だよ。',null,'「政策的分析・政府への提言」は本文にない新情報——消去できるよ。'],
+        ans:0,
+        neko_ok:'すごいぞ！　「〜のは、〜からだ」という構文をちゃんと読み取れたよ。事件解決！',
+        neko_ng:'あともう少し。第４段落の「〜のは、〜からだ」の「からだ」の直前を確認してみよう。',
+        ok:'✅ 正解。「その『消えゆく声』を少しでも記録したいという思いから」——事件解決！',
+        ng:'⚠️ 「筆者が廃村をめぐる旅を続けるのは、〜からだ」——「からだ」の前を確認してみよう。'
+      }
+    ]
+  }
+];
+
+const NANA_MSGS = [
+  {icon:"🐱", text:"あ、来てくれたんだね。ちょうどよかった——<em>事件が入ったの。</em>さあ、行きましょう！"},
+  {icon:"🐱", text:"国語って難しく見えるよね。そう思うかもね。<em>でも、見方を変えてみて——これ、事件の現場なんだよ。</em>"},
+  {icon:"🐾", text:"まず題名をさっと見てみよう。<em>犯人（筆者）の狙い、たいてい題名にヒントがあるの。</em>「何の事件かな？」って予測してから読むとぐっと楽になるよ。"},
+  {icon:"🐱", text:"脚注は見た？　読み飛ばしたくなる気持ちはわかるよ。でも、<strong>よく現場を見てみて！</strong>　これは大事な証拠品だよ。"},
+  {icon:"🐾", text:"全部ちゃんと読まなきゃって思うよね。そう思うかもね。<em>でも、ここは「流し読み」でいいの。</em>段落ごとに「何の話か」をつかむだけで十分だよ。"},
+  {icon:"🐱", text:"問題文、先に読んでおこうね。<em>何を探せばいいか決めてから本文に向かうのが、捜査の基本なの。</em>"},
+  {icon:"🐾", text:"テクニックを使う場面だよ。証拠は必ず本文のどこかにあるから。でも、<strong>よく現場を見てみて！</strong>"},
+  {icon:"🐱", text:"頭の中だけで覚えておこうとするよね。そう思うかもね。<em>でも、メモしておくと後でずっと楽になるよ。</em>３〜５字でいいの。"},
+  {icon:"🐾", text:"ここで一回、題名と照らし合わせてみよう。<em>段落のメモをつなぐと、筆者が言いたかったことが見えてくるの。</em>"},
+  {icon:"🐱", text:"証拠は揃ったよ。でも、<strong>よく現場を見てみて！</strong>　落ち着いて選んでね。"},
+];
+
+const STEPS_LABELS = ["はじめに","事件発生","国語＝捜査","①題名","②脚注","③流し読み","④問いを読む","⑤証拠マーク","⑥捜査手帳","⑦照合","⑧解答","事件解決"];
+
+/* ════════════════════════════════════════
+   状態
+════════════════════════════════════════ */
+// unitStates: 単元ごとに独立したステートを保持
+const makeUnitState = () => ({
+  step: 0,
+  checks: {}, hl: {},
+  selA: [-1,-1,-1], answered: [false,false,false], qIdx: 0, score: 0,
+  memoSel: {}, memoConfirmed: {}, memoHint: {},
+  showFloat: false, skimPage: 0, skimRead: {}, skimABC: {},
+  elimShown: [[],[],[]], elimDone: [false,false,false], elimCount: [0,0,0],
+  showTech: false, sliderPage: 0, showHintPopup: false, markPage: 0, markOpen: {}
+});
+
+let currentUnit = -1; // -1=はじめに, 0〜3=UNITS index
+let unitStates = []; // UNITS.length個
+UNITS.forEach(() => unitStates.push(makeUnitState()));
+
+/* ════════════════════════════════════════
+   ヘルパー
+════════════════════════════════════════ */
+function getS()   { return unitStates[currentUnit]; }
+function getT()   { return UNITS[currentUnit]; }
+function getQS()  { return UNITS[currentUnit].qs; }
+
+function addKeywordMark(html, keyword){
+  if(!keyword) return html;
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return html.replace(new RegExp('('+escaped+')','g'), '<mark class="qword">$1</mark>');
 }
-function hideAllPopups(){document.querySelectorAll('.popup').forEach(function(p){p.classList.remove('on');});}
-function showPoint(n){document.querySelectorAll('.pt'+n).forEach(function(e){e.classList.add('hl-point');});var b=document.getElementById('btn_pt'+n);b.classList.add('done');b.textContent='✓ ポイント';b.onclick=null;}
-function showKeyword(n){document.querySelectorAll('.kw'+n).forEach(function(e){e.classList.add('hl-key');});var b=document.getElementById('btn_kw'+n);b.classList.add('done');b.textContent='✓ keyword';b.onclick=null;}
-function addSummary(t){var p=document.getElementById('summary');p.style.display='block';var d=document.createElement('div');d.className='sum-item';d.innerHTML='<span>🔍</span><span>'+t+'</span>';document.getElementById('sumItems').appendChild(d);}
-function disableAllBtns(id){document.querySelectorAll('#'+id+'c .cb').forEach(function(b){b.disabled=true;b.onclick=null;});}
-function answerQ(id,idx){var c=correctAnswers[id],bs=document.querySelectorAll('#'+id+'c .cb');disableAllBtns(id);if(idx===c){bs[idx].classList.add('cb-ok');document.getElementById(id+'ok').classList.add('on');}else{bs[idx].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(id+'ng').classList.add('on');}if(summaryTexts[id])addSummary(summaryTexts[id]);setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1200);}
-function startElim(q){var b=document.getElementById('elim_'+q);if(b.classList.contains('used'))return;b.classList.add('active');b.textContent='🔍 消去中...';document.getElementById('elim_'+q+'_count').style.display='block';elimState[q]={mode:'elim',eliminated:0,maxElim:2};document.getElementById(q+'c').classList.add('elim-mode');}
-function quizClick(q,i){var s=elimState[q];if(s&&s.mode==='elim'){var c=correctAnswers[q],w=document.getElementById(q+'warn');if(i===c){w.classList.add('on');setTimeout(function(){w.classList.remove('on');},2000);return;}document.getElementById(q+'_'+i).classList.add('cb-elim');s.eliminated++;document.getElementById('elim_'+q+'_remain').textContent=(s.maxElim-s.eliminated);if(s.eliminated>=s.maxElim){s.mode='answer';document.getElementById(q+'c').classList.remove('elim-mode');var eb=document.getElementById('elim_'+q);eb.classList.remove('active');eb.classList.add('used');eb.textContent='✓ 2つ消去しました';document.getElementById('elim_'+q+'_count').style.display='none';document.getElementById(q+'_answerbtn').style.display='block';}return;}if(s&&s.mode==='answer'){answerQuiz(q,i);return;}}
-function enterAnswerMode(q){document.getElementById(q+'_answerbtn').style.display='none';}
-function answerQuiz(q,i){var c=correctAnswers[q],bs=document.querySelectorAll('#'+q+'c .cb');disableAllBtns(q);if(i===c){bs[i].classList.add('cb-ok');document.getElementById(q+'ok').classList.add('on');}else{bs[i].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(q+'ng').classList.add('on');}if(q==='quiz3'){document.getElementById('prog').style.width='100%';setTimeout(function(){hideAllPopups();showFinal();},2000);return;}setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1500);}
-function showFinal(){document.getElementById('btnNext').style.display='none';if(prevFocus)document.getElementById(prevFocus).classList.remove('focus-glow');document.getElementById('final').style.display='block';document.getElementById('final').scrollIntoView({behavior:'smooth',block:'center'});}
-</script></body></html>
+
+function pct(){
+  if(currentUnit < 0) return 0;
+  const S = getS();
+  return Math.round((S.step / (STEPS_LABELS.length - 1)) * 100);
+}
+
+function techPanelHTML(qi){
+  const items = [
+    {cls:'t1',b:'b1',no:'テクニック1',text:'「つまり」「だから」「要するに」の直後→ <strong style="color:#FF9999">要点（犯人の動機）</strong>がある'},
+    {cls:'t2',b:'b2',no:'テクニック2',text:'「しかし」「だが」の後→ <strong style="color:#7EEAE6">犯人の本音</strong>が出る。逆転ポイント！'},
+    {cls:'t3',b:'b3',no:'テクニック3',text:'「たとえば」の後→ <strong style="color:#ccc">要点はない</strong>。例なので飛ばしてOK'},
+    {cls:'t4',b:'b4',no:'テクニック4',text:'指示語「これ・それ・この・その」→ <strong style="color:#F7DC6F">直前</strong>に答えがある'},
+  ];
+  const unlocked = [];
+  if(qi >= 1) unlocked.push({cls:'tx',b:'bx',no:'消去法 NEW',isNew:qi===1,text:'「こんな内容、文章にあったっけ？」→ おかしい選択肢を消す。<strong style="color:#BBA8FF">残ったものが答え候補</strong>になる'});
+  if(qi >= 2) unlocked.push({cls:'ty',b:'by',no:'最も適当 NEW',isNew:qi===2,text:'「最も適当」な答え→ 複数が正しそうでも<strong style="color:#7EE8A2">より正確・より完全なもの</strong>を選ぶ'});
+  let h = '<div class="tech-panel"><div class="tech-panel-title">⚔️ 捜査の武器　現在の装備</div>';
+  [...items, ...unlocked].forEach((it,idx)=>{
+    h += `<div class="tech-item ${it.cls}" style="animation-delay:${idx*.05}s">
+      <span class="tech-badge ${it.b}">${it.no}</span>
+      <span class="tech-text">${it.text}${it.isNew?'<span class="tech-new-badge">NEW</span>':''}</span>
+    </div>`;
+  });
+  return h + '</div>';
+}
+
+function nbHTML(icon, text, sceneParaId, keyword){
+  let sceneBlock = '';
+  if(sceneParaId && currentUnit >= 0){
+    const TEXT = getT();
+    const paras = sceneParaId === 'all' ? TEXT.paras : TEXT.paras.filter(p=>p.id===sceneParaId);
+    if(paras.length > 0){
+      sceneBlock = '<div class="nb-scene">' +
+        paras.map(p=>{
+          const body = keyword ? addKeywordMark(p.highlighted, keyword) : p.highlighted;
+          return `<div class="nb-scene-label">${p.label}</div><div class="nb-scene-text">${body}</div>`;
+        }).join('') + '</div>';
+    }
+  }
+  return `<div class="nb"><div class="nb-face">${icon}</div><div style="flex:1"><div class="nb-name">🐱 ネコ警部</div><div class="nb-txt">${text}</div>${sceneBlock}</div></div>`;
+}
+
+function ciHTML(key, label){
+  const S = getS();
+  const c = S.checks[key];
+  return `<div class="ci${c?' ck':''}" onclick="tog('${key}')"><div class="cbox">${c?'✓':''}</div><span class="clabel">${label}</span></div>`;
+}
+
+function stepBarHTML(){
+  const S = getS();
+  let h = '<div class="stepbar">';
+  STEPS_LABELS.forEach((s,i)=>{ h+=`<div class="sp ${i<S.step?'done':i===S.step?'active':''}">${s}</div>`; });
+  return h + '</div>';
+}
+
+function weaponsHTML(){
+  return `<div class="card">
+    <div class="weapons-title">ネコ警部直伝　捜査の武器　4テクニック</div>
+    <div class="weapon-card w1">
+      <div class="w-head"><span class="w-num n1">テクニック 1</span><span class="w-keyword">犯人の動機を見つける言葉</span></div>
+      <div class="w-kw-pills"><span class="pill p1">つまり</span><span class="pill p1">だから</span><span class="pill p1">要するに</span><span class="pill p1">したがって</span><span class="pill p1">すなわち</span></div>
+      <div class="w-body" style="margin-top:7px">これらの言葉の直後に、文の<span class="key">【要点】</span>がある。<br>筆者（犯人）が「一番言いたかったこと」——<span style="color:var(--tec1);font-weight:700">そこが動機よ。</span></div>
+    </div>
+    <div class="weapon-card w2">
+      <div class="w-head"><span class="w-num n2">テクニック 2</span><span class="w-keyword">犯人の本音が隠れる言葉</span></div>
+      <div class="w-kw-pills"><span class="pill p2">しかし</span><span class="pill p2">だが</span><span class="pill p2">一方で</span><span class="pill p2">ところが</span><span class="pill p2">それでも</span></div>
+      <div class="w-body" style="margin-top:7px">逆説の言葉の<span class="key">後</span>に、犯人が「本当に伝えたかったこと」が隠れている。<br><span style="color:var(--tec2);font-weight:700">真の動機へと転換するサインよ。</span></div>
+    </div>
+    <div class="weapon-card w3">
+      <div class="w-head"><span class="w-num n3">テクニック 3</span><span class="w-keyword">要点ではない言葉（アリバイ工作）</span></div>
+      <div class="w-kw-pills"><span class="pill p3">たとえば</span><span class="pill p3">具体的には</span><span class="pill p3">つまり例えると</span></div>
+      <div class="w-body" style="margin-top:7px">「たとえば」の後には、<span class="key">要点はほとんどない</span>。要点をわかりやすく説明するための【例】にすぎない。<br><span style="color:var(--tec3);font-weight:700">試験では「たとえば」の前に要点がある。</span></div>
+    </div>
+    <div class="weapon-card w4">
+      <div class="w-head"><span class="w-num n4">テクニック 4</span><span class="w-keyword">証拠を確認する言葉（指示語）</span></div>
+      <div class="w-kw-pills"><span class="pill p4">それ・その</span><span class="pill p4">これ・この</span><span class="pill p4">あれ・あの</span><span class="pill p4">そこ・ここ</span></div>
+      <div class="w-body" style="margin-top:7px">指示語が出たら必ず「<span class="key">何を指しているか</span>」を確認しながら読む。<br>直前の語句に置き換えて、文が自然につながれば——<span style="color:#D4AC0D;font-weight:700">証拠、確定。</span></div>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════
+   タブ描画
+════════════════════════════════════════ */
+function renderTabs(){
+  const tabs = document.getElementById('unitTabs');
+  let h = `<div class="unit-tab${currentUnit===-1?' active':''}" onclick="switchUnit(-1)">📖 はじめに</div>`;
+  UNITS.forEach((u,i)=>{
+    const S = unitStates[i];
+    const done = S.step >= STEPS_LABELS.length - 1;
+    const active = currentUnit === i;
+    h += `<div class="unit-tab${active?' active':done?' done':''}" onclick="switchUnit(${i})">${u.label}</div>`;
+  });
+  tabs.innerHTML = h;
+}
+
+function switchUnit(idx){
+  currentUnit = idx;
+  renderTabs();
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════════════════════════════════════════
+   メインレンダリング
+════════════════════════════════════════ */
+function render(){
+  const app = document.getElementById('app');
+
+  // はじめに
+  if(currentUnit === -1){
+    document.getElementById('prog').style.width = '0%';
+    document.getElementById('step-label').textContent = 'はじめに';
+    app.innerHTML = renderPreface();
+    return;
+  }
+
+  const S = getS();
+  document.getElementById('prog').style.width = pct() + '%';
+  document.getElementById('step-label').textContent = STEPS_LABELS[S.step];
+
+  const sid = ["preface","intro","phil","title","note","skim","question","mark","memo","check","answer","done"][S.step];
+  const nl = NANA_MSGS[Math.min(S.step, 9)];
+  const TEXT = getT();
+  const QS = getQS();
+
+  let h = stepBarHTML();
+
+  if(sid==='preface'){
+    h += renderUnitIntro(TEXT);
+
+  }else if(sid==='intro'){
+    h += `<div class="intro-hero">
+      <div class="intro-tag">🐱 ネコ警部と行く　読解捜査</div>
+      <h1>ねえ、一緒に<br>事件を解いてみない？<br>ついてきて。</h1>
+      <p>国語の読解って、実は事件の捜査にそっくりなんだよ。<br>筆者（犯人）は必ずどこかに「言いたいこと」を隠してる。<br>ベテランのネコ警部と一緒に、証拠を集めていこう。<br><br><strong style="color:white">難しく考えなくていい——ひとつひとつ確認していけば、答えは見えてくるよ。</strong></p>
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-num">10</div><div class="stat-lbl">ステップ</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">捜査の武器</div></div>
+        <div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">問題数</div></div>
+      </div>
+    </div>
+    <button class="btn" onclick="adv()">🐱 さあ、行きましょう！ →</button>`;
+
+  }else if(sid==='phil'){
+    h += `<div class="philosophy-hero">
+      <div class="phil-eyebrow">🐱 NEKO KEIBO'S INVESTIGATION MANUAL</div>
+      <div class="phil-headline">ねえ、知ってた？<br>国語って実は<span>事件の捜査</span>なんだよ。</div>
+      <div class="phil-body">そうね、国語って「なんとなく難しそう」って感じるよね。そう思うかもね。<br>でも、よく現場を見てみて——文章の中に必ずヒントがあるんだよ。<br><br>筆者（犯人）は「なぜ書いたのか」「何を伝えたかったのか」を<br>本文という現場に、必ず残してる。<br>それを証拠として拾い上げて——<em style="color:white">事件の全体像を掴もう。一緒にね。</em></div>
+      <div class="process-strip">
+        <div class="proc-step"><div class="proc-icon">🔍</div><div class="proc-label">現場検証<br>問題文を読む</div></div>
+        <div class="proc-arrow">▶</div>
+        <div class="proc-step"><div class="proc-icon">📋</div><div class="proc-label">事件の推移<br>段落ごと整理</div></div>
+        <div class="proc-arrow">▶</div>
+        <div class="proc-step"><div class="proc-icon">🗺️</div><div class="proc-label">全体像を掴む<br>まとめる</div></div>
+        <div class="proc-arrow">▶</div>
+        <div class="proc-step"><div class="proc-icon">⚖️</div><div class="proc-label">証拠と照合<br>答えを特定</div></div>
+        <div class="proc-arrow">▶</div>
+        <div class="proc-step"><div class="proc-icon">🏆</div><div class="proc-label">犯人の動機<br>事件解決</div></div>
+      </div>
+    </div>
+    <div class="step3-wrap">
+      <div class="s3card"><div class="s3icon">①</div><div><div class="s3ttl">問題文をよく読む</div><div class="s3arr">→ 捜査フレームワーク</div><div class="s3sub">事件の疑問点を確認する。「何を問われているか」を先に把握してから現場（本文）に向かう。</div><div class="s3meta">🔍 現場検証</div></div></div>
+      <div class="s3card"><div class="s3icon">②</div><div><div class="s3ttl">段落ごとにまとめる</div><div class="s3arr">→ 捜査手帳に記録</div><div class="s3sub">事件の推移を確認する。段落ごとに「何の話か」を３〜５字でメモして、流れを掴む。</div><div class="s3meta">📋 事件の推移確認</div></div></div>
+      <div class="s3card"><div class="s3icon">③</div><div><div class="s3ttl">全体をまとめる</div><div class="s3arr">→ 犯人の動機を特定</div><div class="s3sub">事件の全体像を掴む。筆者が「何を言いたかったか」を一言でまとめる。それが結論。</div><div class="s3meta">🏆 事件解決</div></div></div>
+    </div>
+    ${weaponsHTML()}
+    <button class="btn" onclick="adv()">🐱 一緒に現場、行ってみよう →</button>`;
+
+  }else if(sid==='title'){
+    h += nbHTML(nl.icon, nl.text);
+    h += `<div class="card">
+      <div class="badge">チェック１</div>
+      <div class="card-ttl">題名を見る</div>
+      <div class="card-hint">本文を読む前に題名だけ見て、何の事件か予測する。予測すると読む速度が上がる。</div>
+      <div class="title-display">「${TEXT.title}」</div>
+      <div style="font-size:14px;margin-bottom:12px">この文章は何について書かれていそうかな？</div>
+      ${ciHTML('t1','事件・事故の記録や報告について')}
+      ${ciHTML('t2','文章のテーマに関連する内容について')}
+      ${ciHTML('t3','単純な情報案内について')}
+      <div style="background:var(--light);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--txt);margin-top:10px;margin-bottom:14px">題名を見ただけでも、<strong>「何の事件かな？」</strong>と予測するだけで読む準備ができるよ。</div>
+      <button class="btn" onclick="adv()">次の証拠へ →</button>
+    </div>`;
+
+  }else if(sid==='note'){
+    h += nbHTML(nl.icon, nl.text);
+    h += `<div class="card">
+      <div class="badge">チェック２</div>
+      <div class="card-ttl">脚注を見る</div>
+      <div class="card-hint">本文の前に脚注を確認する。知らない言葉の意味がここにある。これは証拠品。</div>
+      ${TEXT.note ? `<div class="note-box"><strong>（注）</strong>　${TEXT.note}</div>` : `<div class="note-box" style="color:var(--muted)">この文章には脚注がありません。そのまま本文を読んでいこう。</div>`}
+      ${ciHTML('note_read', TEXT.note ? '脚注を読んだ。重要な言葉の意味がわかった。' : '脚注なし。そのまま本文に向かおう。')}
+      <button class="btn" style="margin-top:14px" onclick="adv()">次の証拠へ →</button>
+    </div>`;
+
+  }else if(sid==='skim'){
+    const sp = S.skimPage;
+    const para = TEXT.paras[sp];
+    const total = TEXT.paras.length;
+    const isLast = sp === total - 1;
+    const pid = para.id;
+    const isRead = S.skimRead[pid];
+    const abc = S.skimABC[pid];
+    h += nbHTML(nl.icon, nl.text);
+    let dots = '<div class="skim-progress">';
+    TEXT.paras.forEach((_,i)=>{ dots += `<div class="skim-dot ${i<sp?'done':i===sp?'active':''}"></div>`; });
+    dots += '</div>';
+    let paraContent = '';
+    if(!isRead){
+      paraContent = `<button class="skim-done-btn" onclick="skimMarkRead('${pid}')">✅ 読みました</button>`;
+    } else if(!abc){
+      paraContent = `
+        <div style="font-size:13px;font-weight:700;color:var(--txt);margin:8px 0 6px">どのくらい理解できた？</div>
+        <div class="abc-wrap">
+          <button class="abc-btn abc-a" onclick="skimSetABC('${pid}','A')"><span style="font-size:18px">😊</span>A よくわかった</button>
+          <button class="abc-btn abc-b" onclick="skimSetABC('${pid}','B')"><span style="font-size:18px">🤔</span>B だいたい</button>
+          <button class="abc-btn abc-c" onclick="skimSetABC('${pid}','C')"><span style="font-size:18px">❓</span>C わからない</button>
+        </div>`;
+    } else if(abc==='C'){
+      const nextLabel = isLast ? '' : ('(' + TEXT.paras[sp+1].label + ')');
+      paraContent = `
+        <div class="abc-wrap" style="pointer-events:none;margin-bottom:0">
+          <button class="abc-btn abc-a" style="opacity:.35">A</button>
+          <button class="abc-btn abc-b" style="opacity:.35">B</button>
+          <button class="abc-btn abc-c selected">❓ C わからない</button>
+        </div>
+        <div class="explain-box"><span class="explain-icon">💡</span><strong>🐱 ネコ警部の説明：</strong><br>${para.explain}</div>
+        ${isLast ? '<button class="next-para-btn" onclick="skimFinish()">✅ 全段落読了——次の捜査へ →</button>' : ('<button class="next-para-btn" onclick="skimNext()">次の段落へ ' + nextLabel + ' →</button>')}`;
+    } else {
+      const nextLabel = isLast ? '' : ('(' + TEXT.paras[sp+1].label + ')');
+      const bExplain = abc==='B' ? `<div class="explain-box" style="background:#F0FFFE;border-color:var(--tec2)"><span class="explain-icon">💡</span><strong>🐱 ネコ警部のひとこと：</strong><br>${para.explain}</div>` : '';
+      paraContent = `
+        <div class="abc-wrap" style="pointer-events:none;margin-bottom:0">
+          <button class="abc-btn abc-a ${abc==='A'?'selected':''}">😊 A よくわかった</button>
+          <button class="abc-btn abc-b ${abc==='B'?'selected':''}">🤔 B だいたい</button>
+          <button class="abc-btn abc-c" style="opacity:.35">C</button>
+        </div>
+        ${bExplain}
+        ${isLast ? '<button class="next-para-btn" onclick="skimFinish()">✅ 全段落読了——次の捜査へ →</button>' : ('<button class="next-para-btn" onclick="skimNext()">次の段落へ ' + nextLabel + ' →</button>')}`;
+    }
+    h += `<div class="card">
+      <div class="badge">チェック３　${sp+1} / ${total}</div>
+      <div class="card-ttl">流し読み（捜査の概要把握）</div>
+      <div class="card-hint">読んだら「読みました」を押してね。<strong>テクニック1〜4のキーワード</strong>を頭の隅に置きながら読んでみよう。</div>
+      ${dots}
+      <div class="skim-para">
+        <div class="skim-plabel"><span>📄 ${para.label}</span></div>
+        <div class="skim-text">${para.highlighted || para.text}</div>
+        ${paraContent}
+      </div>
+      ${sp>0 ? ('<div style="margin-top:10px;text-align:center"><span class="skim-done-tag">✓ 読了済み ' + sp + '段落</span></div>') : ''}
+    </div>`;
+
+  }else if(sid==='question'){
+    h += nbHTML(nl.icon, nl.text);
+    h += `<div class="card">
+      <div class="badge">チェック４</div>
+      <div class="card-ttl">問いを先に読む</div>
+      <div class="card-hint">何を探すか決めてから本文を読む——捜査の鉄則。</div>`;
+    QS.forEach((q,i)=>{
+      h += `<div class="qbanner"><span class="qbanner-lbl">この問いは！　問${i+1}</span>${q.q}</div>`;
+    });
+    h += `${ciHTML('q_read','問題を読んだ。何を探せばいいかわかった。')}
+      <button class="btn" style="margin-top:14px" onclick="adv()">次の証拠へ →</button>
+    </div>`;
+
+  }else if(sid==='mark'){
+    const mp = S.markPage;
+    const para = TEXT.paras[mp];
+    const totalM = TEXT.paras.length;
+    const isLastM = mp === totalM - 1;
+    const isOpen = S.markOpen[mp];
+
+    // ネコ警部バブル
+    if(!isOpen){
+      h += nbHTML('🐾', 'この段落——どこかにテクニックのキーワードが隠れてるよ。<br>「発見した！」と思ったら <strong>🔍 キーワードを見つけた</strong> を押してみて。');
+    } else {
+      h += nbHTML('🐱', `<strong>${para.tec.badge}</strong> を使う場面だったね！<br><em>「${para.tec.keyword}」</em>——ここが現場だよ。`);
+    }
+
+    // プログレスドット
+    let dots = '<div class="mark-progress">';
+    TEXT.paras.forEach((_,i)=>{ dots += `<div class="mark-dot ${i<mp?'done':i===mp?'active':''}"></div>`; });
+    dots += '</div>';
+    h += dots;
+
+    // 段落カード
+    h += `<div class="mark-card">
+      <div class="mark-card-hdr">
+        <span class="mark-card-hdr-lbl">📄 ${para.label}</span>
+        <span class="mark-card-hdr-right">${mp+1} / ${totalM}</span>
+      </div>
+      <div class="mark-card-body">
+        <div class="mark-text">${isOpen ? para.highlighted : para.text}</div>`;
+
+    if(!isOpen){
+      h += `<button class="mark-reveal-btn" onclick="markOpen(${mp})">🔍 キーワードを見つけた！　答えを見る</button>`;
+    } else {
+      h += `<div class="mark-tec-box ${para.tec.color}">
+          <div class="mark-tec-badge">${para.tec.badge}</div>
+          <div class="mark-tec-kw">「${para.tec.keyword}」<span>← ここが現場</span></div>
+          <div class="mark-tec-explain">${para.tec.explain}</div>
+        </div>`;
+      if(!isLastM){
+        h += `<button class="mark-next-btn" onclick="markNext()">次の段落へ（${TEXT.paras[mp+1].label}）→</button>`;
+      } else {
+        h += `<button class="mark-next-btn finish" onclick="adv()">✅ 全段落の現場を確認できた！　次へ →</button>`;
+      }
+    }
+    h += `</div></div>`;
+
+  }else if(sid==='memo'){
+    h += nbHTML(nl.icon, nl.text);
+    h += `<div class="card">
+      <div class="badge">チェック６</div>
+      <div class="card-ttl">捜査手帳にメモ</div>
+      <div class="card-hint">各段落の<strong>要点（犯人の動機）</strong>を４択から選んでみよう。迷ったら🔦ヒントを使ってみてね——本文の要点が光るよ。</div>`;
+    TEXT.paras.forEach(p=>{
+      const sel = S.memoSel[p.id];
+      const confirmed = S.memoConfirmed[p.id];
+      const showHint = S.memoHint[p.id];
+      const opts = p.opts.map((opt,oi)=>{
+        let cls = 'memo-opt';
+        if(confirmed){ cls += oi===p.ans?' m-ok':(sel===oi?' m-ng':''); }
+        else if(sel===oi){ cls += ' sel'; }
+        return `<div class="${cls}" onclick="${confirmed ? '' : `memoSel('${p.id}',${oi})`}"><span class="memo-onum">${['①','②','③','④'][oi]}</span><span>${opt}</span></div>`;
+      }).join('');
+      const paraBody = showHint ? p.highlighted : p.text;
+      h += `<div class="para-quiz">
+        <div class="plabel">${p.label}</div>
+        <div class="para-text">${paraBody}</div>
+        <button class="hint-btn" onclick="memoHint('${p.id}')">${showHint ? '✅ ヒント表示中' : '🔦 ヒント（要点を光らせる）'}</button>
+        ${showHint ? `<div class="hint-note">💡 ${p.hint}</div>` : ''}
+        ${opts}
+        ${confirmed ? `<div class="fb ${sel===p.ans?'ok':'ng'}">${sel===p.ans ? '✅ 正解！　要点を特定できたよ。' : '⚠️ もう一度確認してみよう。要点はどこかな？'}</div>` : ''}
+        ${!confirmed && sel!==undefined && sel>=0 ? `<button class="btn" style="margin-top:8px;padding:9px" onclick="memoConfirm('${p.id}')">確認する</button>` : ''}
+      </div>`;
+    });
+    const allOk = TEXT.paras.every(p=>S.memoConfirmed[p.id]);
+    h += `${allOk ? '<button class="btn" onclick="adv()">次の証拠へ →</button>' : '<div style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">全段落を確認してみよう</div>'}
+    </div>`;
+
+  }else if(sid==='check'){
+    h += nbHTML(nl.icon, nl.text);
+    h += `<div class="card">
+      <div class="badge">チェック７</div>
+      <div class="card-ttl">題名と照合</div>
+      <div class="card-hint">段落メモをつなぐと筆者の「言いたいこと（動機）」が見える。それは題名と一致しているかな？</div>
+      <div class="title-display">「${TEXT.title}」</div>
+      ${ciHTML('c1','段落メモをつなぐと文章のテーマがつかめた')}
+      ${ciHTML('c2','題名と内容が一致している')}
+      ${ciHTML('c3','筆者の言いたいこと（犯人の動機）がつかめた')}
+      <button class="btn" style="margin-top:14px" onclick="adv()">🐱 よし、解答してみよう →</button>
+    </div>`;
+
+  }else if(sid==='answer'){
+    const qi = S.qIdx;
+    const q = QS[qi];
+    const isDone = S.answered[qi];
+    const refPara = TEXT.paras.find(p=>p.id===q.paraId);
+    const elimDone = S.elimDone[qi];
+    const totalParas = TEXT.paras.length;
+    const sp = S.sliderPage;
+    const curPara = TEXT.paras[sp];
+
+    // ── ヒントポップアップ（上に重ねる）
+    if(S.showHintPopup){
+      h += `<div class="hint-popup-overlay" onclick="closeHintPopup(event)">
+        <div class="hint-popup">
+          <div class="hint-popup-header">
+            <div class="hint-popup-title">💡 ネコ警部のヒント</div>
+            <button class="hint-popup-close" onclick="toggleHintPopup()">✕</button>
+          </div>
+          <div class="hint-popup-body">${q.clue}</div>
+          <div class="hint-popup-tec">
+            テクニック1「つまり・だから」→ 要点の直後<br>
+            テクニック2「しかし・ところが」→ 逆転後が本音<br>
+            テクニック3「たとえば」→ 要点はない（例のみ）<br>
+            テクニック4「これ・それ」→ 直前に答えがある
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ── ネコ警部バブル
+    if(!elimDone){
+      h += nbHTML('🐱', 'よし、<strong>消去法</strong>で絞っていこう。「これってここがおかしくない？」って感じた選択肢を消していくの。');
+    } else if(!isDone){
+      h += nbHTML('🐾', '消去できたね。では、残った選択肢——<strong>でも、よく現場を見てみて！</strong>　確信を持って選んでみよう。');
+    } else {
+      const ok = S.selA[qi] === q.ans;
+      h += nbHTML(ok?'🐱':'🐾', ok ? q.neko_ok : q.neko_ng);
+    }
+
+    // ── 本文スライダー（上部・常時表示）
+    h += `<div class="text-slider-wrap">
+      <div class="text-slider-header">
+        <span class="text-slider-label">📄 本文を確認する</span>
+        <div class="text-slider-nav">
+          <button class="tsnav-btn" onclick="sliderPrev()" ${sp===0?'disabled':''}>◀</button>
+          <span class="tsnav-cur">${sp+1} / ${totalParas}</span>
+          <button class="tsnav-btn" onclick="sliderNext()" ${sp===totalParas-1?'disabled':''}>▶</button>
+        </div>
+      </div>
+      <div class="text-slider-body">
+        <div class="text-slider-plabel">${curPara.label}</div>
+        ${q.keyword ? addKeywordMark(curPara.highlighted, q.keyword) : curPara.highlighted}
+      </div>
+    </div>`;
+
+    // ── 問題カード（固定）
+    h += `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="badge" style="margin-bottom:0">問${qi+1} / ${QS.length}</div>
+        <div style="font-size:12px;color:var(--muted)">消去済み：${S.elimShown[qi].length}個</div>
+      </div>
+      <div class="qbanner"><span class="qbanner-lbl">この問いは！</span>${q.q}</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="hint-open-btn" onclick="toggleHintPopup()">💡 ヒントを見る</button>
+        <button class="tech-toggle-btn" onclick="toggleTech()">⚔️ ${S.showTech ? '武器を閉じる' : '武器（テクニック）'}</button>
+      </div>
+      ${S.showTech ? techPanelHTML(qi) : ''}`;
+
+    if(!isDone){
+      h += `<div class="elim-phase">
+        <div class="elim-title">🗑️ 消去法　— おかしいと思う選択肢を２つ消してみよう</div>`;
+      q.opts.forEach((opt,oi)=>{
+        const shown = S.elimShown[qi].includes(oi);
+        const comment = q.elim[oi];
+        let cls = 'elim-opt';
+        if(shown && comment) cls += ' eliminated';
+        else if(shown && !comment) cls += ' kept';
+        const numCls = shown && comment ? 'elim-onum x' : 'elim-onum';
+        const onclick = (!elimDone && !shown) ? `onclick="elimTap(${qi},${oi})"` : '';
+        h += `<div class="${cls}" ${onclick}>
+          <span class="${numCls}">${['①','②','③','④'][oi]}</span>
+          <span>${opt}</span>
+        </div>`;
+        if(shown){
+          const cmtCls = comment ? 'elim-comment' : 'elim-comment kept-comment';
+          const cmtTxt = comment
+            ? '🐱 ' + comment + '　<strong>→ じゃ、これはないよね。</strong>'
+            : '🐱 これ……本文と合ってそうだよね。残しておこう。';
+          h += `<div class="${cmtCls}">${cmtTxt}</div>`;
+        }
+      });
+      const wrongsShown = q.elim.filter((e,i)=>e!==null && S.elimShown[qi].includes(i)).length;
+      const totalWrongs = q.elim.filter(e=>e!==null).length;
+      if(!elimDone){
+        h += `<div style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">おかしいと思う選択肢を２つ消してみよう（${wrongsShown} / 2 消去済み）</div>`;
+        if(wrongsShown === totalWrongs){
+          h += `<button class="btn" style="margin-top:10px" onclick="elimFinish(${qi})">２つ消した！　残りから選ぶ →</button>`;
+        }
+      }
+      h += `</div>`;
+
+      if(elimDone){
+        h += `<div class="nb" style="margin-bottom:12px">
+          <div class="nb-face" style="font-size:20px">🐱</div>
+          <div style="flex:1">
+            <div class="nb-name">🐱 ネコ警部</div>
+            <div class="nb-txt">どっちも合っているように見えるかもしれないよ。<br>でも——<em>もう一度問題文をよく読んでみて。</em><br>「訊いているのは何か」をよく考えてから選んでみよう。</div>
+          </div>
+        </div>`;
+        q.opts.forEach((opt,oi)=>{
+          if(q.elim[oi]) return;
+          let cls = 'aopt';
+          if(S.selA[qi] === oi) cls += ' sel';
+          h += `<div class="${cls}" onclick="selAns(${qi},${oi})"><span class="onum">${['①','②','③','④'][oi]}</span><span>${opt}</span></div>`;
+        });
+        if(S.selA[qi] >= 0){
+          h += `<button class="btn" style="margin-top:10px" onclick="confAns(${qi})">答えを確認する</button>`;
+        }
+      }
+
+    } else {
+      const ok = S.selA[qi] === q.ans;
+      // 褒めバナー
+      const praiseStage = qi===0?'good':qi===1?'great':'perfect';
+      const praiseLines = qi===2
+        ? ['🏆','私が教えることはもうないかも——ここまでよく積み上げてきたよ！']
+        : qi===1
+        ? ['⭐','やるな！　消去法、使いこなしてきてるじゃないか。']
+        : ['👏', ok?'いいね！　最初の問題、しっかり解けたよ。':'惜しかったけど、消去の考え方はよかったよ。'];
+      h += `<div class="neko-praise ${praiseStage}">
+        <div class="neko-praise-icon">${praiseLines[0]}</div>
+        <div class="neko-praise-text">${praiseLines[1]}</div>
+      </div>`;
+
+      q.opts.forEach((opt,oi)=>{
+        let cls = 'aopt';
+        cls += oi===q.ans?' ok':(S.selA[qi]===oi?' ng':'');
+        h += `<div class="${cls}" style="cursor:default"><span class="onum">${['①','②','③','④'][oi]}</span><span>${opt}</span></div>`;
+      });
+      h += `<div class="fb ${ok?'ok':'ng'}">${ok?q.ok:q.ng}</div>`;
+
+      if(qi===1 && ok){
+        h += `<div class="explain-box" style="background:#E8F5E9;border-color:#27AE60;margin-top:10px">
+          <span class="explain-icon">🐱</span><strong>新しい武器が解放されたよ！</strong><br>
+          「最も適当なものを選べ」では、複数の選択肢がなんとなく合ってそうに見えることがある。<br>
+          そのときは——<strong style="color:#1B5E20">より正確で、より本文に近いもの</strong>を選んでみよう。
+        </div>`;
+      }
+
+      if(qi < QS.length-1){
+        h += `<button class="btn" style="margin-top:10px" onclick="nextQ()">次の問題へ（問${qi+2}）→</button>`;
+      } else {
+        h += `<button class="btn" style="margin-top:10px" onclick="adv()">🐱 結果を確認する →</button>`;
+      }
+    }
+    h += `</div>`;
+
+    }else if(sid==='done'){
+    const p2 = Math.round((S.score / QS.length) * 100);
+    const icon = p2===100?'🏆':p2>=66?'🔍':'📝';
+    const msg = p2===100
+      ? '<em>私が教えることはもうないかも——ここまでよく積み上げてきたよ。本当にすごいぞ！</em>'
+      : p2>=66
+      ? '<em>いいぞ。消去法、使いこなしてきてるじゃないか。次はもっとできるよ。</em>'
+      : '<em>まだ難しいかもね。でも、今日の訓練は絶対に活きてくる。一緒にもう一回やってみよう。</em>';
+    h += nbHTML(icon, msg);
+    h += `<div class="card">
+      <div class="badge">🐱 ネコ警部の捜査報告書</div>
+      <div class="score-grid">
+        <div class="score-card"><div class="score-num">${S.score}/${QS.length}</div><div class="score-lbl">正解数</div></div>
+        <div class="score-card"><div class="score-num">${p2}%</div><div class="score-lbl">正答率</div></div>
+      </div>
+      <div class="rule-box">
+        <div class="rule-ttl">🐱 ネコ警部の一言まとめ</div>
+        <div class="rule-item">
+          テクニック1「つまり・だから・要するに」→ <strong style="color:var(--mid)">要点（動機）がある</strong><br>
+          テクニック2「しかし・だが・一方で」→ <strong style="color:var(--mid)">犯人の本音が出る</strong><br>
+          テクニック3「たとえば」→ <strong style="color:var(--mid)">要点はない（例だけ）</strong><br>
+          テクニック4「これ・それ・この・その」→ <strong style="color:var(--mid)">直前に答えがある</strong>
+        </div>
+      </div>
+      <button class="btn" style="margin-top:12px" onclick="restartUnit()">🐱 もう一回、一緒にやってみる</button>
+      ${currentUnit < UNITS.length-1 ? `<button class="btn" style="margin-top:8px;background:var(--dark)" onclick="switchUnit(${currentUnit+1})">次の事件へ → ${UNITS[currentUnit+1].label}</button>` : ''}
+    </div>`;
+  }
+
+  app.innerHTML = h;
+}
+
+/* ════════════════════════════════════════
+   はじめに・単元イントロ
+════════════════════════════════════════ */
+function renderPreface(){
+  return `<div class="preface-wrap">
+    <div class="preface-eyebrow">READ ME FIRST　/　このプログラムについて</div>
+    <div class="preface-title">国語の正答率を上げる<br><span>読解捜査トレーニング</span></div>
+    <div class="preface-body">
+      <p>このプログラムは、<strong>国語の正答率を上げるための訓練</strong>を目的として作られました。読解問題に取り組むときの「見方・考え方」を、繰り返しの練習を通じて身につけていくものです。</p>
+      <p>ここで紹介する方法が「すべての問題に通じる万能の解法」というわけではありません。国語という教科が持つ深さ・豊かさはこれだけではなく、文章を読む楽しさや言葉のすばらしさは、もっとずっと広いところにあります。</p>
+    </div>
+    <div class="preface-note">
+      <strong>制作者より</strong><br>
+      国語を「犯罪捜査」にたとえることで、読解の手がかりを見つけやすくしています。このたとえを使った段階で、日本語の持つ豊かさや、文学が本来そなえているすばらしさを、少なからず損なっている点があることを、あらかじめご了承ください。
+    </div>
+    <div class="preface-cast">
+      <div class="cast-card">
+        <div class="cast-icon">🐱</div>
+        <div class="cast-name">ネコ警部</div>
+        <div class="cast-role">ベテラン捜査官（案内役）</div>
+        <div class="cast-desc">読解のコツを知り尽くした若いベテラン。やさしく、でも捜査はきちんとこなす。</div>
+      </div>
+      <div class="cast-card">
+        <div class="cast-icon">🔰</div>
+        <div class="cast-name">あなた</div>
+        <div class="cast-role">新人捜査官</div>
+        <div class="cast-desc">ネコ警部と一緒に訓練を重ね、少しずつ成長していく。それがあなたのストーリー。</div>
+      </div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px">📋 ４つの事件</div>
+    ${UNITS.map((u,i)=>`<div class="s3card" style="cursor:pointer" onclick="switchUnit(${i})">
+      <div class="s3icon" style="font-size:20px">${u.label.slice(0,2)}</div>
+      <div>
+        <div class="s3ttl">${u.label}</div>
+        <div class="s3sub">${u.title}</div>
+        <div class="s3meta">${unitStates[i].step >= STEPS_LABELS.length-1 ? '✅ 捜査完了' : unitStates[i].step > 0 ? '🔍 捜査中' : '📁 未着手'}</div>
+      </div>
+    </div>`).join('')}
+    <button class="btn" onclick="switchUnit(0)">🐱 さあ、第１事件へ →</button>
+  </div>`;
+}
+
+function renderUnitIntro(TEXT){
+  return `<div class="preface-wrap">
+    <div class="preface-eyebrow">新しい事件ファイル</div>
+    <div class="preface-title">${UNITS[currentUnit].label}<br><span>${TEXT.title}</span></div>
+    <div class="preface-body">
+      <p>この事件では、<strong>「${TEXT.title}」</strong>について書かれた文章を捜査する。</p>
+      <p>ネコ警部と一緒に、10のステップで証拠を集めていこう。消去法をうまく使えば、答えは必ず見えてくるよ。</p>
+    </div>
+    <div class="preface-cast">
+      <div class="cast-card">
+        <div class="cast-icon">🐱</div>
+        <div class="cast-name">ネコ警部</div>
+        <div class="cast-role">ベテラン捜査官</div>
+        <div class="cast-desc">この事件も一緒に捜査するよ。</div>
+      </div>
+      <div class="cast-card">
+        <div class="cast-icon">📄</div>
+        <div class="cast-name">段落数</div>
+        <div class="cast-role">${TEXT.paras.length}段落</div>
+        <div class="cast-desc">問題は3問。消去法で絞っていこう。</div>
+      </div>
+    </div>
+    <button class="btn" onclick="adv()">🐱 捜査開始！ →</button>
+  </div>`;
+}
+
+/* ════════════════════════════════════════
+   イベントハンドラ
+════════════════════════════════════════ */
+function tog(k){ const S=getS(); S.checks[k]=!S.checks[k]; render(); }
+function togHl(id){ const S=getS(); S.hl[id]=!S.hl[id]; render(); }
+function adv(){ getS().step++; render(); }
+function selAns(qi,oi){ getS().selA[qi]=oi; render(); }
+function confAns(qi){
+  const S=getS(); S.answered[qi]=true;
+  if(S.selA[qi]===getQS()[qi].ans) S.score++;
+  render();
+}
+function nextQ(){ const S=getS(); S.qIdx++; S.showFloat=false; S.sliderPage=0; S.showHintPopup=false; render(); }
+function elimTap(qi,oi){
+  const S=getS();
+  if(S.elimDone[qi]) return;
+  if(!S.elimShown[qi].includes(oi)) S.elimShown[qi]=[...S.elimShown[qi],oi];
+  render();
+}
+function elimFinish(qi){ getS().elimDone[qi]=true; render(); }
+function memoSel(id,oi){ const S=getS(); if(!S.memoConfirmed[id]){ S.memoSel[id]=oi; render(); } }
+function memoHint(id){ const S=getS(); S.memoHint[id]=!S.memoHint[id]; render(); }
+function memoConfirm(id){ const S=getS(); if(S.memoSel[id]!==undefined&&S.memoSel[id]>=0){ S.memoConfirmed[id]=true; render(); } }
+function skimMarkRead(id){ const S=getS(); S.skimRead[id]=true; render(); }
+function skimSetABC(id,val){ const S=getS(); S.skimABC[id]=val; render(); }
+function skimFinish(){ adv(); }
+function skimNext(){
+  const S=getS(); const T=getT();
+  if(S.skimPage < T.paras.length-1){ S.skimPage++; render(); }
+  else{ adv(); }
+}
+function toggleFloat(){ const S=getS(); S.showFloat=!S.showFloat; render(); }
+function toggleTech(){ const S=getS(); S.showTech=!S.showTech; render(); }
+function closeFloat(e){ if(e.target.classList.contains('float-overlay')){ getS().showFloat=false; render(); } }
+function restartUnit(){
+  unitStates[currentUnit]=makeUnitState();
+  render();
+}
+function markOpen(idx){ const S=getS(); S.markOpen[idx]=true; render(); }
+function markNext(){
+  const S=getS(); const T=getT();
+  if(S.markPage < T.paras.length-1){ S.markPage++; render(); }
+}
+function sliderPrev(){
+  const S=getS(); const T=getT();
+  if(S.sliderPage > 0){ S.sliderPage--; render(); }
+}
+function sliderNext(){
+  const S=getS(); const T=getT();
+  if(S.sliderPage < T.paras.length-1){ S.sliderPage++; render(); }
+}
+function toggleHintPopup(){
+  const S=getS(); S.showHintPopup=!S.showHintPopup; render();
+}
+function closeHintPopup(e){
+  if(e.target.classList.contains('hint-popup-overlay')){ getS().showHintPopup=false; render(); }
+}
+
+/* ════════════════════════════════════════
+   起動
+════════════════════════════════════════ */
+renderTabs();
+render();
+</script>
+</body>
+</html>
