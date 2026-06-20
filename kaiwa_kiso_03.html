@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 基礎③｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --purple: #7c4dbd;
+    --purple-light: #f0eafb;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-badge {
+    background: var(--teal);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+
+  .intro-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--teal);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--teal); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+
+  .new-point {
+    background: var(--navy);
+    color: white;
+    border-radius: var(--radius);
+    padding: 16px 22px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .new-point .np-label {
+    font-size: 11px; color: var(--teal); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .new-point ul { padding-left: 18px; }
+  .new-point li { margin-bottom: 4px; }
+
+  .guide {
+    background: var(--teal-light);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark { background: var(--pink-light); color: var(--pink); }
+  .demo-exp  { background: var(--gold-light);  color: var(--gold); }
+  .demo-flow { background: var(--teal-light);  color: var(--teal); }
+
+  .scene-box {
+    background: var(--navy); color: white;
+    border-radius: var(--radius); padding: 16px 22px;
+    margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+
+  .characters {
+    display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .char-card {
+    background: white; border-radius: 12px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start;
+    gap: 12px; flex: 1; min-width: 160px;
+  }
+  .char-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .char-a .char-icon { background: #e8f4fd; }
+  .char-b .char-icon { background: #fde8f4; }
+  .char-c .char-icon { background: var(--purple-light); }
+  .char-info .char-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .char-info .char-desc { font-size: 12px; color: var(--gray); margin-top: 3px; line-height: 1.5; }
+
+  .dialogue-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+
+  .utterance {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px 9px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-c .speaker-icon { background: var(--purple-light); }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num {
+    margin-left: auto; font-size: 11px; color: var(--gray);
+    background: var(--gray-light); padding: 2px 8px; border-radius: 10px;
+  }
+  .utterance-body { padding: 13px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.9; color: var(--navy); }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+
+  .btn-row { display: flex; gap: 8px; padding: 8px 18px 13px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp  { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover,  .btn-exp.active  { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 82vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--teal); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--teal); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--teal); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 12px; background: #dde; margin-left: 13px; margin-bottom: 2px; }
+
+  .question-section {
+    background: white; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--teal); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text {
+    font-size: 15.5px; line-height: 1.85; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover { border-color: var(--teal-light); background: var(--teal-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+
+  .phase-bar {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+  }
+  .phase-badge {
+    background: var(--teal); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .phase-note { font-size: 13px; color: var(--gray); }
+
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn    { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+  /* ─── 完了ナビゲーション ─── */
+  .completion-nav {
+    display: none;
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-top: 28px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    animation: slideDown 0.4s ease;
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 2.4em; margin-bottom: 10px; }
+  .completion-nav .comp-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .completion-nav .comp-sub { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.7; }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-next {
+    background: var(--navy); color: white;
+  }
+  .nav-btn-next:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .nav-btn-index {
+    background: white; color: var(--navy);
+    border: 2px solid #d0d5e0;
+  }
+  .nav-btn-index:hover { border-color: var(--navy); transform: translateY(-1px); }
+
+
+  /* ─── 紙吹雪 ─── */
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">会話文読解 基礎</span>
+  <h1>基礎 ③ ── 職場の引き継ぎ</h1>
+</header>
+
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">基礎フェーズ</span>
+    <span class="phase-note">基礎フェーズ最終回。立場の違いが言葉にどう表れるかを読み取りましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">この教材について</div>
+    <p>職場での会話には、上司・同僚・後輩など、<strong>立場の違い</strong>が言葉の選び方に影響します。<br>
+    同じ「困っている」という気持ちでも、立場によって言い方がどう変わるか、注意しながら読んでみましょう。</p>
+  </div>
+
+  <div class="new-point">
+    <div class="np-label">▶ 基礎③の新しいポイント</div>
+    <ul>
+      <li>立場が上の人（上司・先輩）への話し方と、下の人（後輩・部下）への話し方は異なります。</li>
+      <li>「〜していただけますか」「〜させていただきます」など、敬語の使い方から関係性が読み取れます。</li>
+      <li>言葉の表面だけでなく、その人が「本当は何を望んでいるか」を読み取ることが大切です。</li>
+    </ul>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    ある会社の事務室。来月から新しい担当者に業務を引き継ぐことになった。主任の吉田さん、引き継ぎをする先輩社員の松本さん、引き継ぎを受ける新入社員の加藤さんの三人が話し合っている。
+  </div>
+
+  <div class="characters">
+    <div class="char-card char-c">
+      <div class="char-icon">👨‍💼</div>
+      <div class="char-info">
+        <div class="char-name">吉田さん</div>
+        <div class="char-desc">主任。3人の中で立場が上。引き継ぎの責任者。</div>
+      </div>
+    </div>
+    <div class="char-card char-a">
+      <div class="char-icon">👩</div>
+      <div class="char-info">
+        <div class="char-name">松本さん</div>
+        <div class="char-desc">先輩社員。これまでの担当者。来月から別部署へ異動。</div>
+      </div>
+    </div>
+    <div class="char-card char-b">
+      <div class="char-icon">🧑</div>
+      <div class="char-info">
+        <div class="char-name">加藤さん</div>
+        <div class="char-desc">新入社員。引き継ぎを受ける側。まだ業務に不慣れ。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <!-- 発言1 -->
+    <div class="utterance speaker-c" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">吉田さん（主任）</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="来月末までに引き継ぎを完了させてほしい">
+          松本さん、加藤さん、今日は引き継ぎの進め方について確認したいと思います。来月末までに引き継ぎを完了させてほしいのですが、現状はいかがですか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>主任の吉田さんが会話を始めています。<span class="keyword">「来月末までに」</span>という期限を示したうえで、現状確認を求めています。<br>
+        上司が部下に話すときも、ですます調を使うことで丁寧さを保っています。「〜してほしいのですが」はやわらかい命令・依頼の表現です。</p>
+      </div>
+    </div>
+
+    <!-- 発言2 -->
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">松本さん</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="マニュアルの作成が半分ほど終わったところ">
+          はい。現在、マニュアルの作成が半分ほど終わったところです。ただ、取引先ごとの細かい対応の違いなど、文書に残しにくい部分も多くて、どこまで書き込むべきか迷っております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>松本さんは進捗を報告しながら、<span class="keyword">文書化しにくい暗黙知の難しさ</span>を伝えています。「迷っております」という表現は、困っていることを上司に丁寧に伝える言い方です。<br>
+        「ただ」という接続詞のあとに、実は困っている本題が来ています。</p>
+      </div>
+    </div>
+
+    <!-- 発言3 -->
+    <div class="utterance speaker-b" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">加藤さん</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="実際の対応を見せていただけると">
+          私のほうは、マニュアルを読んでいるのですが、正直まだイメージがつかみにくい部分があります。できれば、実際の対応を見せていただけると、より理解が深まるかと思うのですが……。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>加藤さんは「まだわからない」という本音を、<span class="keyword">「正直」という言葉で素直に</span>伝えています。新入社員が先輩や上司に対して使う「〜していただけると」は、遠慮がちにお願いする表現です。<br>
+        文末の「……」には、言い切ることへの遠慮や不安が滲んでいます。</p>
+      </div>
+    </div>
+
+    <!-- 発言4 -->
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">松本さん</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="同席していただくことはできますか">
+          加藤さんのおっしゃる通りで、実際に見てもらうのが一番だと私も思います。来週、A社との定例連絡があるのですが、吉田主任、加藤さんに同席していただくことはできますか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>松本さんは加藤さんの意見に賛同し、<span class="keyword">具体的な解決策を提案しています</span>。「〜することはできますか」は、上司への許可を求める丁寧な表現です。<br>
+        加藤さんへは「〜もらうのが一番」、吉田主任へは「〜していただけますか」と、相手によって言葉の選び方が変わっていることに注目しましょう。</p>
+      </div>
+    </div>
+
+    <!-- 発言5 -->
+    <div class="utterance speaker-c" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">吉田さん（主任）</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="いい機会になりますね">
+          なるほど、それはいい機会になりますね。加藤さん、来週の火曜日、空いていますか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>吉田主任が松本さんの提案を<span class="keyword">承認しています</span>。「なるほど」は相手の意見を受け入れたことを示す言葉です。<br>
+        すぐに加藤さんへ確認を取っているところに、主任として話を前に進めようとする姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <!-- 発言6 -->
+    <div class="utterance speaker-b" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">加藤さん</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="ぜひ同席させていただきたいです">
+          はい、火曜日は予定が入っておりません。ぜひ同席させていただきたいです。松本さん、当日はどのような点に気をつけて見ていればよいでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>加藤さんが積極的に参加意欲を示しています。<span class="keyword">「させていただきたい」</span>は、自分の行動を丁寧に表現する言い方です。<br>
+        さらに「どのような点に気をつけて」と聞いているところに、ただ参加するだけでなく学ぼうとする姿勢が表れています。発言3の不安げな様子から、前向きな変化が出ています。</p>
+      </div>
+    </div>
+
+    <!-- 発言7 -->
+    <div class="utterance speaker-a" id="u7">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">松本さん</div>
+        <div class="utterance-num">発言 7</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t7" data-highlight="言葉の選び方や確認のタイミング">
+          A社の担当者の方はとても細かい方なので、言葉の選び方や確認のタイミングが特に重要です。マニュアルには書ききれていない部分なので、実際に見て感じ取っていただければと思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(7)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(7)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(7)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp7">
+        <div class="exp-title">📖 解説</div>
+        <p>松本さんが発言2で「文書に残しにくい」と述べていた部分の<span class="keyword">具体的な中身</span>が、ここで明かされています。言葉の選び方・タイミングという経験的な知識は、マニュアルより実地で学ぶしかないことがわかります。<br>
+        「感じ取っていただければ」という表現には、経験を言語化できない難しさも込められています。</p>
+      </div>
+    </div>
+
+    <!-- 発言8 -->
+    <div class="utterance speaker-b" id="u8">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">加藤さん</div>
+        <div class="utterance-num">発言 8</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t8" data-highlight="不安に感じていた部分が少し解消されました">
+          わかりました。マニュアルだけでは不安に感じていた部分が少し解消されました。当日はしっかり観察してまいります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(8)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(8)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(8)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp8">
+        <div class="exp-title">📖 解説</div>
+        <p>加藤さんが自分の気持ちの変化を言葉にしています。<span class="keyword">「不安が少し解消された」</span>という表現は、会話を通じて安心感が生まれたことを示しています。<br>
+        発言3の「まだイメージがつかみにくい」から、この発言での前向きな姿勢への変化が、加藤さんの気持ちの流れです。</p>
+      </div>
+    </div>
+
+    <!-- 発言9 -->
+    <div class="utterance speaker-c" id="u9">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">吉田さん（主任）</div>
+        <div class="utterance-num">発言 9</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t9" data-highlight="困ったことがあればすぐに相談してください">
+          よかったです。松本さん、引き継ぎ期間中に気になることがあれば、遠慮なく報告してください。加藤さんも、困ったことがあればすぐに相談してください。一人で抱え込まないようにしましょう。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(9)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(9)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(9)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp9">
+        <div class="exp-title">📖 解説</div>
+        <p>吉田主任が2人それぞれに向けて言葉をかけています。松本さんには「報告を」、加藤さんには「相談を」と、<span class="keyword">役割に応じた言葉の使い分け</span>がされています。<br>
+        「一人で抱え込まないように」という言葉に、上司として2人を支える姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <!-- 発言10 -->
+    <div class="utterance speaker-a" id="u10">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">松本さん</div>
+        <div class="utterance-num">発言 10</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t10" data-highlight="来月末までに確実に引き継ぎを終えられるよう">
+          ありがとうございます。加藤さんとも密に連絡を取りながら、来月末までに確実に引き継ぎを終えられるよう、取り組んでまいります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(10)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(10)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(10)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp10">
+        <div class="exp-title">📖 解説</div>
+        <p>松本さんが会話を締めくくっています。発言1で吉田主任が示した<span class="keyword">「来月末」という期限</span>を受け止め、それに応える形で決意を述べています。<br>
+        「取り組んでまいります」は、これから行動することを丁寧に宣言する表現です。会話全体が「課題の確認→解決策の提案→合意→決意」という流れで完結しています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 問い -->
+  <div class="question-section">
+    <div class="question-label">問　い</div>
+    <div class="question-text">
+      この会話で、<strong>加藤さんが「実際の対応を見せてほしい」と求めた理由</strong>として最も適切なものを、次の①〜④から選んでください。
+    </div>
+    <div class="choices" id="choices">
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">①</span>
+        松本さんの作ったマニュアルに誤りがあると感じ、直接確かめたかったから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, true)">
+        <span class="choice-num">②</span>
+        マニュアルを読んでいるものの理解しにくい部分があり、実地で見ることで理解を深めたかったから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">③</span>
+        文書での引き継ぎよりも、実際に見て学ぶ方が自分に向いていると以前から考えていたから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">④</span>
+        来月末の期限に間に合わせるため、できるだけ早く引き継ぎを完了させる必要があったから。
+      </button>
+    </div>
+    <div class="answer-feedback" id="feedback"></div>
+  </div>
+
+</main>
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">よくできました！</div>
+    <div class="comp-sub">基礎③クリアです。<br>立場の違いによる言葉の使い分けを読み取れました。いよいよ標準フェーズへ進みましょう。</div>
+    <div class="nav-btn-row">
+      <a href="kaiwa_hyojun_01.html" class="nav-btn nav-btn-next">次の単元へ ▶ 標準①「図書館の運営会議」</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+
+  const flowData = [
+    { speaker: '吉田さん（主任）', text: '来月末までの引き継ぎ完了を求め、現状を確認する。' },
+    { speaker: '松本さん', text: 'マニュアルが半分完成していることを報告。文書に残しにくい部分があると困惑を伝える。' },
+    { speaker: '加藤さん', text: 'マニュアルだけではイメージがつかみにくいと述べ、実際の対応を見せてほしいと遠慮がちにお願いする。' },
+    { speaker: '松本さん', text: '加藤さんの意見に賛同し、来週のA社との連絡に加藤さんが同席できるか主任に許可を求める。' },
+    { speaker: '吉田さん（主任）', text: '松本さんの提案をよい機会と評価し、加藤さんの予定を確認する。' },
+    { speaker: '加藤さん', text: '予定が空いていることを伝え、積極的に参加を希望。当日の注意点を松本さんに聞く。' },
+    { speaker: '松本さん', text: 'A社担当者の特徴（言葉の選び方・確認のタイミング）を説明し、実地で感じ取ってほしいと伝える。' },
+    { speaker: '加藤さん', text: 'マニュアルへの不安が解消されたと述べ、当日しっかり観察すると前向きな姿勢を示す。' },
+    { speaker: '吉田さん（主任）', text: '松本さんに報告を、加藤さんに相談を促し、一人で抱え込まないよう声をかける。' },
+    { speaker: '松本さん', text: '加藤さんと連携しながら、来月末までに確実に引き継ぎを終えると決意を述べる。' },
+  ];
+
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+
+  function answer(btn, isCorrect) {
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    const fb = document.getElementById('feedback');
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>
+        発言3で加藤さんは「マニュアルを読んでいるが、正直まだイメージがつかみにくい部分がある」と述べています。マニュアルを否定しているのではなく、読んでいるからこそ「実際に見て補いたい」という気持ちです。本文の言葉を丁寧に読むと、加藤さんの意図が見えてきます。`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll('.choice-btn')[1].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      showCompletionNav();
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>
+        正解は②です。発言3をもう一度読んでみましょう。加藤さんはマニュアルについてどう言っていましたか。「読んでいる」のか「読んでいない」のかを確認するところから始めてみてください。`;
+    }
+  }
+
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+
+  function showCompletionNav() {
+    setTimeout(function() {
+      var nav = document.getElementById('completionNav');
+      if (nav) {
+        nav.classList.add('show');
+        nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 130}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 5, vy: Math.random() * 4 + 2,
+      r: Math.random() * 7 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 9,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 3200);
+  }
+
+</script>
+</body>
+</html>

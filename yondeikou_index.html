@@ -64,6 +64,13 @@ body{font-family:'BIZ UDPGothic','Hiragino Kaku Gothic ProN','Yu Gothic UI',Meir
 .abc-b{border-color:#d97706;color:#d97706}.abc-b.sel{background:#d97706;color:#fff}
 .abc-c{border-color:#dc2626;color:#dc2626}.abc-c.sel{background:#dc2626;color:#fff}
 .abc-btn:hover{opacity:.8}
+/* 会話文読解カード */
+.sc-hd.kaiwa{background:#e6f7f7!important;border-bottom-color:#1b8a8a!important}
+.sc-num.kaiwa{background:#1b8a8a!important}
+.sc-title.kaiwa{color:#0e6655!important}
+.sec-card.s-a .sc-hd.kaiwa{background:#dcfce7!important;border-bottom-color:#16a34a!important}
+.sec-card.s-b .sc-hd.kaiwa{background:#fef3c7!important;border-bottom-color:#d97706!important}
+.sec-card.s-c .sc-hd.kaiwa{background:#fee2e2!important;border-bottom-color:#dc2626!important}
 .sec-card.s-a{border-color:#16a34a}.sec-card.s-a .sc-hd{background:#dcfce7!important;border-bottom-color:#16a34a!important}
 .sec-card.s-b{border-color:#d97706}.sec-card.s-b .sc-hd{background:#fef3c7!important;border-bottom-color:#d97706!important}
 .sec-card.s-c{border-color:#dc2626}.sec-card.s-c .sc-hd{background:#fee2e2!important;border-bottom-color:#dc2626!important}
@@ -94,7 +101,7 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
 <canvas id="cnf"></canvas>
 <div class="top-header">
   <h1>📖 読んでいこう — 国語読解プログラム</h1>
-  <p>近代文学の創作要約文で段階的に読解力を育てる — 全7回</p>
+  <p>近代文学の創作要約文で段階的に読解力を育てる — 全7回 ＋ 会話文読解</p>
   <div class="summary-bar">
     <div class="sum-item"><span class="sum-dot sum-dot-a"></span>A 完璧 <span class="sum-count" id="cnt-a">0</span></div>
     <div class="sum-item"><span class="sum-dot sum-dot-b"></span>B 良好 <span class="sum-count" id="cnt-b">0</span></div>
@@ -103,8 +110,9 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
   </div>
 </div>
 <div class="tab-nav">
-  <button class="tnav on" onclick="switchTab('tab-units',this)">📋 全7回</button>
+  <button class="tnav on" onclick="switchTab('tab-units',this)">📋 全単元</button>
   <button class="tnav"    onclick="switchTab('tab-record',this)">📊 学習記録</button>
+  <button class="tnav"    onclick="scrollToKaiwa()">💬 会話文読解</button>
 </div>
 <div class="wrap">
 <div class="tab-sec on" id="tab-units">
@@ -143,6 +151,20 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
     <div class="unit-body">
       <div class="group-label">💛 人物の内面を読み取る</div>
       <div class="sec-grid" id="grid-advanced"></div>
+    </div>
+  </div>
+
+  <div class="unit">
+    <div class="unit-hd" style="background:linear-gradient(90deg,#1b8a8a,#0e6655)"><span class="unit-num">会話文</span><span class="unit-title">会話文読解</span><span class="unit-badge">入門〜高認実戦</span></div>
+    <div class="unit-body">
+      <div class="group-label">💬 入門 — 2人の会話から読み解く</div>
+      <div class="sec-grid" id="grid-kaiwa-nyumon"></div>
+      <div class="group-label">🗣 基礎 — 3人の会話・立場の違いを読む</div>
+      <div class="sec-grid" id="grid-kaiwa-kiso"></div>
+      <div class="group-label">📋 標準 — 意図と変化を会話全体で追う</div>
+      <div class="sec-grid" id="grid-kaiwa-hyojun"></div>
+      <div class="group-label">🎯 高認実戦 — 本番レベルの会話文に挑戦</div>
+      <div class="sec-grid" id="grid-kaiwa-jissen"></div>
     </div>
   </div>
 </div>
@@ -190,6 +212,40 @@ const UNITS = [
   {id:'y07',num:'第7回',title:'馬鹿一',group:'advanced',
    sub:['二人の画家の価値観の対立','「おもしろい」の中にある純粋さ','葛藤＝感動と認めたくない気持ちの衝突','作者がどちらの側に立つかを読む'],
    href:'yondeikou_07_bakaichi.html'},
+  // ── 会話文読解 ──
+  {id:'k_n01',num:'入門①',title:'放課後の会話',group:'kaiwa-nyumon',
+   sub:['誰が何を言っているかを追う','迷いの原因を読み取る','ここに注意・解説・話の流れの使い方'],
+   href:'kaiwa_nyumon_01.html'},
+  {id:'k_n02',num:'入門②',title:'すれ違う気持ち',group:'kaiwa-nyumon',
+   sub:['気持ちのすれ違いを読む','本音と表面の言葉の違い','行動の裏にある動機を選ぶ'],
+   href:'kaiwa_nyumon_02.html'},
+  {id:'k_n03',num:'入門③',title:'話題の中の第三者',group:'kaiwa-nyumon',
+   sub:['その場にいない人物を区別する','話している2人と話題の人を整理','根拠にもとづく判断を読む'],
+   href:'kaiwa_nyumon_03.html'},
+  {id:'k_k01',num:'基礎①',title:'三人の放課後',group:'kaiwa-kiso',
+   sub:['3人の会話の流れを追う','途中から加わる人物の役割','気持ちの変化を会話全体でたどる'],
+   href:'kaiwa_kiso_01.html'},
+  {id:'k_k02',num:'基礎②',title:'地域会議の一幕',group:'kaiwa-kiso',
+   sub:['ですます調の議論を読む','「ただ」「しかしながら」の役割','対立から合意へのきっかけを読む'],
+   href:'kaiwa_kiso_02.html'},
+  {id:'k_k03',num:'基礎③',title:'職場の引き継ぎ',group:'kaiwa-kiso',
+   sub:['立場の違いによる言葉の使い分け','敬語から関係性を読む','本当の理由を言葉の奥から探す'],
+   href:'kaiwa_kiso_03.html'},
+  {id:'k_h01',num:'標準①',title:'図書館の運営会議',group:'kaiwa-hyojun',
+   sub:['12発言の会話全体を見渡す','傍線部の意図を読む（問い1）','会話全体の変化を追う（問い2）'],
+   href:'kaiwa_hyojun_01.html'},
+  {id:'k_h02',num:'標準②',title:'福祉施設の運営協議',group:'kaiwa-hyojun',
+   sub:['意見の対立と歩み寄りの構造を読む','やわらかい表現の裏の主張を読む','解決策の変化の流れを追う'],
+   href:'kaiwa_hyojun_02.html'},
+  {id:'k_h03',num:'標準③',title:'環境委員会の議論',group:'kaiwa-hyojun',
+   sub:['複数の論点が絡む議論を整理する','「言い過ぎ」「言い足りない」を見極める','傍線部の意図と会話全体の変化'],
+   href:'kaiwa_hyojun_03.html'},
+  {id:'k_j01',num:'実戦①',title:'商店街活性化の協議',group:'kaiwa-jissen',
+   sub:['14発言・3問構成','消去法の実践（言い過ぎ・会話外情報）','傍線部・懸念の理由・会話全体の読み取り'],
+   href:'kaiwa_jissen_01.html'},
+  {id:'k_j02',num:'実戦②',title:'図書館と学校の連携協議',group:'kaiwa-jissen',
+   sub:['14発言・3問構成・最終回','傍線部の意図・役割の整理・全体の読み取り','全11回の会話文読解 完全修了'],
+   href:'kaiwa_jissen_02.html'},
 ];
 
 const LS_PRE='yondeikou_';
@@ -207,14 +263,15 @@ function touch(id){
 }
 
 function buildCards(){
-  const grids={sousa:'grid-sousa',basic:'grid-basic',practice:'grid-practice',advanced:'grid-advanced'};
+  const grids={sousa:'grid-sousa',basic:'grid-basic',practice:'grid-practice',advanced:'grid-advanced','kaiwa-nyumon':'grid-kaiwa-nyumon','kaiwa-kiso':'grid-kaiwa-kiso','kaiwa-hyojun':'grid-kaiwa-hyojun','kaiwa-jissen':'grid-kaiwa-jissen'};
   UNITS.forEach(u=>{
     const el=document.createElement('div');
     el.className='sec-card'; el.dataset.id=u.id;
+    const isKaiwa=u.group.startsWith('kaiwa');
     el.innerHTML=`
-      <div class="sc-hd">
-        <span class="sc-num">${u.num}</span>
-        <span class="sc-title">${u.title}</span>
+      <div class="sc-hd${isKaiwa?' kaiwa':''}">
+        <span class="sc-num${isKaiwa?' kaiwa':''}">${u.num}</span>
+        <span class="sc-title${isKaiwa?' kaiwa':''}">${u.title}</span>
         <span class="sc-status" id="st-${u.id}">未学習</span>
       </div>
       <div class="sc-body">
@@ -298,6 +355,18 @@ function switchTab(id,btn){
 }
 
 function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+function scrollToKaiwa(){
+  // 全単元タブを表示してから会話文セクションへスクロール
+  document.querySelectorAll('.tab-sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tnav').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-units').classList.add('on');
+  document.querySelectorAll('.tnav')[0].classList.add('on');
+  setTimeout(()=>{
+    const el=document.getElementById('grid-kaiwa-nyumon');
+    if(el) el.closest('.unit').scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
 
 function launchConfetti(){
   const cvs=document.getElementById('cnf');

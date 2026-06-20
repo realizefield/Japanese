@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 入門②｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --white: #ffffff;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-badge {
+    background: var(--pink);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  .intro-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--pink);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--pink); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+  .guide {
+    background: var(--teal-light);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark  { background: var(--pink-light); color: var(--pink); }
+  .demo-exp   { background: var(--gold-light);  color: var(--gold); }
+  .demo-flow  { background: var(--teal-light);  color: var(--teal); }
+  .scene-box {
+    background: var(--navy); color: white;
+    border-radius: var(--radius); padding: 16px 22px;
+    margin-bottom: 24px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .dialogue-section { display: flex; flex-direction: column; gap: 18px; margin-bottom: 36px; }
+  .utterance {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .utterance.highlighted { box-shadow: 0 0 0 3px var(--pink), var(--shadow); }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px 10px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num { margin-left: auto; font-size: 11px; color: var(--gray); background: var(--gray-light); padding: 2px 8px; border-radius: 10px; }
+  .utterance-body { padding: 14px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.85; color: var(--navy); transition: background 0.3s; }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+  .btn-row { display: flex; gap: 8px; padding: 10px 18px 14px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover, .btn-exp.active { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--teal); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--teal); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--teal); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13.5px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 14px; background: #dde; margin-left: 13px; margin-bottom: 4px; }
+  .question-section { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--pink); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text { font-size: 15.5px; line-height: 1.85; color: var(--navy); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0; }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover { border-color: var(--pink-light); background: var(--pink-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+  /* ─── 完了ナビゲーション ─── */
+  .completion-nav {
+    display: none;
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-top: 28px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    animation: slideDown 0.4s ease;
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 2.4em; margin-bottom: 10px; }
+  .completion-nav .comp-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .completion-nav .comp-sub { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.7; }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-next {
+    background: var(--navy); color: white;
+  }
+  .nav-btn-next:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .nav-btn-index {
+    background: white; color: var(--navy);
+    border: 2px solid #d0d5e0;
+  }
+  .nav-btn-index:hover { border-color: var(--navy); transform: translateY(-1px); }
+
+
+  /* ─── 紙吹雪 ─── */
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">会話文読解</span>
+  <h1>入門 ② ── すれ違う気持ち</h1>
+</header>
+
+<main>
+
+  <div class="intro-card">
+    <div class="label">この教材について</div>
+    <p>2人は同じ目標を持っていますが、考え方がかみ合っていません。<br>
+    どこで気持ちがすれ違っているか、探りながら読んでみましょう。</p>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    中学3年生の秋。翔太（しょうた）と明（あかり）は同じバスケ部で、来月の地区大会に向けて練習している。放課後、体育館の外で話している。
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <!-- 発言1 -->
+    <div class="utterance speaker-b" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">翔太</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="自主練しないの？">明、最近練習終わったらすぐ帰るよな。大会前なのに、自主練しないの？</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>翔太は明の行動を<span class="keyword">「すぐ帰る」</span>と指摘しています。責めているわけではないかもしれませんが、受け取り方によっては批判に聞こえます。<br>
+        「自主練しないの？」という言い方には、「すべきだ」という翔太の考えが滲んでいます。</p>
+      </div>
+    </div>
+
+    <!-- 発言2 -->
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">明</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="体だけが練習じゃない">してるよ。家でシュートフォームの動画を見て、頭の中でイメトレしてる。体だけが練習じゃないと思って。</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>明は自分なりに練習していると反論しています。<span class="keyword">「体だけが練習じゃない」</span>という言葉は、翔太の「自主練＝体を動かすこと」という前提に対して異議を唱えています。<br>
+        2人の「練習」の定義がここで初めてずれていることがわかります。</p>
+      </div>
+    </div>
+
+    <!-- 発言3 -->
+    <div class="utterance speaker-b" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">翔太</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="本当に効果あるの？">でも試合は体を動かすんだから、実際に体を使って練習しないと意味ないだろ。イメトレって、本当に効果あるの？</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>翔太はイメトレの<span class="keyword">効果を疑っています</span>。「本当に効果あるの？」という言葉は、明のやり方を認めていないことを示しています。<br>
+        翔太は悪意があるわけではなく、「勝ちたい」という気持ちから来ている発言ですが、明には否定されたように聞こえるかもしれません。</p>
+      </div>
+    </div>
+
+    <!-- 発言4 -->
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">明</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="いつも「もっとやれ」って感じ">……翔太はいつも「もっとやれ」って感じだよね。私だって大会に勝ちたい気持ちは同じなんだけど。</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>明はここで<span class="keyword">不満を打ち明けています</span>。「いつも」という言葉は、今回だけでなく以前からそう感じていたことを示しています。<br>
+        「私だって勝ちたい」という言葉が重要です。目標は同じ——ただアプローチが違うだけだと、明は伝えようとしています。</p>
+      </div>
+    </div>
+
+    <!-- 発言5 -->
+    <div class="utterance speaker-b" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">🧑</div>
+        <div class="speaker-name">翔太</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="責めてるつもりじゃなかった">……そうか。ごめん、責めてるつもりじゃなかったんだけど。ただ、チームで戦うんだから、みんなで同じ熱量でいたかっただけで。</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>翔太は初めて<span class="keyword">謝っています</span>。「責めてるつもりじゃなかった」という言葉は、自分の言い方が伝わっていなかったことへの気づきです。<br>
+        「チームで同じ熱量でいたかった」——翔太の言動の根っこにあった本音がここで明かされます。</p>
+      </div>
+    </div>
+
+    <!-- 発言6 -->
+    <div class="utterance speaker-a" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">明</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="やり方が違っただけで">それは私も同じだよ。やり方が違っただけで。……今度、一緒にイメトレの動画、見てみる？</div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>明は翔太の気持ちを受け取り、<span class="keyword">歩み寄っています</span>。「やり方が違っただけ」という言葉で、対立ではなく違いだったと整理しています。<br>
+        「一緒に見てみる？」という誘いは、自分のやり方を翔太に開いてみせる前向きな一歩です。会話全体が「すれ違い→本音→和解」という流れで動いています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 問い -->
+  <div class="question-section">
+    <div class="question-label">問　い</div>
+    <div class="question-text">
+      この会話で、<strong>翔太が明に声をかけた本当の理由</strong>として最も適切なものを、次の①〜④から選んでください。
+    </div>
+    <div class="choices" id="choices">
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">①</span>
+        イメトレという練習方法に興味を持ち、詳しく聞きたかったから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, true)">
+        <span class="choice-num">②</span>
+        チーム全員が同じ気持ちで大会に臨んでほしいと思っていたから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">③</span>
+        明の練習への取り組みが足りないと感じ、注意したかったから。
+      </button>
+      <button class="choice-btn" onclick="answer(this, false)">
+        <span class="choice-num">④</span>
+        自分の自主練のやり方を明にも試してほしかったから。
+      </button>
+    </div>
+    <div class="answer-feedback" id="feedback"></div>
+  </div>
+
+</main>
+
+<!-- 話の流れポップアップ -->
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">よくできました！</div>
+    <div class="comp-sub">入門②クリアです。<br>本音と表面の言葉の違いを読み取る練習ができました。</div>
+    <div class="nav-btn-row">
+      <a href="kaiwa_nyumon_03.html" class="nav-btn nav-btn-next">次の単元へ ▶ 入門③「話題の中の第三者」</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup" id="flowPopup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+  const flowData = [
+    { speaker: '翔太', text: '明が練習後すぐ帰ることを指摘し、自主練しないのかと聞く。' },
+    { speaker: '明', text: '家でイメトレをしていると答え、「体だけが練習じゃない」と反論する。' },
+    { speaker: '翔太', text: 'イメトレの効果を疑い、体を動かすことが大事だと主張する。' },
+    { speaker: '明', text: '「いつも〝もっとやれ〟という感じ」と不満を打ち明ける。勝ちたい気持ちは同じだと伝える。' },
+    { speaker: '翔太', text: '謝り、責めるつもりではなかったと説明。チームで同じ熱量でいたかったという本音を話す。' },
+    { speaker: '明', text: 'やり方が違っただけと整理し、一緒にイメトレ動画を見ようと誘う。' },
+  ];
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function answer(btn, isCorrect) {
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    const fb = document.getElementById('feedback');
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>
+        発言5で翔太は「チームで戦うんだから、みんなで同じ熱量でいたかった」と話しています。責めていたのではなく、一体感を求めていたのが本当の気持ちでした。`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll('.choice-btn')[1].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      showCompletionNav();
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>
+        正解は②です。発言5をもう一度読んでみてください。翔太が「本当はどうしたかった」のか、翔太自身の言葉で書かれている部分を探してみましょう。`;
+    }
+  }
+
+  // 初期化: data-original を保存
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+
+  function showCompletionNav() {
+    setTimeout(function() {
+      var nav = document.getElementById('completionNav');
+      if (nav) {
+        nav.classList.add('show');
+        nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 130}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 5, vy: Math.random() * 4 + 2,
+      r: Math.random() * 7 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 9,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 3200);
+  }
+
+</script>
+</body>
+</html>

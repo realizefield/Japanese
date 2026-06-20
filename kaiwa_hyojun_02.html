@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 標準②｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --purple: #7c4dbd;
+    --purple-light: #f0eafb;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy); color: white;
+    padding: 18px 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .header-badge {
+    background: var(--purple); color: white; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  .phase-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .phase-badge {
+    background: var(--purple); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .phase-note { font-size: 13px; color: var(--gray); }
+  .intro-card {
+    background: white; border-radius: var(--radius); padding: 22px 24px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border-left: 5px solid var(--purple);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--purple); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+  .new-point {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.8;
+  }
+  .new-point .np-label {
+    font-size: 11px; color: #c4b5fd; font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .new-point ul { padding-left: 18px; }
+  .new-point li { margin-bottom: 4px; }
+  .guide {
+    background: var(--teal-light); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark { background: var(--pink-light); color: var(--pink); }
+  .demo-exp  { background: var(--gold-light); color: var(--gold); }
+  .demo-flow { background: var(--teal-light); color: var(--teal); }
+  .scene-box {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .characters { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .char-card {
+    background: white; border-radius: 12px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start;
+    gap: 12px; flex: 1; min-width: 160px;
+  }
+  .char-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .char-a .char-icon { background: #e8f4fd; }
+  .char-b .char-icon { background: #fde8f4; }
+  .char-c .char-icon { background: var(--purple-light); }
+  .char-info .char-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .char-info .char-role {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px; margin: 3px 0 4px;
+  }
+  .role-a { background: #dbeafe; color: #1e40af; }
+  .role-b { background: #fce7f3; color: #9d174d; }
+  .role-c { background: var(--purple-light); color: var(--purple); }
+  .char-info .char-desc { font-size: 12px; color: var(--gray); line-height: 1.5; }
+  .dialogue-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+  .utterance {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px 9px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-c .speaker-icon { background: var(--purple-light); }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num {
+    margin-left: auto; font-size: 11px; color: var(--gray);
+    background: var(--gray-light); padding: 2px 8px; border-radius: 10px;
+  }
+  .utterance-body { padding: 13px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.9; color: var(--navy); }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+  .btn-row { display: flex; gap: 8px; padding: 8px 18px 13px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp  { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover,  .btn-exp.active  { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 82vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--purple); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--purple); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--purple); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 12px; background: #dde; margin-left: 13px; margin-bottom: 2px; }
+  .question-section {
+    background: white; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--purple); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text {
+    font-size: 15.5px; line-height: 1.85; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--purple-light); background: var(--purple-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+  .divider { border: none; border-top: 2px dashed #e5e7eb; }
+  /* 完了ナビ */
+  .completion-nav {
+    display: none; background: white; border-radius: var(--radius);
+    padding: 28px 24px; margin-top: 28px; box-shadow: var(--shadow);
+    text-align: center; animation: slideDown 0.4s ease;
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 2.4em; margin-bottom: 10px; }
+  .completion-nav .comp-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .completion-nav .comp-sub { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.7; }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-next { background: var(--navy); color: white; }
+  .nav-btn-next:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .nav-btn-index { background: white; color: var(--navy); border: 2px solid #d0d5e0; }
+  .nav-btn-index:hover { border-color: var(--navy); transform: translateY(-1px); }
+  /* 紙吹雪 */
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn    { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">会話文読解 標準</span>
+  <h1>標準 ② ── 福祉施設の運営協議</h1>
+</header>
+
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">標準フェーズ</span>
+    <span class="phase-note">意見の対立と歩み寄りの構造を会話全体で読み取りましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">この教材について</div>
+    <p>長い会話では、最初の意見が途中で変化することがあります。<br>
+    「なぜ変わったのか」「何がきっかけか」を問いの核心として意識しながら読みましょう。</p>
+  </div>
+
+  <div class="new-point">
+    <div class="np-label">▶ 標準②のポイント</div>
+    <ul>
+      <li>「〜とは思いますが」「〜のではないでしょうか」など、やわらかい表現の裏にある主張の強さに注目しましょう。</li>
+      <li>同じ人物の発言でも、会話が進むにつれて立場がどう変わるかを追うことが大切です。</li>
+      <li>問いの選択肢には「会話にない情報」を含む誤答が混じります。本文に書かれていることだけを根拠にしましょう。</li>
+    </ul>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    ある市の社会福祉協議会の会議室。高齢者向けデイサービス施設の送迎時間の見直しについて、三者が協議している。施設長の村上さん、介護スタッフ代表の坂本さん、利用者家族代表の富田さんが出席している。
+  </div>
+
+  <div class="characters">
+    <div class="char-card char-c">
+      <div class="char-icon">👨</div>
+      <div class="char-info">
+        <div class="char-name">村上さん</div>
+        <div class="char-role role-c">施設長</div>
+        <div class="char-desc">施設全体の運営責任者。進行も兼ねる。</div>
+      </div>
+    </div>
+    <div class="char-card char-a">
+      <div class="char-icon">👩</div>
+      <div class="char-info">
+        <div class="char-name">坂本さん</div>
+        <div class="char-role role-a">介護スタッフ代表</div>
+        <div class="char-desc">現場の介護職員を代表して発言する。</div>
+      </div>
+    </div>
+    <div class="char-card char-b">
+      <div class="char-icon">👴</div>
+      <div class="char-info">
+        <div class="char-name">富田さん</div>
+        <div class="char-role role-b">利用者家族代表</div>
+        <div class="char-desc">施設を利用する高齢者の家族を代表する。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <div class="utterance speaker-c" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">村上さん（施設長）</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="送迎時間を現在より一時間早める案">
+          本日は送迎時間の見直しについてご意見をいただきたいと思います。スタッフの勤務時間の負担を軽減するため、送迎時間を現在より一時間早める案が出ております。坂本さん、現場としてはいかがでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>村上さんが議題と変更案を提示しています。<span class="keyword">「スタッフの負担軽減」</span>が変更の目的です。施設長として変更を推進する立場から話し合いを始めています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">坂本さん（スタッフ代表）</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="残業が慢性的に続いている状況">
+          ありがとうございます。現場のスタッフとしては、早める方向は大変ありがたいと思っております。現在は夕方の送迎が遅くなりがちで、残業が慢性的に続いている状況です。一時間早めていただければ、かなり改善されると考えております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>坂本さんは変更案に<span class="keyword">賛成の立場</span>を明確にしています。「慢性的に続いている」という言葉が、現場の深刻さを伝えています。具体的な状況を示すことで、主張に説得力を持たせています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">👴</div>
+        <div class="speaker-name">富田さん（家族代表）</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="家族が帰宅前に到着してしまう">
+          スタッフの皆さんのご苦労はよく存じております。ただ、一時間早まりますと、まだ家族が帰宅前に到着してしまうご家庭が出てまいります。特に、日中お仕事をされているご家族にとっては、大きな問題になりかねません。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>富田さんはスタッフの苦労を認めながらも、<span class="keyword">家族の受け入れ問題</span>を指摘しています。「〜かねません」は「〜になる恐れがある」という懸念の表現です。利用者家族の立場から、具体的な困難を提示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">坂本さん（スタッフ代表）</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="ご家族がお帰りになるまで施設でお預かりする">
+          富田さんのご心配はもっともだと思います。その場合は、ご家族がお帰りになるまで施設でお預かりするという形も考えられるのではないでしょうか。送迎の時間だけを早めて、施設内での滞在時間を柔軟に対応するということです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>坂本さんが富田さんの懸念に応える形で<span class="keyword">折衷案</span>を提示しています。「〜のではないでしょうか」はやわらかい提案の表現です。送迎と施設滞在を分けて考えるという視点の転換が、議論を前に進めています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">👴</div>
+        <div class="speaker-name">富田さん（家族代表）</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="利用者の方が長時間施設にいることになります">
+          それは一つの方法だと思います。ただ、そうなりますと、利用者の方が長時間施設にいることになります。高齢の方への体力的な負担も考えますと、必ずしもよい解決策とは言い切れないのではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>富田さんは坂本さんの折衷案を「一つの方法」と認めながらも、<span class="keyword">利用者の体への負担</span>という新しい懸念を示しています。「必ずしも〜とは言い切れない」はやわらかく反論する表現です。富田さんが守ろうとしているのは家族の都合だけでなく、利用者自身の状態でもあることがわかります。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">村上さん（施設長）</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="利用者の状態に応じて送迎時間を個別に設定する">
+          なるほど。では視点を変えて、一律に時間を変えるのではなく、利用者の状態に応じて送迎時間を個別に設定するという方向はいかがでしょうか。体力的に問題のない方は早め、ご家族の都合に合わせる必要のある方は従来通りという形です。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>村上さんが「一律変更」から<span class="keyword">「個別対応」</span>へと提案を転換しました。「なるほど」「視点を変えて」という言葉は、相手の意見から学んで考えを発展させたことを示します。施設長として双方の意見を活かした新たな方向性を示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u7">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">坂本さん（スタッフ代表）</div>
+        <div class="utterance-num">発言 7</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t7" data-highlight="個別対応となると、スタッフの管理が複雑">
+          個別対応となると、スタッフの管理が複雑になるという懸念はございます。ただ、それでも一律変更よりは、現実的かもしれません。スタッフ間での情報共有を徹底すれば、対応できると思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(7)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(7)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(7)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp7">
+        <div class="exp-title">📖 解説</div>
+        <p>坂本さんは懸念を示しながらも<span class="keyword">前向きな可能性</span>を認めています。「懸念はございます。ただ〜」という構造は、問題を認識しつつも解決の余地を示す表現です。情報共有という具体的な解決策も提示しており、建設的な姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u8">
+      <div class="utterance-header">
+        <div class="speaker-icon">👴</div>
+        <div class="speaker-name">富田さん（家族代表）</div>
+        <div class="utterance-num">発言 8</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t8" data-highlight="個別に対応していただけるのであれば、家族としても安心">
+          個別に対応していただけるのであれば、家族としても安心です。ただ、各ご家庭の希望をどのように把握されるのか、その仕組みづくりが大切になってくるかと思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(8)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(8)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(8)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp8">
+        <div class="exp-title">📖 解説</div>
+        <p>富田さんが個別対応案に<span class="keyword">安心感を示しながら</span>、次の課題（希望の把握の仕組み）を提起しています。反対から前向きな姿勢への変化が見えます。「〜かと思います」は柔らかく指摘する表現です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u9">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">村上さん（施設長）</div>
+        <div class="utterance-num">発言 9</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t9" data-highlight="ご家族への聞き取りを来月中に実施する">
+          おっしゃる通りです。まずご家族への聞き取りを来月中に実施する形でいかがでしょうか。その結果をもとに、個別の送迎スケジュールを作成し、再来月から試験的に運用してみたいと考えております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(9)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(9)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(9)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp9">
+        <div class="exp-title">📖 解説</div>
+        <p>村上さんが<span class="keyword">具体的なスケジュール</span>を提示しています。「来月中に聞き取り→再来月から試験運用」という段階を示すことで、議論が実施計画へと発展しました。「おっしゃる通り」で富田さんの意見を受け止めたうえで行動を示す、まとめ役らしい発言です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u10">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">坂本さん（スタッフ代表）</div>
+        <div class="utterance-num">発言 10</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t10" data-highlight="スタッフ全員に周知し、準備を進めてまいります">
+          それで進めましょう。聞き取りの内容をもとに、スタッフ全員に周知し、準備を進めてまいります。個別対応のマニュアルも合わせて整備できればと思っております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(10)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(10)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(10)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp10">
+        <div class="exp-title">📖 解説</div>
+        <p>坂本さんが積極的に準備を引き受ける姿勢を示しています。<span class="keyword">「マニュアルの整備」</span>という言葉は、発言7で懸念していた「管理の複雑さ」を自ら解決しようとする前向きな変化の表れです。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u11">
+      <div class="utterance-header">
+        <div class="speaker-icon">👴</div>
+        <div class="speaker-name">富田さん（家族代表）</div>
+        <div class="utterance-num">発言 11</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t11" data-highlight="利用者の方が安心して通えることが一番">
+          ありがとうございます。最初は一律変更に不安を感じておりましたが、個別対応という形でお互いの事情を尊重していただけるのであれば、賛成いたします。利用者の方が安心して通えることが一番ですので。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(11)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(11)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(11)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp11">
+        <div class="exp-title">📖 解説</div>
+        <p>富田さんが「最初は不安だったが」と<span class="keyword">自身の変化を振り返っています</span>。「お互いの事情を尊重」という言葉に、スタッフと家族双方への理解が表れています。「利用者が安心して通えることが一番」は、富田さんが一貫して持っていた軸です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u12">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">村上さん（施設長）</div>
+        <div class="utterance-num">発言 12</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t12" data-highlight="皆さんのご意見があってこそ">
+          ありがとうございます。皆さんのご意見があってこそ、よりよい形が見えてまいりました。利用者の方、ご家族、そしてスタッフ、それぞれにとって無理のない仕組みを作っていきたいと思います。引き続きご協力をよろしくお願いいたします。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(12)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(12)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(12)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp12">
+        <div class="exp-title">📖 解説</div>
+        <p>村上さんが会議を締めくくっています。<span class="keyword">「皆さんのご意見があってこそ」</span>という言葉は、議論を通じて解決策が生まれたことへの感謝と評価です。「利用者・家族・スタッフ」と三者を並列することで、誰かだけの利益ではなく全員への配慮が目標であることを示しています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="question-section">
+
+    <div class="question-block">
+      <div class="question-label">問い １</div>
+      <div class="question-text">
+        発言5で富田さんが「<strong>必ずしもよい解決策とは言い切れない</strong>」と述べた理由として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices1">
+        <button class="choice-btn" onclick="answer(1, this, false, 0)">
+          <span class="choice-num">①</span>
+          施設でお預かりする時間が増えることで、スタッフの負担がさらに増えてしまうから。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 1)">
+          <span class="choice-num">②</span>
+          送迎時間を早めることに、家族としてそもそも賛成できないと考えているから。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, true, 2)">
+          <span class="choice-num">③</span>
+          高齢の利用者が長時間施設にいることで、体への負担が増す恐れがあるから。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 3)">
+          <span class="choice-num">④</span>
+          家族が帰宅するまで施設でお預かりする仕組みが、制度上認められていないから。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback1"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ２</div>
+      <div class="question-text">
+        この会話を通じて、<strong>解決策がどのように変化していったか</strong>を説明したものとして、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices2">
+        <button class="choice-btn" onclick="answer(2, this, false, 0)">
+          <span class="choice-num">①</span>
+          当初の一律変更案が否定されたため、送迎時間の変更自体を取りやめることになった。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 1)">
+          <span class="choice-num">②</span>
+          坂本さんの折衷案（施設でお預かり）がそのまま採用され、全員が納得した。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, true, 2)">
+          <span class="choice-num">③</span>
+          一律変更から個別対応へと方向が転換され、家族への聞き取りをもとに試験運用することで合意された。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 3)">
+          <span class="choice-num">④</span>
+          富田さんの反対によって議論が止まり、次回の会議に持ち越すことになった。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback2"></div>
+    </div>
+
+  </div>
+
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">よくできました！</div>
+    <div class="comp-sub">標準②クリアです。<br>意見の対立から合意への流れを、会話全体で読み取れました。</div>
+    <div class="nav-btn-row">
+      <a href="kaiwa_hyojun_03.html" class="nav-btn nav-btn-next">次の単元へ ▶ 標準③「環境委員会の議論」</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+
+  const flowData = [
+    { speaker: '村上さん（施設長）', text: '送迎時間を一時間早める案を提示し、坂本さんに現場の意見を求める。' },
+    { speaker: '坂本さん（スタッフ代表）', text: '慢性的な残業を根拠に、時間を早める方向を強く支持する。' },
+    { speaker: '富田さん（家族代表）', text: '家族が帰宅前に到着してしまうご家庭が出るという問題点を指摘する。' },
+    { speaker: '坂本さん（スタッフ代表）', text: '家族が帰宅するまで施設でお預かりする折衷案を提案する。' },
+    { speaker: '富田さん（家族代表）', text: '長時間施設にいることで利用者の体に負担がかかると指摘し、折衷案にも懸念を示す。' },
+    { speaker: '村上さん（施設長）', text: '一律変更から個別対応へと方向を転換し、利用者の状態に応じた送迎時間の設定を提案する。' },
+    { speaker: '坂本さん（スタッフ代表）', text: '管理が複雑になるという懸念を示しながらも、情報共有で対応できると前向きな姿勢を見せる。' },
+    { speaker: '富田さん（家族代表）', text: '個別対応であれば家族として安心と述べ、希望把握の仕組みづくりを求める。' },
+    { speaker: '村上さん（施設長）', text: '来月中に家族への聞き取りを行い、再来月から試験運用するスケジュールを提示する。' },
+    { speaker: '坂本さん（スタッフ代表）', text: 'スタッフへの周知とマニュアル整備を引き受け、積極的な準備を表明する。' },
+    { speaker: '富田さん（家族代表）', text: '最初は不安だったが個別対応なら賛成と述べ、利用者が安心して通えることが一番だと伝える。' },
+    { speaker: '村上さん（施設長）', text: '皆の意見があってよりよい形が見えたとまとめ、三者への配慮ある仕組みづくりを約束する。' },
+  ];
+
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+
+  const answers = {
+    1: {
+      correct: 2,
+      ok: '発言5で富田さんは「利用者の方が長時間施設にいることになります。高齢の方への体力的な負担も考えますと」と述べています。家族の都合ではなく、利用者本人への影響を理由にしているのがポイントです。',
+      ng: '正解は③です。発言5をもう一度読んでみましょう。富田さんが「言い切れない」と述べた直接の理由は何でしょうか。「高齢の方への体力的な負担」という言葉に注目してください。'
+    },
+    2: {
+      correct: 2,
+      ok: '発言1の「一律変更案」→発言6の「個別対応案」→発言9の「聞き取り実施・試験運用」という流れで解決策が具体化されていきました。会話全体を通じて提案が発展していったことが読み取れます。',
+      ng: '正解は③です。「話の流れ」ボタンを使って、発言1・6・9の流れをもう一度確認してみましょう。当初の案がどのように変化して、最終的にどんな形で合意したかを整理してみてください。'
+    }
+  };
+
+  function answer(qNum, btn, isCorrect, idx) {
+    const choicesId = 'choices' + qNum;
+    const feedbackId = 'feedback' + qNum;
+    document.querySelectorAll(`#${choicesId} .choice-btn`).forEach(b => b.disabled = true);
+    const fb = document.getElementById(feedbackId);
+    const ans = answers[qNum];
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>${ans.ok}`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll(`#${choicesId} .choice-btn`)[ans.correct].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>${ans.ng}`;
+    }
+    if (qNum === 2) showCompletionNav();
+  }
+
+  function showCompletionNav() {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      if (nav) { nav.classList.add('show'); nav.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 130}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 5, vy: Math.random() * 4 + 2,
+      r: Math.random() * 7 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 9,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 3200);
+  }
+
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+</script>
+</body>
+</html>

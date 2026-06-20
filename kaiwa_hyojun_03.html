@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 標準③｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --purple: #7c4dbd;
+    --purple-light: #f0eafb;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy); color: white;
+    padding: 18px 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .header-badge {
+    background: var(--purple); color: white; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  .phase-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .phase-badge {
+    background: var(--purple); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .phase-note { font-size: 13px; color: var(--gray); }
+  .intro-card {
+    background: white; border-radius: var(--radius); padding: 22px 24px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border-left: 5px solid var(--purple);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--purple); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+  .new-point {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.8;
+  }
+  .new-point .np-label {
+    font-size: 11px; color: #c4b5fd; font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .new-point ul { padding-left: 18px; }
+  .new-point li { margin-bottom: 4px; }
+  .guide {
+    background: var(--teal-light); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark { background: var(--pink-light); color: var(--pink); }
+  .demo-exp  { background: var(--gold-light); color: var(--gold); }
+  .demo-flow { background: var(--teal-light); color: var(--teal); }
+  .scene-box {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .characters { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .char-card {
+    background: white; border-radius: 12px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start;
+    gap: 12px; flex: 1; min-width: 160px;
+  }
+  .char-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .char-a .char-icon { background: #e8f4fd; }
+  .char-b .char-icon { background: #fde8f4; }
+  .char-c .char-icon { background: var(--purple-light); }
+  .char-info .char-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .char-info .char-role {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px; margin: 3px 0 4px;
+  }
+  .role-a { background: #dbeafe; color: #1e40af; }
+  .role-b { background: #fce7f3; color: #9d174d; }
+  .role-c { background: var(--purple-light); color: var(--purple); }
+  .char-info .char-desc { font-size: 12px; color: var(--gray); line-height: 1.5; }
+  .dialogue-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+  .utterance {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px 9px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-c .speaker-icon { background: var(--purple-light); }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num {
+    margin-left: auto; font-size: 11px; color: var(--gray);
+    background: var(--gray-light); padding: 2px 8px; border-radius: 10px;
+  }
+  .utterance-body { padding: 13px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.9; color: var(--navy); }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+  .btn-row { display: flex; gap: 8px; padding: 8px 18px 13px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp  { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover,  .btn-exp.active  { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 82vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--purple); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--purple); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--purple); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 12px; background: #dde; margin-left: 13px; margin-bottom: 2px; }
+  .question-section {
+    background: white; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--purple); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text {
+    font-size: 15.5px; line-height: 1.85; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--purple-light); background: var(--purple-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+  .divider { border: none; border-top: 2px dashed #e5e7eb; }
+  .completion-nav {
+    display: none; background: white; border-radius: var(--radius);
+    padding: 28px 24px; margin-top: 28px; box-shadow: var(--shadow);
+    text-align: center; animation: slideDown 0.4s ease;
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 2.4em; margin-bottom: 10px; }
+  .completion-nav .comp-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .completion-nav .comp-sub { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.7; }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-next { background: var(--navy); color: white; }
+  .nav-btn-next:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .nav-btn-index { background: white; color: var(--navy); border: 2px solid #d0d5e0; }
+  .nav-btn-index:hover { border-color: var(--navy); transform: translateY(-1px); }
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn    { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">会話文読解 標準</span>
+  <h1>標準 ③ ── 環境委員会の議論</h1>
+</header>
+
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">標準フェーズ</span>
+    <span class="phase-note">標準フェーズ最終回。複数の論点が絡み合う議論を整理して読みましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">この教材について</div>
+    <p>この会話には、複数の論点（費用・効果・実現可能性）が同時に議論されています。<br>
+    「誰がどの論点について話しているか」を整理しながら読むと、会話の構造が見えてきます。</p>
+  </div>
+
+  <div class="new-point">
+    <div class="np-label">▶ 標準③・仕上げのポイント</div>
+    <ul>
+      <li>長い議論では「賛成・反対」だけでなく、「条件つき賛成」「部分的な同意」なども登場します。</li>
+      <li>問いの選択肢が「言い過ぎ」か「言い足りない」かを見極める練習をしましょう。</li>
+      <li>次の高認実戦フェーズでは、今まで練習してきたすべての力が問われます。</li>
+    </ul>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    ある市の環境委員会の会議室。市内の小中学校への太陽光パネル設置について協議している。委員長の岩本さん、教育委員会代表の桐島さん、市民団体代表の林さんの三人が出席している。
+  </div>
+
+  <div class="characters">
+    <div class="char-card char-c">
+      <div class="char-icon">👩‍💼</div>
+      <div class="char-info">
+        <div class="char-name">岩本さん</div>
+        <div class="char-role role-c">委員長</div>
+        <div class="char-desc">会議の進行と取りまとめを担う。</div>
+      </div>
+    </div>
+    <div class="char-card char-a">
+      <div class="char-icon">👨</div>
+      <div class="char-info">
+        <div class="char-name">桐島さん</div>
+        <div class="char-role role-a">教育委員会代表</div>
+        <div class="char-desc">学校現場の立場から発言する。</div>
+      </div>
+    </div>
+    <div class="char-card char-b">
+      <div class="char-icon">👩</div>
+      <div class="char-info">
+        <div class="char-name">林さん</div>
+        <div class="char-role role-b">市民団体代表</div>
+        <div class="char-desc">環境活動に取り組む市民の立場から発言する。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <div class="utterance speaker-c" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岩本さん（委員長）</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="市内全小中学校への太陽光パネル設置の是非">
+          本日は、市内全小中学校への太陽光パネル設置の是非についてご議論いただきたいと思います。環境への効果と費用の両面からご意見をお聞かせください。桐島さん、まず教育委員会としてのお立場からいかがでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>岩本さんが「<span class="keyword">環境への効果と費用の両面</span>」という二つの論点を最初に提示しています。これが会議全体の議論の枠組みになります。最初の発言で論点が示されると、その後の発言がどの論点に答えているかを整理しながら読めます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">桐島さん（教育委員会）</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="設置費用と維持管理の費用が相当な額になる">
+          設置の意義は理解しております。ただ、現実的な問題として、設置費用と維持管理の費用が相当な額になると試算しております。教育予算はすでに厳しい状況にあり、他の教育活動への影響が懸念されます。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>桐島さんは意義を認めながらも、<span class="keyword">費用の問題</span>を主な懸念として挙げています。「試算しております」という言葉は、感覚ではなく具体的な数字にもとづいていることを示します。教育予算全体への影響という視点が、学校現場の立場を表しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">林さん（市民団体）</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="国の補助金制度を活用すれば、市の負担はかなり軽減される">
+          費用の点については、国の補助金制度を活用すれば、市の負担はかなり軽減されると考えております。また、設置後は電力コストの削減が見込めますので、長期的には費用を回収できる可能性もございます。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>林さんは桐島さんの「費用」という論点に正面から答えています。<span class="keyword">補助金・電力コスト削減・長期回収</span>という三つの根拠を示すことで、費用面の懸念に反論しています。「可能性もございます」という表現に、確信ではないが可能性は十分あるという姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">桐島さん（教育委員会）</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="補助金の申請手続きや審査に時間がかかる">
+          補助金の活用は検討に値すると思います。ただ、補助金の申請手続きや審査に時間がかかるという点も考慮する必要があります。また、すべての学校が補助金の対象になるとは限りませんので、その点も確認が必要かと思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>桐島さんは補助金活用案を「検討に値する」と部分的に認めながら、<span class="keyword">手続きの時間・対象校の限定</span>という新たな問題点を提示しています。「〜とは限りません」は、相手の主張を全否定せずに例外の可能性を示す表現です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">林さん（市民団体）</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="子どもたちが実際にエネルギー問題を学ぶ場にもなります">
+          おっしゃる通り、手続きの問題はございます。ただ、費用だけでなく、教育的な観点からも意義があることをお伝えしたいと思います。パネルが稼働する様子を見ることで、子どもたちが実際にエネルギー問題を学ぶ場にもなります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>林さんが「費用」の論点から「<span class="keyword">教育的意義</span>」という新しい論点を加えました。桐島さんが教育委員会の代表であることを意識した発言で、相手の立場に響く根拠を新たに示しています。論点を広げることで議論を有利に進めようとする工夫が見えます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">桐島さん（教育委員会）</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="教育的な意義については、私どもも重要だと考えております">
+          教育的な意義については、私どもも重要だと考えております。環境教育の充実は教育委員会としても推進したい方向です。ただ、それと費用の問題は切り離して考えることができません。教育的意義があっても、財源の確保ができなければ実現は難しいのです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>桐島さんは教育的意義を認めつつも、<span class="keyword">「費用と意義は切り離せない」</span>と述べています。この発言が重要です。桐島さんは設置に反対しているのではなく、「財源が確保できれば賛成」という立場であることがここで明確になります。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u7">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岩本さん（委員長）</div>
+        <div class="utterance-num">発言 7</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t7" data-highlight="段階的に設置を進めるという方向">
+          少し整理させてください。お二人のご意見を踏まえると、設置の意義については共通の認識があるようです。問題は財源と時間の確保ですね。そこで、補助金が確保できた学校から順に、段階的に設置を進めるという方向はいかがでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(7)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(7)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(7)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp7">
+        <div class="exp-title">📖 解説</div>
+        <p>岩本委員長が「意義は共通・問題は財源と時間」と整理し、<span class="keyword">段階的設置</span>という折衷案を提示しました。「少し整理させてください」は進行役が議論をコントロールする表現です。標準①の図書館会議と同じ構造で、委員長が共通点を見つけて前に進めています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u8">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">林さん（市民団体）</div>
+        <div class="utterance-num">発言 8</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t8" data-highlight="一気に全校でなくとも、着実に広げていける">
+          段階的であれば、一気に全校でなくとも、着実に広げていけるという点で現実的だと思います。まず補助金対象の学校でモデルケースを作り、その効果を示すことで次のステップにつなげていくことができるのではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(8)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(8)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(8)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp8">
+        <div class="exp-title">📖 解説</div>
+        <p>林さんが段階的設置案に賛成し、<span class="keyword">モデルケース方式</span>という具体的な進め方まで提案しています。「一気に全校でなくとも」という言葉に、当初の「全校設置」から柔軟になった姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u9">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">桐島さん（教育委員会）</div>
+        <div class="utterance-num">発言 9</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t9" data-highlight="モデル校での実績を見ながら判断できる">
+          段階的な方向であれば、教育委員会としても協力できると思います。補助金対象校から始め、モデル校での実績を見ながら判断できるというのは、財源の面でも無理のない進め方です。ただ、設置後の維持管理の体制については、あらかじめ明確にしておく必要があります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(9)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(9)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(9)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp9">
+        <div class="exp-title">📖 解説</div>
+        <p>桐島さんが段階的設置案に<span class="keyword">条件つきで協力を表明</span>しました。「財源の面でも無理のない」という言葉は、発言2からの一貫した費用への関心が反映されています。ただし「維持管理体制の明確化」という新たな条件も加えています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u10">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">林さん（市民団体）</div>
+        <div class="utterance-num">発言 10</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t10" data-highlight="維持管理については市民ボランティアとの連携も考えられます">
+          維持管理については、私どもの団体でも地域と連携した取り組みを行っておりますので、市民ボランティアとの連携も考えられます。すべてを学校側に任せるのではなく、地域全体で支える形が望ましいのではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(10)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(10)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(10)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp10">
+        <div class="exp-title">📖 解説</div>
+        <p>林さんが桐島さんの条件（維持管理体制）に対して、<span class="keyword">市民ボランティアとの連携</span>という解決策を示しました。「地域全体で支える形」という提案は、市民団体代表としての強みを活かした発言です。議論が具体的な実施体制の話に発展しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u11">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">桐島さん（教育委員会）</div>
+        <div class="utterance-num">発言 11</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t11" data-highlight="地域との連携という観点は、学校教育の観点からも歓迎したい">
+          地域との連携という観点は、学校教育の観点からも歓迎したいと思います。学校が地域と結びつく機会になるという点でも意義があります。段階的な設置と地域連携の維持管理という形であれば、前向きに検討できると思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(11)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(11)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(11)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp11">
+        <div class="exp-title">📖 解説</div>
+        <p>桐島さんが<span class="keyword">「前向きに検討できる」</span>と述べました。発言2での「費用が懸念」という立場から、条件が整えば賛成へと大きく変化しています。「地域と学校が結びつく機会」という言葉は、教育委員会の視点から新たな価値を見出したことを示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u12">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岩本さん（委員長）</div>
+        <div class="utterance-num">発言 12</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t12" data-highlight="補助金対象校から段階的に設置し、地域と連携した維持管理体制を整える">
+          ありがとうございます。本日の協議をまとめますと、補助金対象校から段階的に設置し、地域と連携した維持管理体制を整えるという方向で、次回の委員会に具体的な計画案を提出することにいたします。お二人のご意見があって、実現可能な形が見えてまいりました。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(12)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(12)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(12)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp12">
+        <div class="exp-title">📖 解説</div>
+        <p>岩本さんが会議の結論を明確にまとめています。<span class="keyword">「補助金対象校から段階的に・地域連携で維持管理」</span>という二つの柱が、議論を経て生まれた合意事項です。「実現可能な形が見えてまいりました」という言葉に、当初の「全校一律設置案」から議論を経て現実的な方向に進化したことが表れています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="question-section">
+
+    <div class="question-block">
+      <div class="question-label">問い １</div>
+      <div class="question-text">
+        発言6で桐島さんが「<strong>それと費用の問題は切り離して考えることができません</strong>」と述べた意図として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices1">
+        <button class="choice-btn" onclick="answer(1, this, false, 0)">
+          <span class="choice-num">①</span>
+          教育的意義はまったく認めず、費用の問題だけを重視すべきだと主張した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, true, 1)">
+          <span class="choice-num">②</span>
+          教育的意義は認めるが、財源が確保されなければ実現できないという現実的な条件を示した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 2)">
+          <span class="choice-num">③</span>
+          費用の問題が解決すれば、設置に全面的に賛成すると明言した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 3)">
+          <span class="choice-num">④</span>
+          林さんの提案する補助金制度には問題があり、活用できないと反論した。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback1"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ２</div>
+      <div class="question-text">
+        この会話全体を通じて、<strong>桐島さんの立場の変化</strong>として最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices2">
+        <button class="choice-btn" onclick="answer(2, this, false, 0)">
+          <span class="choice-num">①</span>
+          最初から設置に賛成していたが、費用への懸念を示すことで予算確保を訴えていた。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 1)">
+          <span class="choice-num">②</span>
+          費用と手続きの問題から設置に反対し続け、最終的にも態度を変えなかった。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, true, 2)">
+          <span class="choice-num">③</span>
+          費用・手続きの問題から慎重な立場を取っていたが、段階的設置と地域連携という条件が整うにつれて前向きな姿勢に変わった。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 3)">
+          <span class="choice-num">④</span>
+          林さんの教育的意義の主張に共感し、費用の問題は重要でないと考えを改めた。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback2"></div>
+    </div>
+
+  </div>
+
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">標準フェーズ、完走です！</div>
+    <div class="comp-sub">標準③クリアです。<br>複数の論点が絡む議論を整理して読み切りました。<br>いよいよ高認実戦フェーズへ進みましょう。</div>
+    <div class="nav-btn-row">
+      <a href="kaiwa_jissen_01.html" class="nav-btn nav-btn-next">次の単元へ ▶ 高認実戦①</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+
+  const flowData = [
+    { speaker: '岩本さん（委員長）', text: '環境への効果と費用の両面から太陽光パネル設置の是非を議論するよう求め、桐島さんに意見を促す。' },
+    { speaker: '桐島さん（教育委員会）', text: '設置の意義は認めるが、費用と維持管理が多額になるとして教育予算への影響を懸念する。' },
+    { speaker: '林さん（市民団体）', text: '補助金活用と電力コスト削減を根拠に、費用面の懸念を払拭しようとする。' },
+    { speaker: '桐島さん（教育委員会）', text: '補助金は検討に値するとしながら、申請手続きの時間と対象校の限定という問題を指摘する。' },
+    { speaker: '林さん（市民団体）', text: '費用だけでなく教育的意義も強調し、子どもがエネルギー問題を学べる場になると述べる。' },
+    { speaker: '桐島さん（教育委員会）', text: '教育的意義は認めるが、財源確保なしには実現できないと費用と意義は切り離せないと訴える。' },
+    { speaker: '岩本さん（委員長）', text: '意義は共通・問題は財源と時間と整理し、補助金確保校から段階的に設置する折衷案を提示する。' },
+    { speaker: '林さん（市民団体）', text: '段階的設置は現実的と賛成し、モデル校で実績を示して次のステップにつなげる方法を提案する。' },
+    { speaker: '桐島さん（教育委員会）', text: '段階的なら協力できると表明するが、維持管理体制の明確化を条件として求める。' },
+    { speaker: '林さん（市民団体）', text: '維持管理に市民ボランティアとの連携を提案し、地域全体で支える形を提唱する。' },
+    { speaker: '桐島さん（教育委員会）', text: '地域連携を歓迎し、段階的設置と地域連携の維持管理という条件なら前向きに検討できると述べる。' },
+    { speaker: '岩本さん（委員長）', text: '補助金対象校から段階的に設置し、地域連携で維持管理するという方向で次回に計画案を提出すると締めくくる。' },
+  ];
+
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+
+  const answers = {
+    1: {
+      correct: 1,
+      ok: '発言6で桐島さんは「教育的な意義については重要だと考えております」と認めたうえで、「財源の確保ができなければ実現は難しい」と述べています。意義を否定しているのではなく、財源という現実的な条件を示しているのです。①は「まったく認めず」が言い過ぎ、③は「全面賛成を明言」が会話の内容と異なります。',
+      ng: '正解は②です。発言6をもう一度読んでみましょう。桐島さんは教育的意義についてどう述べていますか。「切り離せない」という言葉は、意義を否定しているのではなく、費用と意義の関係を述べている表現です。'
+    },
+    2: {
+      correct: 2,
+      ok: '桐島さんは発言2で費用への懸念から慎重な立場を示しましたが、発言4では補助金を「検討に値する」、発言9では「段階的なら協力できる」、発言11では「前向きに検討できる」と段階的に変化しています。④は「費用を重要でないと考えを改めた」とありますが、発言9・11でも費用・維持管理への関心は続いており、正確ではありません。',
+      ng: '正解は③です。桐島さんの発言2・4・6・9・11の流れを「話の流れ」ボタンで確認してみましょう。最初の立場と最後の立場を比べながら、何がきっかけで変化したかを探してみてください。'
+    }
+  };
+
+  function answer(qNum, btn, isCorrect, idx) {
+    const choicesId = 'choices' + qNum;
+    const feedbackId = 'feedback' + qNum;
+    document.querySelectorAll(`#${choicesId} .choice-btn`).forEach(b => b.disabled = true);
+    const fb = document.getElementById(feedbackId);
+    const ans = answers[qNum];
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>${ans.ok}`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll(`#${choicesId} .choice-btn`)[ans.correct].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>${ans.ng}`;
+    }
+    if (qNum === 2) showCompletionNav();
+  }
+
+  function showCompletionNav() {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      if (nav) { nav.classList.add('show'); nav.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 130}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 5, vy: Math.random() * 4 + 2,
+      r: Math.random() * 7 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 9,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 3200);
+  }
+
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+</script>
+</body>
+</html>

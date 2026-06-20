@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 高認実戦②｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --red-mid: #b91c1c;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy); color: white;
+    padding: 18px 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .header-badge {
+    background: var(--red); color: white; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  .phase-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .phase-badge {
+    background: var(--red); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .phase-note { font-size: 13px; color: var(--gray); }
+  .intro-card {
+    background: white; border-radius: var(--radius); padding: 22px 24px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border-left: 5px solid var(--red);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--red); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+  .jissen-point {
+    background: var(--red); color: white; border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.8;
+  }
+  .jissen-point .jp-label {
+    font-size: 11px; color: #fca5a5; font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+  .jissen-point ul { padding-left: 18px; }
+  .jissen-point li { margin-bottom: 6px; }
+  .guide {
+    background: var(--teal-light); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark { background: var(--pink-light); color: var(--pink); }
+  .demo-exp  { background: var(--gold-light); color: var(--gold); }
+  .demo-flow { background: var(--teal-light); color: var(--teal); }
+  .scene-box {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .characters { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .char-card {
+    background: white; border-radius: 12px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start;
+    gap: 12px; flex: 1; min-width: 160px;
+  }
+  .char-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .char-a .char-icon { background: #e8f4fd; }
+  .char-b .char-icon { background: #fde8f4; }
+  .char-c .char-icon { background: #fee2e2; }
+  .char-info .char-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .char-info .char-role {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px; margin: 3px 0 4px;
+  }
+  .role-a { background: #dbeafe; color: #1e40af; }
+  .role-b { background: #fce7f3; color: #9d174d; }
+  .role-c { background: var(--red-light); color: var(--red); }
+  .char-info .char-desc { font-size: 12px; color: var(--gray); line-height: 1.5; }
+  .dialogue-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+  .utterance {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px 9px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-c .speaker-icon { background: #fee2e2; }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num {
+    margin-left: auto; font-size: 11px; color: var(--gray);
+    background: var(--gray-light); padding: 2px 8px; border-radius: 10px;
+  }
+  .utterance-body { padding: 13px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.9; color: var(--navy); }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+  .btn-row { display: flex; gap: 8px; padding: 8px 18px 13px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp  { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover,  .btn-exp.active  { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 82vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--red); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--red); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--red); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 12px; background: #dde; margin-left: 13px; margin-bottom: 2px; }
+  .question-section {
+    background: white; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--red); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text {
+    font-size: 15.5px; line-height: 1.85; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;
+  }
+  .question-text .underline { border-bottom: 2px solid var(--navy); padding-bottom: 1px; }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--red-light); background: var(--red-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+  .divider { border: none; border-top: 2px dashed #e5e7eb; }
+  .completion-nav {
+    display: none; background: white; border-radius: var(--radius);
+    padding: 32px 24px; margin-top: 28px; box-shadow: var(--shadow);
+    text-align: center; animation: slideDown 0.4s ease;
+    border: 3px solid var(--gold);
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 3em; margin-bottom: 12px; }
+  .completion-nav .comp-title {
+    font-size: 20px; font-weight: 800; color: var(--navy);
+    margin-bottom: 8px; letter-spacing: 0.03em;
+  }
+  .completion-nav .comp-sub {
+    font-size: 14px; color: var(--gray); margin-bottom: 28px; line-height: 1.9;
+  }
+  .comp-sub strong { color: var(--navy); }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-index { background: var(--navy); color: white; }
+  .nav-btn-index:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn    { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">高認実戦</span>
+  <h1>高認実戦 ② ── 図書館と学校の連携協議</h1>
+</header>
+
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">高認実戦フェーズ</span>
+    <span class="phase-note">最終回。全力で取り組みましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">会話文読解 最終回</div>
+    <p>入門から数えて11回目の会話文読解です。ここまでで積み上げてきた力——「誰が何を言っているか」「気持ちの変化を追う」「消去法で絞る」——をすべて使って取り組みましょう。</p>
+  </div>
+
+  <div class="jissen-point">
+    <div class="jp-label">▶ 最終回の確認事項</div>
+    <ul>
+      <li>本文を全部読んでから問いに取り組む方が、選択肢を絞りやすくなります。</li>
+      <li>傍線部の問いは「前後の文脈」が根拠になります。前後の発言も必ず確認しましょう。</li>
+      <li>「会話に書かれていない情報」を含む選択肢を先に消すと、残りが絞られます。</li>
+    </ul>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    ある市の教育センターの会議室。市立図書館と市内小学校との連携事業について協議が行われている。図書館長の秋山さん、小学校校長の三浦さん、市教育委員会指導主事の岡田さんの三人が出席している。
+  </div>
+
+  <div class="characters">
+    <div class="char-card char-c">
+      <div class="char-icon">👩</div>
+      <div class="char-info">
+        <div class="char-name">秋山さん</div>
+        <div class="char-role role-c">図書館長</div>
+        <div class="char-desc">市立図書館の責任者。連携事業を提案した側。</div>
+      </div>
+    </div>
+    <div class="char-card char-a">
+      <div class="char-icon">👨</div>
+      <div class="char-info">
+        <div class="char-name">三浦さん</div>
+        <div class="char-role role-a">小学校校長</div>
+        <div class="char-desc">学校現場の責任者。児童と教員の立場から発言する。</div>
+      </div>
+    </div>
+    <div class="char-card char-b">
+      <div class="char-icon">👩‍💼</div>
+      <div class="char-info">
+        <div class="char-name">岡田さん</div>
+        <div class="char-role role-b">教育委員会指導主事</div>
+        <div class="char-desc">教育行政の立場から調整と助言を行う。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <div class="utterance speaker-c" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">秋山さん（図書館長）</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="図書館と小学校が連携して読書活動を推進する">
+          本日はお時間をいただきありがとうございます。図書館と小学校が連携して読書活動を推進するという事業について、ご意見をいただきたく参りました。図書館としては、児童の来館数が減少しており、学校との連携によって読書習慣の定着につなげたいと考えております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>秋山さんが連携事業を提案した背景として、<span class="keyword">児童の来館数の減少</span>を挙げています。図書館側には「来てほしい」という動機があり、学校との連携でそれを解決しようとしていることが、この発言から読み取れます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="本を読む習慣が身についていない児童が増えている">
+          学校としても、読書活動の充実は重要な課題だと認識しております。本を読む習慣が身についていない児童が増えているという実感がありまして、図書館との連携には関心を持っております。ただ、授業の時間を圧迫するような形になるのであれば、難しい面もあります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんは連携に関心を持ちながらも、<span class="keyword">授業時間への影響</span>を懸念しています。「ただ」のあとに本当の懸念が来る、この構造はここまでの教材で何度も登場した表現です。条件つきの賛成という立場が最初から示されています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">秋山さん（図書館長）</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="図書館司書が学校に出向いてブックトークを行う">
+          授業時間を削るつもりはございません。私どもが考えておりますのは、図書館司書が学校に出向いてブックトークを行うという形です。朝のホームルームや昼休みの時間を使っていただければ、授業には影響しません。また、学校から図書館への団体来館も、総合学習の時間を活用していただくことを想定しております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>秋山さんが三浦さんの懸念（授業時間）に対して、<span class="keyword">朝のホームルーム・昼休み・総合学習の時間</span>を活用するという具体的な解決策を示しています。相手の懸念を先回りして打ち消す、説得力のある提案の仕方です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="教員の準備や調整の負担が増えることも考慮">
+          授業時間を使わないというのは安心しました。ただ、もう一点気になりますのは、教員の準備や調整の負担が増えることも考慮していただく必要があります。現場の教員はすでに多くの業務を抱えておりまして、新しい取り組みを加えることへの抵抗感も正直なところあります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんは授業時間の懸念が解消されると「安心した」と認めながら、今度は<span class="keyword">教員の業務負担</span>という新たな懸念を提示しています。「正直なところ」という言葉が、現場の本音を率直に伝えようとする姿勢を示しています。懸念が一つ解消されると次の懸念が出る構造に注目しましょう。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岡田さん（指導主事）</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="連絡調整は教育委員会が担う">
+          教員の負担については、連絡調整は教育委員会が担うという形を取ることができます。図書館と学校の間の日程調整や資料の受け渡しなどは、私どもが窓口になりますので、担任の先生には最小限の対応だけお願いするような仕組みにしたいと思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>岡田さんが教員の負担という懸念に対して、<span class="keyword">教育委員会が調整を担う</span>という解決策を提案しました。ここで初めて岡田さんが具体的な役割を持って登場します。行政が「橋渡し役」として機能することで、現場の負担を軽減しようとしています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="教育委員会が間に入ってくださるなら、現場としても動きやすくなります">
+          教育委員会が間に入ってくださるなら、現場としても動きやすくなります。ただ、一点だけ確認させていただきたいのですが、司書の方が来校される際の受け入れ担当は、どなたになるのでしょうか。担当が不明確だと、現場で混乱が生じかねません。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんが「動きやすくなる」と前向きになりながらも、<span class="keyword">受け入れ担当の明確化</span>という実務的な確認を求めています。反対から賛成へという流れの中で、「条件の詳細を詰める」段階に入ったことがわかります。懸念を述べているのではなく、実施に向けた具体化の質問です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u7">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">秋山さん（図書館長）</div>
+        <div class="utterance-num">発言 7</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t7" data-highlight="学校司書の先生か、図書委員会の担当教員の方にお願いできれば">
+          ご指摘はもっともだと思います。受け入れについては、学校司書の先生か、図書委員会の担当教員の方にお願いできれば理想的だと考えております。もし学校側でご指定いただければ、私どもはその方との連携を密にしてまいります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(7)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(7)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(7)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp7">
+        <div class="exp-title">📖 解説</div>
+        <p>秋山さんが受け入れ担当として<span class="keyword">学校司書か図書委員会担当教員</span>を提案しています。「学校側でご指定いただければ」という言葉は、決定権を学校に委ねる姿勢を示しており、押しつけでなく協力を求める丁寧な提案です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u8">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 8</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t8" data-highlight="図書委員会の担当教員が適任かと思います">
+          わかりました。それであれば、本校には学校司書は配置されておりませんので、図書委員会の担当教員が適任かと思います。その教員とご連絡をとっていただければ、スムーズに進められると思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(8)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(8)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(8)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp8">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんが具体的な担当者（<span class="keyword">図書委員会の担当教員</span>）を決め、協力する姿勢を示しました。「スムーズに進められる」という言葉に、消極的だった立場から積極的な協力へと変化したことが読み取れます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u9">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岡田さん（指導主事）</div>
+        <div class="utterance-num">発言 9</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t9" data-highlight="児童が本に親しむ機会を増やすという目標に向けて、三者が役割を分担">
+          よい方向でまとまってきましたね。この事業の趣旨は、児童が本に親しむ機会を増やすという目標に向けて、三者が役割を分担して取り組むということだと思います。図書館が「読む楽しさ」を届け、学校が「場と時間」を提供し、教育委員会が「調整と支援」を担う、という構造でよいでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(9)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(9)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(9)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp9">
+        <div class="exp-title">📖 解説</div>
+        <p>岡田さんが三者の役割を<span class="keyword">図書館・学校・教育委員会</span>に整理してまとめています。「図書館が読む楽しさを届け、学校が場と時間を提供し、教育委員会が調整と支援を担う」という構造は、この会話全体の合意事項を的確に要約しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u10">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">秋山さん（図書館長）</div>
+        <div class="utterance-num">発言 10</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t10" data-highlight="まずは一校からモデル的に始めさせていただければ">
+          その通りでございます。ただ、いきなり全校で実施するのではなく、まずは一校からモデル的に始めさせていただければと思います。実施状況を見ながら改善点を洗い出し、来年度以降に広げていく形が、無理のない進め方かと考えております。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(10)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(10)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(10)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp10">
+        <div class="exp-title">📖 解説</div>
+        <p>秋山さんが<span class="keyword">一校からのモデル実施</span>を提案しています。「いきなり全校ではなく」という言葉は、現実的な進め方への配慮を示しています。標準③の太陽光パネルの段階的設置と同じ発想です。この謙虚な姿勢が、三浦さんの不安をさらに和らげる効果もあります。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u11">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 11</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t11" data-highlight="本校がモデル校として手を挙げることも考えられます">
+          一校から始めるという段階的な進め方は、学校側としても取り組みやすいと思います。もし他校が躊躇されているようであれば、本校がモデル校として手を挙げることも考えられます。児童の読書習慣の定着は、学校としても長年の課題でしたので。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(11)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(11)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(11)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp11">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんが自らモデル校に名乗りを上げています。発言2で「難しい面もある」と慎重だった姿勢から、<span class="keyword">自発的な協力</span>へと大きく変化しました。「長年の課題」という言葉は、三浦さんも読書習慣の問題を以前から重視していたことを示しており、共通の目標があったからこそ合意に至れたことがわかります。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u12">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩‍💼</div>
+        <div class="speaker-name">岡田さん（指導主事）</div>
+        <div class="utterance-num">発言 12</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t12" data-highlight="三浦校長のお申し出は大変心強い">
+          三浦校長のお申し出は大変心強いです。では、三浦校長の学校をモデル校とし、今年度中に試験的な実施を行うことで進めてまいりましょう。教育委員会としては、実施後のアンケートや成果の記録も支援いたします。他校への展開につながる資料として活用できると思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(12)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(12)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(12)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp12">
+        <div class="exp-title">📖 解説</div>
+        <p>岡田さんが三浦さんの申し出を受け、<span class="keyword">今年度中の試験実施</span>という具体的なスケジュールを決定しています。さらにアンケート・成果記録の支援を約束し、他校展開への道筋も示しています。教育委員会が単なる調整役から積極的な支援者へと役割を広げています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u13">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">秋山さん（図書館長）</div>
+        <div class="utterance-num">発言 13</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t13" data-highlight="児童が図書館を身近に感じてくれるようになれば">
+          ありがとうございます。図書館としては、この連携をきっかけに、児童が図書館を身近に感じてくれるようになればと願っております。本との出会いが、子どもたちの世界を広げる一助になれれば幸いです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(13)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(13)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(13)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp13">
+        <div class="exp-title">📖 解説</div>
+        <p>秋山さんが事業の本来の目的——<span class="keyword">「児童が図書館を身近に感じ、本との出会いで世界が広がる」</span>——を言葉にして締めくくっています。来館数の増加という数値目標ではなく、子どもたちへの思いが根本にあることが伝わってきます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u14">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">三浦さん（校長）</div>
+        <div class="utterance-num">発言 14</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t14" data-highlight="最初は少し構えておりましたが、こうして話し合ってみると">
+          最初は少し構えておりましたが、こうして話し合ってみると、実現できそうだという気持ちになってまいりました。子どもたちが本を好きになってくれるなら、学校としても全力で協力したいと思います。よい連携になるよう、ともに取り組みましょう。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(14)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(14)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(14)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp14">
+        <div class="exp-title">📖 解説</div>
+        <p>三浦さんが「<span class="keyword">最初は少し構えていたが</span>」と自分の変化を振り返り、「ともに取り組みましょう」と締めくくっています。発言2の「難しい面もある」という慎重な出発点から、ここまでの変化が一目で確認できます。「話し合ってみると実現できそうだ」という言葉が、対話の持つ力を示しています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="question-section">
+
+    <div class="question-block">
+      <div class="question-label">問い １</div>
+      <div class="question-text">
+        発言2で三浦さんが「<span class="underline">授業の時間を圧迫するような形になるのであれば、難しい面もあります</span>」と述べた意図として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices1">
+        <button class="choice-btn" onclick="answer(1, this, false, 0)">
+          <span class="choice-num">①</span>
+          読書活動の推進には意義がなく、図書館との連携事業そのものに反対であることを示した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 1)">
+          <span class="choice-num">②</span>
+          授業時間の確保が最優先であり、読書活動は放課後に限定すべきだと主張した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, true, 2)">
+          <span class="choice-num">③</span>
+          読書活動の充実は重要だと認識しながらも、授業時間に影響が出ない形での連携を求めた。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 3)">
+          <span class="choice-num">④</span>
+          図書館の司書が学校に来ることへの抵抗感から、連携の形式を変えるよう要求した。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback1"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ２</div>
+      <div class="question-text">
+        発言9で岡田さんが三者の役割を整理した内容として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices2">
+        <button class="choice-btn" onclick="answer(2, this, false, 0)">
+          <span class="choice-num">①</span>
+          図書館が日程の調整を担い、学校が読む楽しさを届け、教育委員会が場と時間を提供する。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 1)">
+          <span class="choice-num">②</span>
+          図書館と学校がそれぞれ独立して読書活動を実施し、教育委員会は成果の評価だけを担う。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, true, 2)">
+          <span class="choice-num">③</span>
+          図書館が読む楽しさを届け、学校が場と時間を提供し、教育委員会が調整と支援を担う。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 3)">
+          <span class="choice-num">④</span>
+          教育委員会がすべての調整と実施を主導し、図書館と学校は補助的な役割を担う。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback2"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ３</div>
+      <div class="question-text">
+        この会話全体を通じて読み取れることとして、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices3">
+        <button class="choice-btn" onclick="answer(3, this, false, 0)">
+          <span class="choice-num">①</span>
+          三浦さんは最初から連携事業に積極的で、細かな条件を確認しながら合意に至った。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, false, 1)">
+          <span class="choice-num">②</span>
+          秋山さんは全校一斉での実施を強く求めたが、三浦さんの反対によって一校からの試験実施に変更した。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, false, 2)">
+          <span class="choice-num">③</span>
+          岡田さんは当初から三浦さんを支持しており、秋山さんの提案に否定的な立場をとっていた。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, true, 3)">
+          <span class="choice-num">④</span>
+          三浦さんは授業への影響や教員の負担を懸念して慎重だったが、具体的な役割分担と段階的な進め方が示されるにつれ、自ら協力を申し出るまでに変化した。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback3"></div>
+    </div>
+
+  </div>
+
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🏆</div>
+    <div class="comp-title">会話文読解 全課程修了！</div>
+    <div class="comp-sub">
+      <strong>入門①から高認実戦②まで、全11回の会話文読解を完走しました。</strong><br><br>
+      最初は2人の短い会話から始まり、<br>
+      議論の場でのですます調、3人の立場の違い、<br>
+      複数の論点が絡む長文会話まで——<br>
+      ここまで来られたことは、本当にすごいことです。<br><br>
+      この力は、高認試験の本番でも必ず役に立ちます。
+    </div>
+    <div class="nav-btn-row">
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+
+  const flowData = [
+    { speaker: '秋山さん（図書館長）', text: '来館数の減少を背景に、読書習慣の定着を目的とした図書館と小学校の連携事業を提案する。' },
+    { speaker: '三浦さん（校長）', text: '読書活動の充実は重要と認識しながらも、授業時間への影響を懸念して条件つきの賛成を示す。' },
+    { speaker: '秋山さん（図書館長）', text: 'ブックトークは朝のホームルームや昼休みを活用し、来館は総合学習の時間を使うと具体策を示して懸念を払拭する。' },
+    { speaker: '三浦さん（校長）', text: '授業時間の懸念は解消されたと認めながら、教員の業務負担と新しい取り組みへの抵抗感という新たな懸念を示す。' },
+    { speaker: '岡田さん（指導主事）', text: '図書館と学校の連絡調整を教育委員会が担うことで、担任への負担を最小化できると提案する。' },
+    { speaker: '三浦さん（校長）', text: '教育委員会が間に入るなら動きやすくなると前向きになり、司書来校時の受け入れ担当を誰にするかを確認する。' },
+    { speaker: '秋山さん（図書館長）', text: '学校司書か図書委員会担当教員を受け入れ担当に、学校側で指定してほしいと伝える。' },
+    { speaker: '三浦さん（校長）', text: '学校司書は配置されていないため、図書委員会の担当教員が適任と具体的な担当者を決める。' },
+    { speaker: '岡田さん（指導主事）', text: '三者の役割を「図書館が読む楽しさ・学校が場と時間・教育委員会が調整と支援」と整理してまとめる。' },
+    { speaker: '秋山さん（図書館長）', text: 'いきなり全校ではなく一校からのモデル実施を提案し、翌年度以降に広げる段階的な進め方を示す。' },
+    { speaker: '三浦さん（校長）', text: '段階的な進め方なら取り組みやすいと述べ、自校がモデル校として手を挙げることを申し出る。' },
+    { speaker: '岡田さん（指導主事）', text: '三浦校長の学校をモデル校として今年度中に試験実施することを決定し、アンケートや成果記録の支援も約束する。' },
+    { speaker: '秋山さん（図書館長）', text: '連携をきっかけに児童が図書館を身近に感じ、本との出会いで世界が広がることへの願いを述べる。' },
+    { speaker: '三浦さん（校長）', text: '最初は構えていたが話し合いで実現できると感じ、子どもたちが本を好きになるなら全力で協力すると決意を述べる。' },
+  ];
+
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+
+  const answers = {
+    1: {
+      correct: 2,
+      ok: '発言2で三浦さんは「読書活動の充実は重要な課題だと認識しております」「連携には関心を持っております」と述べており、事業そのものには賛成です。「ただ、授業の時間を圧迫するような形になるのであれば」という条件が懸念の本体です。①「事業に反対」②「放課後に限定すべき」④「司書が来ることへの抵抗」はいずれも本文に根拠がありません。',
+      ng: '正解は③です。発言2をもう一度読んでみましょう。三浦さんは連携事業についてどう言っていますか。「ただ」の前と後に注目して、賛成の部分と懸念の部分を分けて確認してみてください。'
+    },
+    2: {
+      correct: 2,
+      ok: '発言9で岡田さんは「図書館が『読む楽しさ』を届け、学校が『場と時間』を提供し、教育委員会が『調整と支援』を担う」と明確に述べています。①は役割が入れ替わっており、②は「独立して実施」「評価のみ」が本文と異なり、④は「教育委員会がすべてを主導」が言い過ぎです。',
+      ng: '正解は③です。発言9をもう一度確認しましょう。岡田さんが「図書館・学校・教育委員会」のそれぞれについて何を担うと述べているか、一つひとつ照らし合わせてみてください。'
+    },
+    3: {
+      correct: 3,
+      ok: '三浦さんは発言2で「難しい面もある」と慎重に始まり、発言4で教員の負担を懸念し、発言6で「動きやすくなる」と前向きになり、発言11では自らモデル校に手を挙げました。発言14では「最初は少し構えていたが」と自分の変化を振り返っています。①「最初から積極的」は誤り、②「全校実施を強く求めた」は本文にない情報、③「岡田さんが秋山さんに否定的」も誤りです。',
+      ng: '正解は④です。三浦さんの発言2・4・6・8・11・14の流れを「話の流れ」ボタンで確認してみましょう。最初の立場と最後の立場を比べながら、どんな段階を経て変化したかを追ってみてください。'
+    }
+  };
+
+  function answer(qNum, btn, isCorrect, idx) {
+    const choicesId = 'choices' + qNum;
+    const feedbackId = 'feedback' + qNum;
+    document.querySelectorAll(`#${choicesId} .choice-btn`).forEach(b => b.disabled = true);
+    const fb = document.getElementById(feedbackId);
+    const ans = answers[qNum];
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>${ans.ok}`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll(`#${choicesId} .choice-btn`)[ans.correct].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>${ans.ng}`;
+    }
+    if (qNum === 3) showCompletionNav();
+  }
+
+  function showCompletionNav() {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      if (nav) {
+        nav.classList.add('show');
+        nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 160}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 6, vy: Math.random() * 4 + 2,
+      r: Math.random() * 8 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c','#ffffff'][Math.floor(Math.random()*8)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 10,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 4000);
+  }
+
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+</script>
+</body>
+</html>

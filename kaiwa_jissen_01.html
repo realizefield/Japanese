@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話文読解 高認実戦①｜江原予備校</title>
+<style>
+  :root {
+    --cream: #fdf8f0;
+    --pink: #f582ae;
+    --pink-light: #fde8f2;
+    --pink-marker: rgba(245, 130, 174, 0.35);
+    --navy: #001858;
+    --navy-mid: #1a3a6b;
+    --teal: #1b8a8a;
+    --teal-light: #e6f7f7;
+    --gold: #e8a020;
+    --gold-light: #fef6e4;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --red-mid: #b91c1c;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,24,88,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy); color: white;
+    padding: 18px 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .header-badge {
+    background: var(--red); color: white; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.03em; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+  .phase-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .phase-badge {
+    background: var(--red); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .phase-note { font-size: 13px; color: var(--gray); }
+
+  /* 実戦フェーズ専用カード */
+  .intro-card {
+    background: white; border-radius: var(--radius); padding: 22px 24px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border-left: 5px solid var(--red);
+  }
+  .intro-card .label {
+    font-size: 11px; color: var(--red); font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: var(--navy-mid); }
+
+  .jissen-point {
+    background: var(--red); color: white; border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.8;
+  }
+  .jissen-point .jp-label {
+    font-size: 11px; color: #fca5a5; font-weight: 700;
+    letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+  .jissen-point ul { padding-left: 18px; }
+  .jissen-point li { margin-bottom: 6px; }
+
+  /* 消去法パネル */
+  .shokyoho-box {
+    background: white; border-radius: var(--radius); padding: 18px 22px;
+    margin-bottom: 24px; box-shadow: var(--shadow); border: 2px solid var(--gold);
+  }
+  .shokyoho-box .sh-label {
+    font-size: 12px; font-weight: 700; color: var(--gold);
+    letter-spacing: 0.06em; margin-bottom: 10px;
+  }
+  .shokyoho-steps { display: flex; flex-direction: column; gap: 8px; }
+  .sh-step {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13.5px; line-height: 1.7; color: var(--navy-mid);
+  }
+  .sh-num {
+    background: var(--gold); color: white; font-size: 11px; font-weight: 700;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .guide {
+    background: var(--teal-light); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .guide-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--teal); font-weight: 600; }
+  .guide-btn-demo {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: none; font-weight: 700; cursor: default;
+  }
+  .demo-mark { background: var(--pink-light); color: var(--pink); }
+  .demo-exp  { background: var(--gold-light); color: var(--gold); }
+  .demo-flow { background: var(--teal-light); color: var(--teal); }
+
+  .scene-box {
+    background: var(--navy); color: white; border-radius: var(--radius);
+    padding: 16px 22px; margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+  }
+  .scene-box .scene-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; margin-bottom: 4px; }
+
+  .characters { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .char-card {
+    background: white; border-radius: 12px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start;
+    gap: 12px; flex: 1; min-width: 160px;
+  }
+  .char-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .char-a .char-icon { background: #e8f4fd; }
+  .char-b .char-icon { background: #fde8f4; }
+  .char-c .char-icon { background: #fee2e2; }
+  .char-info .char-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .char-info .char-role {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 10px; margin: 3px 0 4px;
+  }
+  .role-a { background: #dbeafe; color: #1e40af; }
+  .role-b { background: #fce7f3; color: #9d174d; }
+  .role-c { background: var(--red-light); color: var(--red); }
+  .char-info .char-desc { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  .dialogue-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+  .utterance {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .utterance-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px 9px; border-bottom: 1px solid #f0f0f0;
+  }
+  .speaker-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .speaker-a .speaker-icon { background: #e8f4fd; }
+  .speaker-b .speaker-icon { background: #fde8f4; }
+  .speaker-c .speaker-icon { background: #fee2e2; }
+  .speaker-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .utterance-num {
+    margin-left: auto; font-size: 11px; color: var(--gray);
+    background: var(--gray-light); padding: 2px 8px; border-radius: 10px;
+  }
+  .utterance-body { padding: 13px 18px; }
+  .utterance-text { font-size: 15.5px; line-height: 1.9; color: var(--navy); }
+  mark.hl { background: var(--pink-marker); border-radius: 4px; padding: 1px 3px; color: inherit; font-style: normal; }
+
+  .btn-row { display: flex; gap: 8px; padding: 8px 18px 13px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.18s; font-family: inherit;
+  }
+  .btn-mark { background: var(--pink-light); color: var(--pink); border-color: var(--pink-light); }
+  .btn-mark:hover, .btn-mark.active { background: var(--pink); color: white; border-color: var(--pink); }
+  .btn-exp  { background: var(--gold-light); color: var(--gold); border-color: var(--gold-light); }
+  .btn-exp:hover,  .btn-exp.active  { background: var(--gold); color: white; border-color: var(--gold); }
+  .btn-flow { background: var(--teal-light); color: var(--teal); border-color: var(--teal-light); }
+  .btn-flow:hover, .btn-flow.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .exp-panel {
+    display: none; margin: 0 18px 14px;
+    background: var(--gold-light); border-radius: 10px;
+    padding: 14px 16px; border-left: 4px solid var(--gold);
+    animation: slideDown 0.22s ease;
+  }
+  .exp-panel.open { display: block; }
+  .exp-panel .exp-title { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .exp-panel p { font-size: 14px; line-height: 1.8; color: var(--navy-mid); }
+  .exp-panel .keyword { background: rgba(232,160,32,0.2); border-radius: 3px; padding: 0 3px; font-weight: 700; }
+
+  .flow-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,24,88,0.45); z-index: 1000;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .flow-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .flow-popup {
+    background: white; border-radius: 18px;
+    max-width: 520px; width: 100%; max-height: 82vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,24,88,0.25); animation: popIn 0.22s ease;
+  }
+  .flow-popup-header {
+    background: var(--red); color: white; padding: 16px 20px;
+    border-radius: 18px 18px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .flow-popup-header h3 { font-size: 15px; font-weight: 700; }
+  .flow-close {
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .flow-popup-body { padding: 20px; }
+  .flow-step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .flow-step:last-child { margin-bottom: 0; }
+  .flow-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--red); color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .flow-step.future .flow-dot { background: var(--gray-light); color: var(--gray); }
+  .flow-content .flow-speaker { font-size: 11px; font-weight: 700; color: var(--red); margin-bottom: 3px; }
+  .flow-step.future .flow-content .flow-speaker { color: var(--gray); }
+  .flow-content p { font-size: 13px; line-height: 1.7; color: var(--navy-mid); }
+  .flow-step.future .flow-content p { color: #aaa; }
+  .flow-connector { width: 2px; height: 12px; background: #dde; margin-left: 13px; margin-bottom: 2px; }
+
+  /* 問いセクション（3問構成） */
+  .question-section {
+    background: white; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .question-label { font-size: 12px; font-weight: 700; color: var(--red); letter-spacing: 0.08em; margin-bottom: 14px; }
+  .question-text {
+    font-size: 15.5px; line-height: 1.85; color: var(--navy);
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;
+  }
+  .question-text .underline { border-bottom: 2px solid var(--navy); padding-bottom: 1px; }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-light); border: 2px solid transparent;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    text-align: left; font-family: inherit; font-size: 14.5px;
+    line-height: 1.7; color: var(--navy); transition: all 0.18s; width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--red-light); background: var(--red-light); }
+  .choice-num {
+    font-weight: 700; font-size: 13px; color: var(--gray);
+    background: white; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .choice-btn.correct { background: #e8f7ee; border-color: #4caf50; color: var(--navy); }
+  .choice-btn.correct .choice-num { background: #4caf50; color: white; }
+  .choice-btn.wrong { background: #fce8e8; border-color: #e05050; color: #999; text-decoration: line-through; }
+  .choice-btn.wrong .choice-num { background: #e05050; color: white; }
+  .choice-btn:disabled { cursor: default; }
+  .answer-feedback {
+    display: none; margin-top: 16px; padding: 16px;
+    border-radius: 10px; font-size: 14px; line-height: 1.8;
+  }
+  .answer-feedback.show { display: block; animation: slideDown 0.22s ease; }
+  .answer-feedback.ok { background: #e8f7ee; border-left: 4px solid #4caf50; color: #2e6b38; }
+  .answer-feedback.ng { background: #fce8e8; border-left: 4px solid #e05050; color: #7a2020; }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+
+  .divider { border: none; border-top: 2px dashed #e5e7eb; }
+
+  /* 完了ナビ */
+  .completion-nav {
+    display: none; background: white; border-radius: var(--radius);
+    padding: 28px 24px; margin-top: 28px; box-shadow: var(--shadow);
+    text-align: center; animation: slideDown 0.4s ease;
+  }
+  .completion-nav.show { display: block; }
+  .completion-nav .comp-emoji { font-size: 2.4em; margin-bottom: 10px; }
+  .completion-nav .comp-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .completion-nav .comp-sub { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.7; }
+  .nav-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 12px 24px; border-radius: 50px; font-size: 14px;
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    border: none; font-family: inherit; transition: all 0.18s;
+  }
+  .nav-btn-next { background: var(--navy); color: white; }
+  .nav-btn-next:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .nav-btn-index { background: white; color: var(--navy); border: 2px solid #d0d5e0; }
+  .nav-btn-index:hover { border-color: var(--navy); transform: translateY(-1px); }
+
+  canvas#confetti { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; display:none; }
+
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn    { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header>
+  <span class="header-badge">高認実戦</span>
+  <h1>高認実戦 ① ── 商店街活性化の協議</h1>
+</header>
+
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">高認実戦フェーズ</span>
+    <span class="phase-note">高認レベルの文章量と難度。3問に挑戦しましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">高認実戦フェーズへようこそ</div>
+    <p>ここからは、高卒認定試験の国語で実際に出題される会話文に近い長さ・難度の問題です。<br>
+    入門から標準まで積み上げてきた力を、ここで試してみましょう。</p>
+  </div>
+
+  <div class="jissen-point">
+    <div class="jp-label">▶ 高認実戦フェーズのルール</div>
+    <ul>
+      <li>問いは3問になります。本文全体を読んでから取り組むと、答えが見えやすくなります。</li>
+      <li>傍線部の問いは、その前後の文脈が必ず根拠になります。傍線部だけを読んで判断しないようにしましょう。</li>
+      <li>選択肢は「言い過ぎ」「言い足りない」「会話にない情報」の三種類の誤りが混じります。消去法で絞りましょう。</li>
+    </ul>
+  </div>
+
+  <div class="shokyoho-box">
+    <div class="sh-label">🔍 消去法の使い方（復習）</div>
+    <div class="shokyoho-steps">
+      <div class="sh-step"><div class="sh-num">1</div><div>まず「会話に書かれていない情報を含む選択肢」を消す。</div></div>
+      <div class="sh-step"><div class="sh-num">2</div><div>次に「言い過ぎ（すべて・必ず・絶対など）」を含む選択肢を消す。</div></div>
+      <div class="sh-step"><div class="sh-num">3</div><div>残った選択肢を本文と照らし合わせ、最も正確なものを選ぶ。</div></div>
+    </div>
+  </div>
+
+  <div class="guide">
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-mark">🖊 ここに注意</button>
+      → 発言にマーカーが入ります
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-exp">📖 解説</button>
+      → 要点の説明が開きます
+    </div>
+    <div class="guide-item">
+      <button class="guide-btn-demo demo-flow">🗺 話の流れ</button>
+      → ここまでの流れを確認できます
+    </div>
+  </div>
+
+  <div class="scene-box">
+    <div class="scene-label">場 面</div>
+    ある地方都市の商工会議所の会議室。中心市街地の商店街活性化について、三者が協議している。商工会議所理事の峰岸さん、商店主代表の小野さん、市の産業振興課職員の今村さんが出席している。
+  </div>
+
+  <div class="characters">
+    <div class="char-card char-c">
+      <div class="char-icon">👨‍💼</div>
+      <div class="char-info">
+        <div class="char-name">峰岸さん</div>
+        <div class="char-role role-c">商工会議所理事</div>
+        <div class="char-desc">会議の進行を担う。地域経済全体の立場から発言する。</div>
+      </div>
+    </div>
+    <div class="char-card char-a">
+      <div class="char-icon">👩</div>
+      <div class="char-info">
+        <div class="char-name">小野さん</div>
+        <div class="char-role role-a">商店主代表</div>
+        <div class="char-desc">商店街で衣料品店を営む。現場の声を届ける立場。</div>
+      </div>
+    </div>
+    <div class="char-card char-b">
+      <div class="char-icon">👨</div>
+      <div class="char-info">
+        <div class="char-name">今村さん</div>
+        <div class="char-role role-b">市産業振興課職員</div>
+        <div class="char-desc">行政の立場から支援策を検討する。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialogue-section" id="dialogue">
+
+    <div class="utterance speaker-c" id="u1">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">峰岸さん（理事）</div>
+        <div class="utterance-num">発言 1</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t1" data-highlight="空き店舗が増加し、人通りが年々減っている">
+          本日は、商店街の現状と活性化策についてご協議いただきたいと思います。ご承知の通り、当商店街では空き店舗が増加し、人通りが年々減っている状況です。小野さん、まず現場のご意見をお聞かせください。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(1)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(1)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(1)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp1">
+        <div class="exp-title">📖 解説</div>
+        <p>峰岸さんが現状を「<span class="keyword">空き店舗の増加・人通りの減少</span>」と二点に整理して問題提起しています。この二点が会議全体の出発点になります。「ご承知の通り」は参加者全員が共有している事実を確認する表現です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u2">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 2</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t2" data-highlight="郊外の大型ショッピングモールに客を取られている">
+          ありがとうございます。正直に申し上げますと、ここ数年で売上がかなり落ちています。原因としては、郊外の大型ショッピングモールに客を取られていることが大きいと感じております。価格では太刀打ちできませんし、駐車場もありませんので、車で来られる方は向こうへ行ってしまいます。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(2)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(2)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(2)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp2">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんが売上減少の原因を<span class="keyword">郊外モールとの競合・価格・駐車場不足</span>という三点で説明しています。「正直に申し上げますと」は、現場の厳しい実態を率直に伝えようとする姿勢を示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u3">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">今村さん（市職員）</div>
+        <div class="utterance-num">発言 3</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t3" data-highlight="商店街ならではの強みを活かすことが重要">
+          小野さんのおっしゃる通り、価格や利便性では大型店に勝つことは難しいと思います。ただ、行政としては、商店街ならではの強みを活かすことが重要だと考えております。たとえば、個人店主との対話や地域のコミュニティとしての機能は、大型店にはないものではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(3)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(3)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(3)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp3">
+        <div class="exp-title">📖 解説</div>
+        <p>今村さんは大型店との競合を認めながら、<span class="keyword">商店街の独自の強み</span>（対話・地域コミュニティ）という視点を提示しています。「価格で勝てない」という前提を共有したうえで、戦略の方向転換を示唆する発言です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u4">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 4</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t4" data-highlight="理念はわかりますが、現実には目の前の売上が大事">
+          おっしゃる意味はわかります。ただ、理念はわかりますが、現実には目の前の売上が大事です。コミュニティの場といっても、それが直接収入につながらなければ、店を続けることができません。空き店舗が増えているのも、そういう現実があるからです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(4)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(4)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(4)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp4">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんが今村さんの「強みを活かす」という提案に対して、<span class="keyword">「理念より現実の売上」</span>という反論をしています。「理念はわかりますが」は相手の考えを認めながら現実との乖離を指摘する表現です。空き店舗増加の原因を「収入につながらないから」と明確に述べており、問題の核心を示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u5">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">今村さん（市職員）</div>
+        <div class="utterance-num">発言 5</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t5" data-highlight="空き店舗を活用したチャレンジショップ制度">
+          おっしゃる通りです。そこで具体的な提案なのですが、市として空き店舗を活用したチャレンジショップ制度を設けることを検討しております。若い起業家や副業希望者に低コストで出店の機会を提供し、商店街に新しい人の流れを作るという考えです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(5)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(5)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(5)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp5">
+        <div class="exp-title">📖 解説</div>
+        <p>今村さんが具体的な施策として<span class="keyword">チャレンジショップ制度</span>を提案しています。空き店舗という問題を逆に資源として活用する発想の転換が見られます。「検討しております」という表現は、まだ決定ではないが準備中であることを示します。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u6">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 6</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t6" data-highlight="新しいお店が増えれば、商店街全体のにぎわいにつながる">
+          チャレンジショップですか。それは面白いかもしれません。新しいお店が増えれば、商店街全体のにぎわいにつながる可能性はあると思います。ただ、既存の店舗と商品が競合してしまうと、かえって共倒れになる心配もあります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(6)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(6)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(6)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp6">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんがチャレンジショップ案に興味を示しながらも、<span class="keyword">既存店との競合・共倒れ</span>という懸念を追加しています。発言4の「理念より売上」という強い否定から、「面白いかもしれない」という前向きな変化が見られます。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u7">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">今村さん（市職員）</div>
+        <div class="utterance-num">発言 7</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t7" data-highlight="既存店と異なるジャンルの業種に限定する">
+          競合については、既存店と異なるジャンルの業種に限定するという条件をつけることで対応できると思います。たとえば、カフェや雑貨・ワークショップなど、今の商店街にないものを誘致する方向です。そうすれば、既存の店舗と補完し合う関係になれるのではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(7)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(7)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(7)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp7">
+        <div class="exp-title">📖 解説</div>
+        <p>今村さんが小野さんの懸念（競合）に対して、<span class="keyword">業種限定という条件</span>で解決策を示しています。「補完し合う関係」という言葉は、対立から協力へという方向性を示す重要なキーワードです。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u8">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">峰岸さん（理事）</div>
+        <div class="utterance-num">発言 8</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t8" data-highlight="イベントを定期的に開催して商店街全体に人を呼び込む">
+          今村さんの案は魅力的だと思います。加えて、商工会議所としては、イベントを定期的に開催して商店街全体に人を呼び込むという取り組みも同時に進めたいと考えております。チャレンジショップと連携させることで、相乗効果が期待できるのではないでしょうか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(8)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(8)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(8)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp8">
+        <div class="exp-title">📖 解説</div>
+        <p>峰岸さんが今村さんの案に<span class="keyword">定期イベント</span>という追加策を提案しています。「加えて」という言葉が、否定でも代替でもなく「上乗せ」の提案であることを示します。チャレンジショップ×イベントという組み合わせで相乗効果を狙う発想です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u9">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 9</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t9" data-highlight="イベントの準備や当日の運営が、普段の業務に重なってしまう">
+          イベントは確かに集客に効果があると思います。ただ、以前やったときの経験でいいますと、イベントの準備や当日の運営が、普段の業務に重なってしまって、体力的にきつかったという声がスタッフから出ておりました。小さな店舗では人手が足りないのです。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(9)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(9)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(9)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp9">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんが過去の経験を根拠に<span class="keyword">人手不足・業務負担</span>という現実的な問題を指摘しています。「以前やったときの経験」という具体的な根拠が、この発言に説得力を与えています。理想論ではなく現場の実態を示す、商店主代表らしい発言です。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u10">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">今村さん（市職員）</div>
+        <div class="utterance-num">発言 10</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t10" data-highlight="市の職員や大学生ボランティアがイベント運営を支援する">
+          その点については、市の職員や大学生ボランティアがイベント運営を支援するという形を取ることができます。商店主の皆さんには当日の接客や販売に専念していただき、運営面は外部からサポートする体制を整えたいと思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(10)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(10)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(10)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp10">
+        <div class="exp-title">📖 解説</div>
+        <p>今村さんが小野さんの「人手不足」という懸念に対して、<span class="keyword">市職員・大学生ボランティアによるサポート</span>を提案しています。「接客・販売は商店主、運営は外部」という役割分担が解決策の核心です。行政が支援者として機能する姿勢が表れています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u11">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 11</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t11" data-highlight="運営を手伝ってもらえるなら、私たちも積極的に参加できます">
+          それは大変助かります。運営を手伝ってもらえるなら、私たちも積極的に参加できます。実は、やる気はあっても人手の問題で諦めていた部分があったので、そこが解消されれば大きく前進できると思います。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(11)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(11)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(11)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp11">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんが<span class="keyword">「やる気はあっても人手の問題で諦めていた」</span>と本音を明かしました。この言葉は重要です。小野さんは活性化に無関心だったのではなく、現実的な制約によって動けなかったことがわかります。制約が解消されれば動けるという、前向きな姿勢への転換を示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-c" id="u12">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨‍💼</div>
+        <div class="speaker-name">峰岸さん（理事）</div>
+        <div class="utterance-num">発言 12</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t12" data-highlight="チャレンジショップの導入とイベント開催の体制づくりを並行して進める">
+          そうですね。では、チャレンジショップの導入とイベント開催の体制づくりを並行して進めるという方向で、次回会議までに具体的なスケジュールを作成することにしましょう。今村さん、市の支援内容についても文書でまとめていただけますか。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(12)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(12)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(12)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp12">
+        <div class="exp-title">📖 解説</div>
+        <p>峰岸さんが<span class="keyword">二つの施策を並行して進める</span>方針をまとめ、今村さんに文書化を依頼しています。「並行して進める」という言葉から、どちらか一方ではなく両方を実施する合意が成立したことがわかります。会議の締めくくりとして、次のステップを明確に示しています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-b" id="u13">
+      <div class="utterance-header">
+        <div class="speaker-icon">👨</div>
+        <div class="speaker-name">今村さん（市職員）</div>
+        <div class="utterance-num">発言 13</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t13" data-highlight="商店主の皆さんの熱意があってこそ、支援も生きてまいります">
+          承知いたしました。必要な書類と支援の枠組みを整理してご提出いたします。小野さん、商店主の皆さんの熱意があってこそ、支援も生きてまいります。ご協力のほど、よろしくお願いいたします。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(13)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(13)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(13)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp13">
+        <div class="exp-title">📖 解説</div>
+        <p>今村さんが「<span class="keyword">商店主の熱意があってこそ支援が生きる</span>」と述べています。行政の支援は商店主の主体性があって初めて機能するという考えが表れています。発言3の「商店街の強みを活かす」という今村さんの一貫した考え方が、ここにも反映されています。</p>
+      </div>
+    </div>
+
+    <div class="utterance speaker-a" id="u14">
+      <div class="utterance-header">
+        <div class="speaker-icon">👩</div>
+        <div class="speaker-name">小野さん（商店主）</div>
+        <div class="utterance-num">発言 14</div>
+      </div>
+      <div class="utterance-body">
+        <div class="utterance-text" id="t14" data-highlight="こうして具体的な支援策が見えてくると、前向きになれます">
+          ありがとうございます。正直なところ、最初はどこまで変わるか半信半疑でしたが、こうして具体的な支援策が見えてくると、前向きになれます。商店街を守っていくのは私たちですので、できる限り取り組んでまいります。
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn btn-mark" onclick="toggleMark(14)">🖊 ここに注意</button>
+        <button class="action-btn btn-exp"  onclick="toggleExp(14)">📖 解説</button>
+        <button class="action-btn btn-flow" onclick="openFlow(14)">🗺 話の流れ</button>
+      </div>
+      <div class="exp-panel" id="exp14">
+        <div class="exp-title">📖 解説</div>
+        <p>小野さんが「<span class="keyword">最初は半信半疑だったが、前向きになれる</span>」と自分の変化を振り返っています。この発言が会話全体の変化を象徴しています。発言2の「売上が落ちている」という厳しい現実から、「取り組んでまいります」という決意まで、小野さんの気持ちの変化が一貫した物語になっています。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="question-section">
+
+    <div class="question-block">
+      <div class="question-label">問い １</div>
+      <div class="question-text">
+        発言4で小野さんが「<span class="underline">理念はわかりますが、現実には目の前の売上が大事です</span>」と述べた意図として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices1">
+        <button class="choice-btn" onclick="answer(1, this, false, 0)">
+          <span class="choice-num">①</span>
+          商店街がコミュニティの場として機能することには、まったく価値がないと否定した。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 1)">
+          <span class="choice-num">②</span>
+          今村さんの提案する支援制度は現実的ではなく、行政には頼れないと伝えた。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, true, 2)">
+          <span class="choice-num">③</span>
+          地域コミュニティとしての意義は理解しているが、収入に直結しなければ店を維持できないという現場の切実な状況を訴えた。
+        </button>
+        <button class="choice-btn" onclick="answer(1, this, false, 3)">
+          <span class="choice-num">④</span>
+          郊外の大型モールへの対抗策として、価格の引き下げを最優先にすべきだと主張した。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback1"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ２</div>
+      <div class="question-text">
+        発言9で小野さんがイベントについて懸念を示した理由として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices2">
+        <button class="choice-btn" onclick="answer(2, this, false, 0)">
+          <span class="choice-num">①</span>
+          以前のイベントで集客に失敗した経験があり、効果がないと判断していたから。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, true, 1)">
+          <span class="choice-num">②</span>
+          小規模な店舗では人手が限られており、通常業務と並行してイベント運営を行うことが難しいから。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 2)">
+          <span class="choice-num">③</span>
+          イベントを開催することで新規客が増え、既存の商店との競合が生じると懸念したから。
+        </button>
+        <button class="choice-btn" onclick="answer(2, this, false, 3)">
+          <span class="choice-num">④</span>
+          商店街ではなく郊外でイベントを開催する方が、より多くの来客を見込めると考えたから。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback2"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="question-block">
+      <div class="question-label">問い ３</div>
+      <div class="question-text">
+        この会話全体を通じて読み取れる内容として、最も適切なものを次の①〜④から選んでください。
+      </div>
+      <div class="choices" id="choices3">
+        <button class="choice-btn" onclick="answer(3, this, false, 0)">
+          <span class="choice-num">①</span>
+          小野さんは商店街の活性化に当初から積極的で、行政の支援が遅いことに不満を持っていた。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, false, 1)">
+          <span class="choice-num">②</span>
+          今村さんは商店街の現状を把握しておらず、小野さんから現場の実態を教えてもらって初めて問題を理解した。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, false, 2)">
+          <span class="choice-num">③</span>
+          峰岸さんはチャレンジショップ制度に否定的で、イベント開催のみを解決策として主張し続けた。
+        </button>
+        <button class="choice-btn" onclick="answer(3, this, true, 3)">
+          <span class="choice-num">④</span>
+          小野さんは現実的な制約から慎重な姿勢を取っていたが、具体的な支援策と役割分担が示されるにつれて前向きに変化した。
+        </button>
+      </div>
+      <div class="answer-feedback" id="feedback3"></div>
+    </div>
+
+  </div>
+
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">高認実戦①クリア！</div>
+    <div class="comp-sub">14発言の長い会話文を最後まで読み切りました。<br>3問すべてに取り組んだ集中力はすばらしいです。<br>いよいよ最終回、高認実戦②に進みましょう。</div>
+    <div class="nav-btn-row">
+      <a href="kaiwa_jissen_02.html" class="nav-btn nav-btn-next">次の単元へ ▶ 高認実戦②</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+
+<div class="flow-overlay" id="flowOverlay" onclick="closeFlow(event)">
+  <div class="flow-popup">
+    <div class="flow-popup-header">
+      <h3>🗺 ここまでの話の流れ</h3>
+      <button class="flow-close" onclick="closeFlowBtn()">✕</button>
+    </div>
+    <div class="flow-popup-body" id="flowBody"></div>
+  </div>
+</div>
+
+<script>
+  const markState = {};
+  function toggleMark(n) {
+    markState[n] = !markState[n];
+    const textEl = document.getElementById('t' + n);
+    const btn = document.querySelectorAll(`#u${n} .btn-mark`)[0];
+    btn.classList.toggle('active', markState[n]);
+    if (markState[n]) {
+      const phrase = textEl.dataset.highlight;
+      if (phrase) {
+        textEl.innerHTML = textEl.dataset.original.replace(
+          new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          `<mark class="hl">${phrase}</mark>`
+        );
+      }
+    } else {
+      textEl.innerHTML = textEl.dataset.original;
+    }
+  }
+
+  const expState = {};
+  function toggleExp(n) {
+    expState[n] = !expState[n];
+    document.getElementById('exp' + n).classList.toggle('open', expState[n]);
+    document.querySelectorAll(`#u${n} .btn-exp`)[0].classList.toggle('active', expState[n]);
+  }
+
+  const flowData = [
+    { speaker: '峰岸さん（理事）', text: '空き店舗の増加と人通りの減少という現状を示し、小野さんに意見を求める。' },
+    { speaker: '小野さん（商店主）', text: '郊外モールとの競合・価格・駐車場不足を原因として、売上の大幅な落ち込みを訴える。' },
+    { speaker: '今村さん（市職員）', text: '価格競争では勝てないことを認めながら、対話・コミュニティという商店街独自の強みを活かすよう提案する。' },
+    { speaker: '小野さん（商店主）', text: '意義はわかるが、収入に直結しなければ店を続けられないと、理念より現実の売上を優先する立場を示す。' },
+    { speaker: '今村さん（市職員）', text: '空き店舗を活用したチャレンジショップ制度を提案し、若い起業家の誘致で人の流れを作ると説明する。' },
+    { speaker: '小野さん（商店主）', text: 'チャレンジショップ案に興味を示しながらも、既存店との競合・共倒れの懸念を述べる。' },
+    { speaker: '今村さん（市職員）', text: '既存店と異なるジャンルに業種を限定することで競合を防ぎ、補完し合う関係を提案する。' },
+    { speaker: '峰岸さん（理事）', text: 'チャレンジショップに加え、定期イベントとの連携で相乗効果を狙う案を追加提案する。' },
+    { speaker: '小野さん（商店主）', text: 'イベントの集客効果は認めるが、過去の経験から準備・運営が通常業務と重なり人手が足りないと訴える。' },
+    { speaker: '今村さん（市職員）', text: '市職員と大学生ボランティアが運営を担い、商店主は接客・販売に専念できる体制を提案する。' },
+    { speaker: '小野さん（商店主）', text: '運営サポートがあれば積極的に参加できると述べ、やる気はあっても人手不足で諦めていたと本音を明かす。' },
+    { speaker: '峰岸さん（理事）', text: 'チャレンジショップとイベント体制づくりを並行して進める方針をまとめ、今村さんに支援内容の文書化を依頼する。' },
+    { speaker: '今村さん（市職員）', text: '文書作成を了承し、商店主の熱意があってこそ支援が生きると伝える。' },
+    { speaker: '小野さん（商店主）', text: '最初は半信半疑だったが、具体的な支援策が見えて前向きになれたと変化を振り返り、取り組む決意を述べる。' },
+  ];
+
+  function openFlow(n) {
+    const body = document.getElementById('flowBody');
+    body.innerHTML = '';
+    flowData.forEach((d, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'flow-connector';
+        body.appendChild(conn);
+      }
+      const step = document.createElement('div');
+      const isFuture = (i + 1) > n;
+      step.className = 'flow-step' + (isFuture ? ' future' : '');
+      step.innerHTML = `
+        <div class="flow-dot">${i + 1}</div>
+        <div class="flow-content">
+          <div class="flow-speaker">${d.speaker}</div>
+          <p>${isFuture ? '（まだ読んでいません）' : d.text}</p>
+        </div>`;
+      body.appendChild(step);
+    });
+    document.getElementById('flowOverlay').classList.add('open');
+  }
+
+  function closeFlow(e) {
+    if (e.target === document.getElementById('flowOverlay'))
+      document.getElementById('flowOverlay').classList.remove('open');
+  }
+  function closeFlowBtn() {
+    document.getElementById('flowOverlay').classList.remove('open');
+  }
+
+  const answers = {
+    1: {
+      correct: 2,
+      ok: '発言4で小野さんは「コミュニティの場といっても、それが直接収入につながらなければ、店を続けることができません」と述べています。今村さんの提案する地域コミュニティとしての意義は「わかる」と認めながらも、収入への直結が前提という現場の切実な事情を訴えた発言です。①の「まったく価値がない」は言い過ぎです。',
+      ng: '正解は③です。発言4をもう一度読んでみましょう。小野さんは今村さんの提案の「意義はわかる」と言っています。全否定ではなく、何を訴えているのかを確認してみてください。'
+    },
+    2: {
+      correct: 1,
+      ok: '発言9で小野さんは「イベントの準備や当日の運営が、普段の業務に重なってしまって、体力的にきつかった」「小さな店舗では人手が足りない」と述べています。①の「集客に失敗」は本文にない情報です。③の「競合」は発言6の懸念であり、発言9の理由ではありません。',
+      ng: '正解は②です。発言9をもう一度読んでみましょう。小野さんがイベントについて「以前やったときの経験」として話しているのは、何についての困難でしたか。「人手」という言葉に注目してください。'
+    },
+    3: {
+      correct: 3,
+      ok: '小野さんは発言2で「売上が落ちている」と訴え、発言4では現実の売上を優先し、発言9ではイベントの人手不足を指摘しました。しかし発言11で「やる気はあっても人手で諦めていた」と本音を明かし、発言14で「前向きになれます」と変化を語っています。①は「当初から積極的」が誤り、②は「現状を把握していない」が会話にない情報、③は「チャレンジショップに否定的」が誤りです。',
+      ng: '正解は④です。小野さんの発言2・4・9・11・14の変化を「話の流れ」ボタンで確認してみましょう。最初の立場と最後の立場を比べたとき、何が変化のきっかけになったかを探してみてください。'
+    }
+  };
+
+  function answer(qNum, btn, isCorrect, idx) {
+    const choicesId = 'choices' + qNum;
+    const feedbackId = 'feedback' + qNum;
+    document.querySelectorAll(`#${choicesId} .choice-btn`).forEach(b => b.disabled = true);
+    const fb = document.getElementById(feedbackId);
+    const ans = answers[qNum];
+    if (isCorrect) {
+      btn.classList.add('correct');
+      launchConfetti();
+      fb.className = 'answer-feedback show ok';
+      fb.innerHTML = `<div class="feedback-title">✅ 正解です！</div>${ans.ok}`;
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll(`#${choicesId} .choice-btn`)[ans.correct].classList.add('correct');
+      fb.className = 'answer-feedback show ng';
+      fb.innerHTML = `<div class="feedback-title">惜しい、もう一度確認してみましょう。</div>${ans.ng}`;
+    }
+    if (qNum === 3) showCompletionNav();
+  }
+
+  function showCompletionNav() {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      if (nav) { nav.classList.add('show'); nav.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }, 1400);
+  }
+
+  function launchConfetti() {
+    const cvs = document.getElementById('confetti');
+    cvs.width = innerWidth; cvs.height = innerHeight;
+    cvs.style.display = 'block';
+    const ctx = cvs.getContext('2d');
+    const parts = Array.from({length: 130}, () => ({
+      x: Math.random() * innerWidth, y: -12,
+      vx: (Math.random() - .5) * 5, vy: Math.random() * 4 + 2,
+      r: Math.random() * 7 + 3,
+      color: ['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+      rot: Math.random() * 360, rv: (Math.random() - .5) * 9,
+    }));
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      parts.forEach(p => {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      });
+      if (parts.some(p => p.y < innerHeight)) { frame = requestAnimationFrame(draw); }
+      else { cvs.style.display = 'none'; cancelAnimationFrame(frame); }
+    }
+    draw();
+    setTimeout(() => { cvs.style.display = 'none'; cancelAnimationFrame(frame); }, 3200);
+  }
+
+  document.querySelectorAll('.utterance-text').forEach(el => {
+    el.dataset.original = el.innerHTML;
+  });
+</script>
+</body>
+</html>
