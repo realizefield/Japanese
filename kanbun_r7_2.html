@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢文読解 ― 古文真宝「富人の稼」</title>
+<style>:root{
+  --navy:#1a2744;--navy-mid:#2a3d6b;--navy-pale:#e8ecf4;
+  --gold:#c9a84c;--gold-light:#f0d98a;--red:#c0392b;
+  --green:#1e7e5a;--green-light:#d4f0e4;--cream:#faf8f2;
+  --text:#1a1a2e;--muted:#6b7aa1;--border:#c8d0e4;
+  --shadow:rgba(26,39,68,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+  color:#fff;padding:28px 24px 22px;text-align:center;}
+.header-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--gold-light);
+  border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:10px;font-family:sans-serif;}
+.header h1{font-size:1.5rem;font-weight:normal;letter-spacing:.1em;line-height:1.6;}
+.header .sub{font-size:.82rem;color:var(--gold-light);margin-top:6px;font-family:sans-serif;opacity:.85;}
+.container{max-width:860px;margin:0 auto;padding:28px 16px;}
+.intro-box{background:#fff;border:1px solid var(--border);border-left:4px solid var(--navy);
+  border-radius:8px;padding:18px 20px;margin-bottom:28px;font-size:.9rem;line-height:1.9;
+  color:#3a3a4a;font-family:sans-serif;}
+.intro-box strong{color:var(--navy);}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:28px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.section-header{background:var(--navy);color:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;}
+.section-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  color:var(--gold-light);font-family:sans-serif;font-weight:bold;flex-shrink:0;}
+.section-title{font-size:.95rem;letter-spacing:.05em;line-height:1.5;}
+.section-title small{display:block;font-size:.75rem;color:var(--gold-light);
+  font-family:sans-serif;margin-top:2px;opacity:.85;}
+.prog-wrap{background:var(--navy-pale);height:5px;margin:0 20px;border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  border-radius:20px;transition:width .5s;width:0;}
+.section-body{padding:22px 20px;}
+.notes-box{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;
+  padding:12px 16px;margin-bottom:18px;font-family:sans-serif;font-size:.8rem;
+  color:var(--muted);line-height:1.8;}
+.notes-box strong{color:var(--navy);}
+/* 書き下し文：縦書き */
+.kundoku-wrap{background:var(--navy-pale);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin-bottom:20px;overflow-x:auto;}
+.kundoku-label{font-size:.72rem;color:var(--muted);font-family:sans-serif;
+  letter-spacing:1.5px;margin-bottom:12px;}
+.kundoku-text{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:inline-block;font-size:1.25rem;line-height:2.0;
+  letter-spacing:0.35em;color:var(--navy);
+  font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  min-height:80px;
+}
+/* 問い */
+.question-zone{background:#f4f6fb;border:1px solid var(--border);border-radius:10px;
+  padding:18px 18px 14px;margin-bottom:16px;transition:opacity .3s;}
+.q-label{font-size:.78rem;color:var(--navy);font-family:sans-serif;
+  font-weight:bold;margin-bottom:8px;letter-spacing:.05em;}
+.q-text{font-size:.92rem;color:#1a1a2e;line-height:1.7;margin-bottom:14px;font-family:sans-serif;}
+.hl{background:var(--gold-light);padding:1px 6px;border-radius:4px;
+  font-family:'Hiragino Mincho ProN',serif;font-size:1rem;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.cbtn{background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 16px;font-size:.88rem;font-family:sans-serif;line-height:1.6;
+  cursor:pointer;text-align:left;transition:all .18s;color:var(--text);
+  display:flex;align-items:flex-start;gap:10px;}
+.cbtn:hover:not([disabled]){border-color:var(--navy);background:var(--navy-pale);transform:translateX(2px);}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--navy-pale);
+  color:var(--navy);font-size:.78rem;display:flex;align-items:center;
+  justify-content:center;font-weight:bold;flex-shrink:0;margin-top:1px;}
+.cbtn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.cbtn.correct .cnum{background:var(--green);color:#fff;}
+.cbtn.wrong{background:#fde8e6;border-color:var(--red);color:var(--red);opacity:.75;}
+.cbtn.wrong .cnum{background:var(--red);color:#fff;}
+.cbtn[disabled]{cursor:default;}
+.feedback{display:none;margin-top:12px;padding:11px 14px;border-radius:8px;
+  font-size:.85rem;font-family:sans-serif;line-height:1.7;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);color:var(--green);border-left:4px solid var(--green);}
+.feedback.ng{background:#fde8e6;color:#8b1a10;border-left:4px solid var(--red);}
+/* まとめ */
+.sum-zone{margin-top:20px;display:none;}
+.sum-zone.unlocked{display:block;}
+.sum-btn{background:var(--navy);color:var(--gold-light);border:none;border-radius:8px;
+  padding:10px 20px;font-size:.85rem;font-family:sans-serif;cursor:pointer;
+  letter-spacing:.05em;display:flex;align-items:center;gap:8px;transition:background .2s;}
+.sum-btn:hover{background:var(--navy-mid);}
+.sum-content{display:none;margin-top:10px;background:var(--navy);color:#e8edf8;
+  border-radius:10px;padding:18px 20px;font-family:sans-serif;font-size:.88rem;
+  line-height:1.9;animation:fadeIn .3s ease;}
+.sum-content.show{display:block;}
+.sum-content h4{color:var(--gold-light);font-size:.78rem;letter-spacing:1.5px;margin-bottom:10px;}
+.sum-content p{margin-bottom:8px;}
+.sum-content p:last-child{margin-bottom:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.final{display:none;background:var(--navy);color:#e8edf8;border-radius:14px;
+  padding:28px 24px;margin-top:8px;text-align:center;font-family:sans-serif;
+  animation:fadeIn .4s ease;}
+.final.show{display:block;}
+.final h2{color:var(--gold-light);font-size:1.1rem;letter-spacing:.1em;margin-bottom:14px;}
+.final p{font-size:.9rem;line-height:1.9;margin-bottom:6px;}
+.score{font-size:2.2rem;color:var(--gold-light);font-weight:bold;margin:12px 0;}
+.score span{font-size:1rem;color:#a8b4cc;}
+@media(max-width:600px){.kundoku-text{font-size:1.05rem;}.header h1{font-size:1.25rem;}}</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-badge">漢文読解 ／ 古文真宝　令和7年度第2回</div>
+  <h1>富人の稼</h1>
+  <div class="sub">書き下し文の意味を読み取る練習（全8問）</div>
+</div>
+<div class="container">
+<div class="intro-box">
+  <strong>この文章について：</strong><br>
+  中国の詩文集『古文真宝』に収められた文章です。豊かな農家と貧しい農家の農業のやり方を比較し、なぜ豊かな農家の作物が常に優れているかを論じています。<br><br>
+  <strong>学習の進め方：</strong>① 書き下し文をよく読みます。② マークされた部分の意味を選んでください。③ 1問でも解くと段落まとめが見られます。
+</div>
+
+<!-- 第一段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">一</div>
+    <div class="section-title">富人の田と悪い農法の対比
+      <small>豊かな農家の田と、時期を守らない農家の対比</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p1"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      稼（か）＝農作物を植え取り入れること ／ 蓋し＝思うに ／ 嘗て＝かつて ／ 斂む＝収穫する ／ 秕（しいな）＝実の入らない穀物
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">蓋し嘗て富人の稼を観るや。其の田美にして多く、食足りて餘有り。上に於ける者は、魚の鱗の如く、而して地力竭く。種ゑること常に時に及ばずして、而して之を斂めること常に其の熟するを待たず。</div>
+    </div>
+    <div class="question-zone" id="q1">
+      <div class="q-label">問１</div>
+      <div class="q-text"><span class="hl">蓋し嘗て富人の稼を観るや</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q1',false,'「蓋し」は「思うに」、「嘗て」は「かつて」の意。今のことではなく、かつての観察を述べています。')"><span class="cnum">①</span><span>今まさに豊かな農家の農業を観察してみると</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',true,'正解！「蓋し」＝思うに、「嘗て」＝かつて・以前に、「観る」＝観察する。かつて豊かな農家の農業を見たことがある、という冒頭の導入です。')"><span class="cnum">②</span><span>思うに、かつて豊かな農家の農業（のやり方）を観察したことがある。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「観る」の主語は筆者。富人が見たのではありません。')"><span class="cnum">③</span><span>豊かな農家が自分の農業を振り返って観察してみると</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「嘗て」は「かつて」の意。これから観察しようとしているのではありません。')"><span class="cnum">④</span><span>これから豊かな農家の農業を見に行こうと思う。</span></button>
+      </div>
+      <div class="feedback" id="f_q1"></div>
+    </div>
+    <div class="question-zone" id="q2" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問２</div>
+      <div class="q-text"><span class="hl">種ゑること常に時に及ばずして</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q2',false,'「及ばず」は「間に合わない」の意。いつも早いのではなく、いつも遅れるという意味です。')"><span class="cnum">①</span><span>種まきをいつも適切な時期よりも早く行うので</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',true,'正解！「常に時に及ばず」＝いつも適切な時期に間に合わない。種まきを常に遅らせてしまう悪い農家のやり方を示しています。')"><span class="cnum">②</span><span>種まきがいつも（適切な）時期に間に合わないので</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「種ゑること」は種まきのこと。収穫のことではありません。')"><span class="cnum">③</span><span>収穫をいつも時期に間に合わせることができないので</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「常に」は「いつも（の習慣として）」の意。一度だけのことではありません。')"><span class="cnum">④</span><span>ある時だけ種まきが時期に遅れてしまったので</span></button>
+      </div>
+      <div class="feedback" id="f_q2"></div>
+    </div>
+    <div class="question-zone" id="q3" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問３</div>
+      <div class="q-text"><span class="hl">之を斂めること常に其の熟するを待たず</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q3',false,'「待たず」は「待たない」の意。遅れるのではなく、熟す前に早めに刈り取ってしまうのです。')"><span class="cnum">①</span><span>収穫がいつも（穀物が）熟してから遅れて行われるので</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「斂む」は収穫すること。種まきのことではありません。')"><span class="cnum">②</span><span>種まきをいつも穀物が熟するのを待たずに行うので</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',true,'正解！「之を斂む」＝それを収穫する、「其の熟するを待たず」＝熟すのを待たない。穀物が十分に実らないうちに収穫してしまう悪習を指しています。')"><span class="cnum">③</span><span>収穫をいつも（穀物が）熟するのを待たずに行うので</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「常に」はいつもの習慣を示します。何年かに一度という意味ではありません。')"><span class="cnum">④</span><span>何年かに一度、熟する前に収穫を行うこともあるので</span></button>
+      </div>
+      <div class="feedback" id="f_q3"></div>
+    </div>
+    <div class="sum-zone" id="s1">
+      <button class="sum-btn" onclick="toggleSum('sc1',this)"><span>📖</span> 第一段落のまとめを見る</button>
+      <div class="sum-content" id="sc1">
+        <h4>第一段落 ／ まとめ</h4>
+        <p>筆者はかつて（<strong style="color:var(--gold-light)">蓋し嘗て</strong>）豊かな農家の農業を観察した。その田は美しく収穫も豊かだった。</p>
+        <p>対して悪い農家の田は地力を使い果たし（<strong style="color:var(--gold-light)">地力竭く</strong>）、種まきはいつも時期に遅れ（<strong style="color:var(--gold-light)">常に時に及ばず</strong>）、収穫も穀物が熟す前に行ってしまう（<strong style="color:var(--gold-light)">其の熟するを待たず</strong>）。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">二</div>
+    <div class="section-title">富人の農法と貧家の現状
+      <small>田を休ませ時期を守る農法の効果と、貧家の非効率な農業</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p2"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      秕（しいな）少なし＝実の入らない穀物が少ない ／ 實（み）＝実 ／ 腐らず＝腐敗しない ／ 十口之家＝十人家族の家 ／ 寸寸＝少しずつ・手あたり次第
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">故に富人の稼は常に美にして、秕少なく實多く、久しく蔵して腐らず。今吾は十口の家にして、共に二百畝の田を、寸寸にして之を取る。</div>
+    </div>
+    <div class="question-zone" id="q4">
+      <div class="q-label">問４</div>
+      <div class="q-text"><span class="hl">故に富人の稼は常に美にして</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q4',false,'「故に」は「だから・それゆえ」の意で前の内容を受けた結論。たまたまではありません。')"><span class="cnum">①</span><span>富人の農業はたまたま美しい作物が採れることがある。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',true,'正解！「故に」＝それゆえ（前の農法の説明を受けた結論）、「常に美にして」＝いつも出来がよく。良い農法を実践した結果として、常によい作物が採れることを示しています。')"><span class="cnum">②</span><span>だから（それゆえ）、富人の作物はいつも出来がよく（美しく）、</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「故に」は前の理由を受けた結論語。逆説ではありません。')"><span class="cnum">③</span><span>しかし富人の作物は美しいとは言えず、</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「常に」はいつもの意。年によって変わることを示しているのではありません。')"><span class="cnum">④</span><span>富人の作物は年によっては美しいこともあるが、</span></button>
+      </div>
+      <div class="feedback" id="f_q4"></div>
+    </div>
+    <div class="question-zone" id="q5" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問５</div>
+      <div class="q-text"><span class="hl">今吾は十口の家にして、共に二百畝の田を、寸寸にして之を取る</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q5',false,'「今吾は」は貧しい農家（一家）の側から語っています。また「寸寸」は少しずつ・雑にという意味です。')"><span class="cnum">①</span><span>今の私は十人家族で、二百畝の広い田をゆっくりと丁寧に耕している。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',true,'正解！「十口の家」＝十人家族、「二百畝の田」＝広い田、「寸寸にして取る」＝少しずつ手あたり次第に刈り取る。せっかくの広い田を非効率に使う貧家の姿です。')"><span class="cnum">②</span><span>（我が家は）十人家族で二百畝の田を共に耕し、少しずつ（手あたり次第に）それを刈り取っている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「共に」は家族みんなで、の意。他の農家と共同で耕しているわけではありません。')"><span class="cnum">③</span><span>今、十軒の家が共同で二百畝の田を耕し、均等にそれを分配している。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「寸寸にして取る」は少しずつ雑に扱うことを示します。大切に保存しているのではありません。')"><span class="cnum">④</span><span>十人家族が二百畝の田を使い、大切に少量ずつ収穫して保存している。</span></button>
+      </div>
+      <div class="feedback" id="f_q5"></div>
+    </div>
+    <div class="sum-zone" id="s2">
+      <button class="sum-btn" onclick="toggleSum('sc2',this)"><span>📖</span> 第二段落のまとめを見る</button>
+      <div class="sum-content" id="sc2">
+        <h4>第二段落 ／ まとめ</h4>
+        <p>その結果（<strong style="color:var(--gold-light)">故に</strong>）、富人の作物はいつも出来がよく、実の入らない穀物が少なく、長く貯蔵しても腐らない。</p>
+        <p>対して貧しい農家（今吾）は十人家族で二百畝もの田を持ちながら、<strong style="color:var(--gold-light)">寸寸にして取る</strong>（少しずつ手あたり次第に刈り取る）という非効率なやり方をしている。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">三</div>
+    <div class="section-title">反語と本文の主旨
+      <small>「豈に能く復た美稼有らんや」と本文の教訓</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p3"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      豈（あに）＝どうして〜か（反語・強い否定） ／ 能く＝〜することができる ／ 復た＝再び ／ 美稼（びか）＝良い作物 ／ 哉（かな）＝〜か（詠嘆）
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">豈に能く復た美稼有らんや。</div>
+    </div>
+    <div class="question-zone" id="q6">
+      <div class="q-label">問６</div>
+      <div class="q-text"><span class="hl">豈に能く復た美稼有らんや</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q6',false,'「豈に〜や」は反語で「どうして〜できようか（できない）」の意。疑問ではなく強い否定です。')"><span class="cnum">①</span><span>どうすればまた良い作物を収穫できるだろうか。（方法を問う疑問）</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「豈に」は反語（強い否定）。肯定的な期待を示しているのではありません。')"><span class="cnum">②</span><span>またよい作物が収穫できることを期待している。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',true,'正解！「豈に〜や」は反語で「どうして〜できようか（できるはずがない）」の意。良い作物が採れるはずがない、という強い否定の結論です。')"><span class="cnum">③</span><span>どうしてまた良い作物が採れようか。（採れるはずがない。）</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「豈に」は反語であって、仮定の表現ではありません。')"><span class="cnum">④</span><span>もし農法を改めれば、また良い作物が採れるだろう。</span></button>
+      </div>
+      <div class="feedback" id="f_q6"></div>
+    </div>
+    <div class="question-zone" id="q7" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問７　「則」の読みと意味</div>
+      <div class="q-text">本文中に登場する「<strong>則（すなはち）</strong>」の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q7',false,'「則」は順接の接続詞。逆接ではありません。')"><span class="cnum">①</span><span>しかし・だが（逆接）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',true,'正解！「則（すなはち）」は順接・帰結を表し、「〜ならばすなわち〜」「〜のとき〜となる」の意味です。前の条件を受けてその結果を示します。')"><span class="cnum">②</span><span>すなわち・そうすると（順接・帰結）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「若し〜ならば」の仮定は「若」「苟」などです。「則」は帰結・順接です。')"><span class="cnum">③</span><span>もし〜ならば（仮定）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「則」は文中の接続詞。文末の断定ではありません。')"><span class="cnum">④</span><span>〜である（断定）</span></button>
+      </div>
+      <div class="feedback" id="f_q7"></div>
+    </div>
+    <div class="question-zone" id="q8" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問８　本文全体の主旨</div>
+      <div class="q-text">この文章（古文真宝）全体の内容として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q8',false,'豊かな農家が土地を独占するという内容は書かれていません。')"><span class="cnum">①</span><span>豊かな農家が広い土地を独占することで貧しい農家が困窮するという社会問題を批判した文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',true,'正解！田を休ませ時期を守る農法の重要性を、豊かな農家と貧しい農家の対比を通じて示した文章です。')"><span class="cnum">②</span><span>田を休ませ時期を守る農法の重要性を豊かな農家と貧しい農家の対比を通じて示した文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'本文は農業技術の話で、金銭の貸し借りについては述べていません。')"><span class="cnum">③</span><span>豊かな農家から金を借りた貧しい農家がその借金を返せなくなる顛末を描いた文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'本文は農業の話であり、天候・天災については触れていません。')"><span class="cnum">④</span><span>天候に恵まれた年は良い作物が採れるが、そうでない年は農家が苦しむことを示した文章。</span></button>
+      </div>
+      <div class="feedback" id="f_q8"></div>
+    </div>
+    <div class="sum-zone" id="s3">
+      <button class="sum-btn" onclick="toggleSum('sc3',this)"><span>📖</span> 全体まとめを見る</button>
+      <div class="sum-content" id="sc3">
+        <h4>全体まとめ</h4>
+        <p>「<strong style="color:var(--gold-light)">豈に能く復た美稼有らんや</strong>」は反語（どうして良い作物が採れようか＝採れるはずがない）。貧しい農法では絶対によい作物は得られないという結論。</p>
+        <p><strong style="color:var(--gold-light)">重要語：</strong>「蓋し」＝思うに ／「故に」＝それゆえ ／「豈に〜や」＝反語（〜できようか） ／「則」＝すなわち（順接）</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <h2>✨ 全問完了</h2>
+  <div class="score" id="sc">―<span> / 8問</span></div>
+  <p id="sm"></p>
+  <p style="margin-top:16px;font-size:.82rem;color:#a8b4cc;">「富人の農法」の要点をまとめで整理しておきましょう。</p>
+</div>
+</div>
+<script>
+window._TOTAL=8;
+window._SEC={q1:1,q2:1,q3:1,q4:2,q5:2,q6:3,q7:3,q8:3};
+window._NEXT={q1:'q2',q2:'q3',q3:null,q4:'q5',q5:null,q6:'q7',q7:'q8',q8:null};
+window._STOT={1:3,2:2,3:3};
+function ans(btn,id,ok,msg){
+  if(window._used&&window._used[id])return;
+  if(!window._used)window._used={};
+  window._used[id]=true;
+  document.getElementById(id).querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById('f_'+id);
+  fb.textContent=(ok?'✓ 正解！　':'✗ 不正解。　')+msg;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  if(ok)window._correct=(window._correct||0)+1;
+  window._done=(window._done||0)+1;
+  const s=window._SEC[id];
+  window._sdone=window._sdone||{};
+  window._sdone[s]=(window._sdone[s]||0)+1;
+  document.getElementById('p'+s).style.width=(window._sdone[s]/window._STOT[s]*100)+'%';
+  if(!(window._sopen&&window._sopen[s])){
+    if(!window._sopen)window._sopen={};
+    window._sopen[s]=true;
+    document.getElementById('s'+s).classList.add('unlocked');
+  }
+  const nxt=window._NEXT[id];
+  if(nxt){const nz=document.getElementById(nxt);nz.style.opacity='1';nz.style.pointerEvents='auto';}
+  if(window._done===window._TOTAL)setTimeout(showFin,600);
+}
+function showFin(){
+  const el=document.getElementById('fin');el.classList.add('show');
+  document.getElementById('sc').innerHTML=(window._correct||0)+'<span> / '+window._TOTAL+'問</span>';
+  const p=Math.round((window._correct||0)/window._TOTAL*100);
+  document.getElementById('sm').textContent=
+    p>=86?'素晴らしい！ 書き下し文の読解がとてもよくできています。':
+    p>=57?'よく頑張りました。間違えた問題の解説をもう一度読み返してみましょう。':
+    '難しい問題がありましたね。書き下し文と語注を照らし合わせながらもう一度取り組んでみましょう。';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function toggleSum(id,btn){
+  const el=document.getElementById(id);
+  const show=el.classList.toggle('show');
+  btn.childNodes[1].textContent=show?' 閉じる':' まとめを見る';
+}
+</script>
+</body>
+</html>

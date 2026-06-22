@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢文読解 ― 呂氏春秋「師曠・荊文王」</title>
+<style>:root{
+  --navy:#1a2744;--navy-mid:#2a3d6b;--navy-pale:#e8ecf4;
+  --gold:#c9a84c;--gold-light:#f0d98a;--red:#c0392b;
+  --green:#1e7e5a;--green-light:#d4f0e4;--cream:#faf8f2;
+  --text:#1a1a2e;--muted:#6b7aa1;--border:#c8d0e4;
+  --shadow:rgba(26,39,68,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+  color:#fff;padding:28px 24px 22px;text-align:center;}
+.header-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--gold-light);
+  border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:10px;font-family:sans-serif;}
+.header h1{font-size:1.5rem;font-weight:normal;letter-spacing:.1em;line-height:1.6;}
+.header .sub{font-size:.82rem;color:var(--gold-light);margin-top:6px;font-family:sans-serif;opacity:.85;}
+.container{max-width:860px;margin:0 auto;padding:28px 16px;}
+.intro-box{background:#fff;border:1px solid var(--border);border-left:4px solid var(--navy);
+  border-radius:8px;padding:18px 20px;margin-bottom:28px;font-size:.9rem;line-height:1.9;
+  color:#3a3a4a;font-family:sans-serif;}
+.intro-box strong{color:var(--navy);}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:28px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.section-header{background:var(--navy);color:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;}
+.section-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  color:var(--gold-light);font-family:sans-serif;font-weight:bold;flex-shrink:0;}
+.section-title{font-size:.95rem;letter-spacing:.05em;line-height:1.5;}
+.section-title small{display:block;font-size:.75rem;color:var(--gold-light);
+  font-family:sans-serif;margin-top:2px;opacity:.85;}
+.prog-wrap{background:var(--navy-pale);height:5px;margin:0 20px;border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  border-radius:20px;transition:width .5s;width:0;}
+.section-body{padding:22px 20px;}
+.notes-box{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;
+  padding:12px 16px;margin-bottom:18px;font-family:sans-serif;font-size:.8rem;
+  color:var(--muted);line-height:1.8;}
+.notes-box strong{color:var(--navy);}
+/* 書き下し文：縦書き */
+.kundoku-wrap{background:var(--navy-pale);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin-bottom:20px;overflow-x:auto;}
+.kundoku-label{font-size:.72rem;color:var(--muted);font-family:sans-serif;
+  letter-spacing:1.5px;margin-bottom:12px;}
+.kundoku-text{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:inline-block;font-size:1.25rem;line-height:2.0;
+  letter-spacing:0.35em;color:var(--navy);
+  font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  min-height:80px;
+}
+/* 問い */
+.question-zone{background:#f4f6fb;border:1px solid var(--border);border-radius:10px;
+  padding:18px 18px 14px;margin-bottom:16px;transition:opacity .3s;}
+.q-label{font-size:.78rem;color:var(--navy);font-family:sans-serif;
+  font-weight:bold;margin-bottom:8px;letter-spacing:.05em;}
+.q-text{font-size:.92rem;color:#1a1a2e;line-height:1.7;margin-bottom:14px;font-family:sans-serif;}
+.hl{background:var(--gold-light);padding:1px 6px;border-radius:4px;
+  font-family:'Hiragino Mincho ProN',serif;font-size:1rem;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.cbtn{background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 16px;font-size:.88rem;font-family:sans-serif;line-height:1.6;
+  cursor:pointer;text-align:left;transition:all .18s;color:var(--text);
+  display:flex;align-items:flex-start;gap:10px;}
+.cbtn:hover:not([disabled]){border-color:var(--navy);background:var(--navy-pale);transform:translateX(2px);}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--navy-pale);
+  color:var(--navy);font-size:.78rem;display:flex;align-items:center;
+  justify-content:center;font-weight:bold;flex-shrink:0;margin-top:1px;}
+.cbtn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.cbtn.correct .cnum{background:var(--green);color:#fff;}
+.cbtn.wrong{background:#fde8e6;border-color:var(--red);color:var(--red);opacity:.75;}
+.cbtn.wrong .cnum{background:var(--red);color:#fff;}
+.cbtn[disabled]{cursor:default;}
+.feedback{display:none;margin-top:12px;padding:11px 14px;border-radius:8px;
+  font-size:.85rem;font-family:sans-serif;line-height:1.7;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);color:var(--green);border-left:4px solid var(--green);}
+.feedback.ng{background:#fde8e6;color:#8b1a10;border-left:4px solid var(--red);}
+/* まとめ */
+.sum-zone{margin-top:20px;display:none;}
+.sum-zone.unlocked{display:block;}
+.sum-btn{background:var(--navy);color:var(--gold-light);border:none;border-radius:8px;
+  padding:10px 20px;font-size:.85rem;font-family:sans-serif;cursor:pointer;
+  letter-spacing:.05em;display:flex;align-items:center;gap:8px;transition:background .2s;}
+.sum-btn:hover{background:var(--navy-mid);}
+.sum-content{display:none;margin-top:10px;background:var(--navy);color:#e8edf8;
+  border-radius:10px;padding:18px 20px;font-family:sans-serif;font-size:.88rem;
+  line-height:1.9;animation:fadeIn .3s ease;}
+.sum-content.show{display:block;}
+.sum-content h4{color:var(--gold-light);font-size:.78rem;letter-spacing:1.5px;margin-bottom:10px;}
+.sum-content p{margin-bottom:8px;}
+.sum-content p:last-child{margin-bottom:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.final{display:none;background:var(--navy);color:#e8edf8;border-radius:14px;
+  padding:28px 24px;margin-top:8px;text-align:center;font-family:sans-serif;
+  animation:fadeIn .4s ease;}
+.final.show{display:block;}
+.final h2{color:var(--gold-light);font-size:1.1rem;letter-spacing:.1em;margin-bottom:14px;}
+.final p{font-size:.9rem;line-height:1.9;margin-bottom:6px;}
+.score{font-size:2.2rem;color:var(--gold-light);font-weight:bold;margin:12px 0;}
+.score span{font-size:1rem;color:#a8b4cc;}
+@media(max-width:600px){.kundoku-text{font-size:1.05rem;}.header h1{font-size:1.25rem;}}</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-badge">漢文読解 ／ 呂氏春秋　令和5年度第2回</div>
+  <h1>師曠と荊の文王</h1>
+  <div class="sub">書き下し文の意味を読み取る練習（全8問）</div>
+</div>
+<div class="container">
+<div class="intro-box">
+  <strong>この文章について：</strong><br>
+  【文章Ⅰ】は秦代の書物『呂氏春秋』の一節で、晋の楽師・師曠が音楽の乱れを聞き取る場面です。【文章Ⅱ】は荊（楚）の文王が諫臣について語る場面です。<br><br>
+  <strong>学習の進め方：</strong>① 書き下し文をよく読みます。② マークされた部分の意味を選んでください。③ 1問でも解くと段落まとめが見られます。
+</div>
+
+<!-- 第一段落：師曠 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">一</div>
+    <div class="section-title">【文章Ⅰ】師曠と鐘の調子
+      <small>師曠が乱れた鐘の音を聴き取り、君主のために恥じる</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p1"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      晋＝国名 ／ 平公＝晋の君主 ／ 師曠＝楽師の名 ／ 師涓＝楽師の名 ／ 鐘＝打楽器 ／ 調ふ＝調子が整う ／ 知音者＝音楽をよく知る人
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">師涓に至りて、而して果して鐘の調はざるを知りたることなり。君の為に之を恥ぢて。是れ師曠の知音者なるなり。</div>
+    </div>
+    <div class="question-zone" id="q1">
+      <div class="q-label">問１</div>
+      <div class="q-text"><span class="hl">師涓に至りて、而して果して鐘の調はざるを知りたることなり</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q1',false,'「果して」は「果たして・やはり」の意（予想通り）。師涓が鐘を壊したのではありません。')"><span class="cnum">①</span><span>師涓のもとに来て、やはり師涓が鐘の調子を狂わせたことがわかった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',true,'正解！「果して」＝やはり（予想通り）、「調はざるを知る」＝調子が整っていないことを知る。師涓が来たとき、果たして鐘の調子が狂っていることが判明したのです。')"><span class="cnum">②</span><span>師涓のもとに来て、やはり（予想通り）鐘の調子が整っていないことがわかった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「果して」はやはり・予想通りの意。偶然ではありません。')"><span class="cnum">③</span><span>師涓が偶然やってきて、鐘の音が乱れていることに気づいた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「知りたること」は知ったこと（過去）。これから調べようとするのではありません。')"><span class="cnum">④</span><span>師涓がやってきて、これから鐘の調子が乱れているかどうかを調べようとした。</span></button>
+      </div>
+      <div class="feedback" id="f_q1"></div>
+    </div>
+    <div class="question-zone" id="q2" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問２</div>
+      <div class="q-text"><span class="hl">君の為に之を恥ぢて</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q2',false,'「君の為に」は「君主のために（代わって）」の意。君主が師曠を恥じているのではありません。')"><span class="cnum">①</span><span>君主（平公）が師曠のことをそれを恥ずかしいと思って</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',true,'正解！「君の為に」＝君主（平公）のために（代わりに）、「之を恥ぢて」＝そのことを恥じて。鐘の調子が乱れたことを、君主に代わって師曠が恥じたのです。')"><span class="cnum">②</span><span>君主（平公）のために（代わって）そのことを恥じて</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「之を恥ぢて」は師曠が恥じること。師涓を責めているのではありません。')"><span class="cnum">③</span><span>君主のために師涓を責めて、恥じさせて</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「為に」は「〜のために・〜に代わって」の意。君主に恥をかかせたのではありません。')"><span class="cnum">④</span><span>君主（平公）に対してそのことで恥をかかせて</span></button>
+      </div>
+      <div class="feedback" id="f_q2"></div>
+    </div>
+    <div class="question-zone" id="q3" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問３</div>
+      <div class="q-text"><span class="hl">是れ師曠の知音者なるなり</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q3',false,'「知音者」は「音楽をよく知る人」。師曠が有名な音楽家として知られているという意味ではありません。')"><span class="cnum">①</span><span>これが、師曠が有名な音楽家として知られるようになったわけだ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「知音」は音楽をよく知ること。友人を大切にした話ではありません。')"><span class="cnum">②</span><span>これが師曠が親友（知己）を大切にする人物だということの証拠だ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',true,'正解！「知音者」＝音楽をよく知る人。師曠が鐘の乱れを聴き取り君主のために恥じたことこそ、彼が真の音楽の達人である証拠だ、という結論です。')"><span class="cnum">③</span><span>これこそが師曠が（真の）音楽の達人（音楽をよく知る人）である（理由）なのだ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「なり」は断定。師曠が知音者かどうか疑っているのではありません。')"><span class="cnum">④</span><span>これでは師曠が本当に音楽を知る人物かどうか疑わしい。</span></button>
+      </div>
+      <div class="feedback" id="f_q3"></div>
+    </div>
+    <div class="sum-zone" id="s1">
+      <button class="sum-btn" onclick="toggleSum('sc1',this)"><span>📖</span> 第一段落のまとめを見る</button>
+      <div class="sum-content" id="sc1">
+        <h4>【文章Ⅰ】師曠 ／ まとめ</h4>
+        <p>師涓が来ると（<strong style="color:var(--gold-light)">師涓に至りて</strong>）、果たして（<strong style="color:var(--gold-light)">果して</strong>）鐘の調子が乱れていたことが判明した。</p>
+        <p>師曠は君主のために（<strong style="color:var(--gold-light)">君の為に</strong>）そのことを恥じた。これこそ師曠が真の音楽の達人（<strong style="color:var(--gold-light)">知音者</strong>）である証しだ。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二段落：荊文王 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">二</div>
+    <div class="section-title">【文章Ⅱ】荊の文王と諫臣
+      <small>荊の文王が度々自分を諫める臣下について語る</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p2"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      荊＝楚の国の別称 ／ 文王＝荊（楚）の君主 ／ 数＝しばしば ／ 犯す＝（礼に反して）直言する ／ 爵す＝爵位を与える ／ 不穀＝王の謙称（一人称）
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">荊の文王が曰はく、「しばしば我を犯して焉を得たり。」吾の身を以て之を爵せず、後世に聖人有りて、吾の身を以て之を爵せざるを以て、不穀を爵せん。</div>
+    </div>
+    <div class="question-zone" id="q4">
+      <div class="q-label">問４</div>
+      <div class="q-text"><span class="hl">しばしば我を犯して焉を得たり</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q4',false,'「犯す」はここでは「（礼に反して）諫める・直言する」の意。臣下が主君を攻撃したのではありません。')"><span class="cnum">①</span><span>たびたびわたし（文王）を攻撃して、利益を得た（臣下がいた）。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',true,'正解！「犯す」＝（礼節をも顧みず主君に）直言・諫言する、「焉を得たり」＝（爵位を）得た。たびたび主君に直言してくる臣下に爵位を与えた、という文王の言葉です。')"><span class="cnum">②</span><span>たびたびわたし（文王）に直言（諫言）して、（それで爵位を）得た（者がいる）。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「焉」はここでは爵位・報奨を指しています。逃げ去ったのではありません。')"><span class="cnum">③</span><span>たびたびわたし（文王）に反抗して、そこで逃げ去った（者がいる）。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「犯す」の主語は臣下。文王が臣下を攻撃したのではありません。')"><span class="cnum">④</span><span>たびたびわたし（文王）が（臣下の）礼に反して、それを得た。</span></button>
+      </div>
+      <div class="feedback" id="f_q4"></div>
+    </div>
+    <div class="question-zone" id="q5" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問５</div>
+      <div class="q-text"><span class="hl">吾の身を以て之を爵せず</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q5',false,'「爵せず」は爵位を与えない、の意。臣下が文王に爵位を与えるのではなく、文王が臣下に与えないということです。')"><span class="cnum">①</span><span>その臣下が自分（文王）に爵位を与えなかったとしても</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',true,'正解！「吾の身を以て」＝わたし自身の手では、「之を爵せず」＝彼（直言した臣下）に爵位を与えなかった。文王が自分の判断では与えなかったという状況を述べています。')"><span class="cnum">②</span><span>わたし（文王）自身の（判断）では彼（直言した臣下）に爵位を与えなかったとしても</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「爵せず」はすでに与えなかった事実。これから与えないとする意図表明ではありません。')"><span class="cnum">③</span><span>わたし（文王）はこれからも彼に爵位を与えないつもりだ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「爵す」は爵位を与えること。臣下が文王を非難することではありません。')"><span class="cnum">④</span><span>わたし（文王）が彼に対して礼を犯したとして</span></button>
+      </div>
+      <div class="feedback" id="f_q5"></div>
+    </div>
+    <div class="question-zone" id="q6" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問６</div>
+      <div class="q-text"><span class="hl">後世に聖人有りて、吾の身を以て之を爵せざるを以て、不穀を爵せん</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q6',false,'「不穀を爵せん」の主語は後世の聖人。文王（不穀）が聖人に爵位を与えるのではありません。')"><span class="cnum">①</span><span>後の世に聖人が現れれば、わたし（不穀・文王）がその聖人に爵位を与えるだろう。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「爵せん」は将来の行為（推量）。現在のことを述べているのではありません。')"><span class="cnum">②</span><span>後の世に聖人が現れているので、今すでにわたし（不穀）は称えられている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',true,'正解！「後世に聖人有りて」＝将来の賢者が現れたとき、「吾の身を以て之を爵せざるを以て」＝わたしが彼に爵位を与えなかったことを理由に、「不穀を爵せん」＝わたし（文王）を称えるだろう。将来の賢者が文王の行動を評価するという意味です。')"><span class="cnum">③</span><span>後の世に賢者が現れたとき、わたし（不穀・文王）が彼に爵位を与えなかったことを理由に、わたしを称えるだろう。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'文王が聖人になるという話ではありません。')"><span class="cnum">④</span><span>後の世において、わたし（不穀）は必ず聖人となって称えられるだろう。</span></button>
+      </div>
+      <div class="feedback" id="f_q6"></div>
+    </div>
+    <div class="sum-zone" id="s2">
+      <button class="sum-btn" onclick="toggleSum('sc2',this)"><span>📖</span> 第二段落のまとめを見る</button>
+      <div class="sum-content" id="sc2">
+        <h4>【文章Ⅱ】荊文王 ／ まとめ</h4>
+        <p>荊の文王は「しばしば（<strong style="color:var(--gold-light)">数</strong>）わたし（<strong style="color:var(--gold-light)">不穀</strong>）に直言（<strong style="color:var(--gold-light)">犯す</strong>）してきた臣下に爵位を与えた」と語った。</p>
+        <p>将来の賢者がわたしの行動を評価するだろうという先見の明を示している。「<strong style="color:var(--gold-light)">爵す</strong>」＝爵位・褒賞を与える。「<strong style="color:var(--gold-light)">不穀</strong>」＝王の謙称。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三段落：総合 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">三</div>
+    <div class="section-title">両文章の読解
+      <small>文章Ⅰ・Ⅱの内容と重要語句を確認する</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p3"></div></div>
+  <div class="section-body">
+    <div class="question-zone" id="q7">
+      <div class="q-label">問７　「為」の読みと意味</div>
+      <div class="q-text">文章Ⅰ中の「<strong>君の為に之を恥ぢて</strong>」における「為（ため）に」の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q7',false,'「〜の為に」はここでは目的ではなく「〜に代わって・〜の立場で」の意味です。')"><span class="cnum">①</span><span>君主の利益のために（目的）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',true,'正解！「為」＝〜のために・〜に代わって。師曠が君主（平公）に代わって鐘の乱れを恥じた、という意味です。')"><span class="cnum">②</span><span>君主に代わって・君主のために（代理・代替）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「〜に向かって」という方向を示す用法とは異なります。')"><span class="cnum">③</span><span>君主に向かって（方向）</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「〜のせいで・〜が原因で」という因果表現とは異なります。')"><span class="cnum">④</span><span>君主のせいで（原因）</span></button>
+      </div>
+      <div class="feedback" id="f_q7"></div>
+    </div>
+    <div class="question-zone" id="q8" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問８　両文章の共通テーマ</div>
+      <div class="q-text">【文章Ⅰ】と【文章Ⅱ】に共通するテーマとして最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q8',false,'音楽の技術そのものを説明するのが目的ではありません。')"><span class="cnum">①</span><span>音楽の技術と楽器の重要性について論じている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'国家間の戦争については触れていません。')"><span class="cnum">②</span><span>国家間の戦争と軍事戦略について論じている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',true,'正解！文章Ⅰは師曠が君主のために恥じる（忠義・諫言）、文章Ⅱは直言する臣下を評価する文王の話。どちらも「君主に直言する臣下」という忠義・諫言のテーマが共通しています。')"><span class="cnum">③</span><span>君主に対して直言・諫言する臣下の姿と、それを正しく評価することの大切さ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'農業の話は登場しません。')"><span class="cnum">④</span><span>農業の技術と土地の管理方法について論じている。</span></button>
+      </div>
+      <div class="feedback" id="f_q8"></div>
+    </div>
+    <div class="sum-zone" id="s3">
+      <button class="sum-btn" onclick="toggleSum('sc3',this)"><span>📖</span> 全体まとめを見る</button>
+      <div class="sum-content" id="sc3">
+        <h4>全体まとめ</h4>
+        <p><strong style="color:var(--gold-light)">【文章Ⅰ】：</strong>師曠は鐘の乱れを聴き取り、君主のために（<strong style="color:var(--gold-light)">君の為に</strong>）恥じた。これが「知音者」＝真の音楽の達人の証し。</p>
+        <p><strong style="color:var(--gold-light)">【文章Ⅱ】：</strong>しばしば自分に直言してくる臣下に爵位を与えた。将来の賢者が自分（文王）を評価するだろうという先見の明。</p>
+        <p><strong style="color:var(--gold-light)">共通テーマ：</strong>君主への忠義・直言の大切さと、それを正しく評価することの重要性。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <h2>✨ 全問完了</h2>
+  <div class="score" id="sc">―<span> / 8問</span></div>
+  <p id="sm"></p>
+  <p style="margin-top:16px;font-size:.82rem;color:#a8b4cc;">「師曠」と「荊文王」の話の要点をまとめで確認しましょう。</p>
+</div>
+</div>
+<script>
+window._TOTAL=8;
+window._SEC={q1:1,q2:1,q3:1,q4:2,q5:2,q6:2,q7:3,q8:3};
+window._NEXT={q1:'q2',q2:'q3',q3:null,q4:'q5',q5:'q6',q6:null,q7:'q8',q8:null};
+window._STOT={1:3,2:3,3:2};
+function ans(btn,id,ok,msg){
+  if(window._used&&window._used[id])return;
+  if(!window._used)window._used={};
+  window._used[id]=true;
+  document.getElementById(id).querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById('f_'+id);
+  fb.textContent=(ok?'✓ 正解！　':'✗ 不正解。　')+msg;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  if(ok)window._correct=(window._correct||0)+1;
+  window._done=(window._done||0)+1;
+  const s=window._SEC[id];
+  window._sdone=window._sdone||{};
+  window._sdone[s]=(window._sdone[s]||0)+1;
+  document.getElementById('p'+s).style.width=(window._sdone[s]/window._STOT[s]*100)+'%';
+  if(!(window._sopen&&window._sopen[s])){
+    if(!window._sopen)window._sopen={};
+    window._sopen[s]=true;
+    document.getElementById('s'+s).classList.add('unlocked');
+  }
+  const nxt=window._NEXT[id];
+  if(nxt){const nz=document.getElementById(nxt);nz.style.opacity='1';nz.style.pointerEvents='auto';}
+  if(window._done===window._TOTAL)setTimeout(showFin,600);
+}
+function showFin(){
+  const el=document.getElementById('fin');el.classList.add('show');
+  document.getElementById('sc').innerHTML=(window._correct||0)+'<span> / '+window._TOTAL+'問</span>';
+  const p=Math.round((window._correct||0)/window._TOTAL*100);
+  document.getElementById('sm').textContent=
+    p>=86?'素晴らしい！ 書き下し文の読解がとてもよくできています。':
+    p>=57?'よく頑張りました。間違えた問題の解説をもう一度読み返してみましょう。':
+    '難しい問題がありましたね。書き下し文と語注を照らし合わせながらもう一度取り組んでみましょう。';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function toggleSum(id,btn){
+  const el=document.getElementById(id);
+  const show=el.classList.toggle('show');
+  btn.childNodes[1].textContent=show?' 閉じる':' まとめを見る';
+}
+</script>
+</body>
+</html>

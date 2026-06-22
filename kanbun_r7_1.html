@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢詩読解 ― 梅花無尽蔵「清見が関」</title>
+<style>:root{
+  --navy:#1a2744;--navy-mid:#2a3d6b;--navy-pale:#e8ecf4;
+  --gold:#c9a84c;--gold-light:#f0d98a;--red:#c0392b;
+  --green:#1e7e5a;--green-light:#d4f0e4;--cream:#faf8f2;
+  --text:#1a1a2e;--muted:#6b7aa1;--border:#c8d0e4;
+  --shadow:rgba(26,39,68,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+  color:#fff;padding:28px 24px 22px;text-align:center;}
+.header-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--gold-light);
+  border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:10px;font-family:sans-serif;}
+.header h1{font-size:1.5rem;font-weight:normal;letter-spacing:.1em;line-height:1.6;}
+.header .sub{font-size:.82rem;color:var(--gold-light);margin-top:6px;font-family:sans-serif;opacity:.85;}
+.container{max-width:860px;margin:0 auto;padding:28px 16px;}
+.intro-box{background:#fff;border:1px solid var(--border);border-left:4px solid var(--navy);
+  border-radius:8px;padding:18px 20px;margin-bottom:28px;font-size:.9rem;line-height:1.9;
+  color:#3a3a4a;font-family:sans-serif;}
+.intro-box strong{color:var(--navy);}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:28px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.section-header{background:var(--navy);color:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;}
+.section-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  color:var(--gold-light);font-family:sans-serif;font-weight:bold;flex-shrink:0;}
+.section-title{font-size:.95rem;letter-spacing:.05em;line-height:1.5;}
+.section-title small{display:block;font-size:.75rem;color:var(--gold-light);
+  font-family:sans-serif;margin-top:2px;opacity:.85;}
+.prog-wrap{background:var(--navy-pale);height:5px;margin:0 20px;border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  border-radius:20px;transition:width .5s;width:0;}
+.section-body{padding:22px 20px;}
+.notes-box{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;
+  padding:12px 16px;margin-bottom:18px;font-family:sans-serif;font-size:.8rem;
+  color:var(--muted);line-height:1.8;}
+.notes-box strong{color:var(--navy);}
+/* 書き下し文：縦書き */
+.kundoku-wrap{background:var(--navy-pale);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin-bottom:20px;overflow-x:auto;}
+.kundoku-label{font-size:.72rem;color:var(--muted);font-family:sans-serif;
+  letter-spacing:1.5px;margin-bottom:12px;}
+.kundoku-text{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:inline-block;font-size:1.25rem;line-height:2.0;
+  letter-spacing:0.35em;color:var(--navy);
+  font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  min-height:80px;
+}
+/* 問い */
+.question-zone{background:#f4f6fb;border:1px solid var(--border);border-radius:10px;
+  padding:18px 18px 14px;margin-bottom:16px;transition:opacity .3s;}
+.q-label{font-size:.78rem;color:var(--navy);font-family:sans-serif;
+  font-weight:bold;margin-bottom:8px;letter-spacing:.05em;}
+.q-text{font-size:.92rem;color:#1a1a2e;line-height:1.7;margin-bottom:14px;font-family:sans-serif;}
+.hl{background:var(--gold-light);padding:1px 6px;border-radius:4px;
+  font-family:'Hiragino Mincho ProN',serif;font-size:1rem;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.cbtn{background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 16px;font-size:.88rem;font-family:sans-serif;line-height:1.6;
+  cursor:pointer;text-align:left;transition:all .18s;color:var(--text);
+  display:flex;align-items:flex-start;gap:10px;}
+.cbtn:hover:not([disabled]){border-color:var(--navy);background:var(--navy-pale);transform:translateX(2px);}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--navy-pale);
+  color:var(--navy);font-size:.78rem;display:flex;align-items:center;
+  justify-content:center;font-weight:bold;flex-shrink:0;margin-top:1px;}
+.cbtn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.cbtn.correct .cnum{background:var(--green);color:#fff;}
+.cbtn.wrong{background:#fde8e6;border-color:var(--red);color:var(--red);opacity:.75;}
+.cbtn.wrong .cnum{background:var(--red);color:#fff;}
+.cbtn[disabled]{cursor:default;}
+.feedback{display:none;margin-top:12px;padding:11px 14px;border-radius:8px;
+  font-size:.85rem;font-family:sans-serif;line-height:1.7;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);color:var(--green);border-left:4px solid var(--green);}
+.feedback.ng{background:#fde8e6;color:#8b1a10;border-left:4px solid var(--red);}
+/* まとめ */
+.sum-zone{margin-top:20px;display:none;}
+.sum-zone.unlocked{display:block;}
+.sum-btn{background:var(--navy);color:var(--gold-light);border:none;border-radius:8px;
+  padding:10px 20px;font-size:.85rem;font-family:sans-serif;cursor:pointer;
+  letter-spacing:.05em;display:flex;align-items:center;gap:8px;transition:background .2s;}
+.sum-btn:hover{background:var(--navy-mid);}
+.sum-content{display:none;margin-top:10px;background:var(--navy);color:#e8edf8;
+  border-radius:10px;padding:18px 20px;font-family:sans-serif;font-size:.88rem;
+  line-height:1.9;animation:fadeIn .3s ease;}
+.sum-content.show{display:block;}
+.sum-content h4{color:var(--gold-light);font-size:.78rem;letter-spacing:1.5px;margin-bottom:10px;}
+.sum-content p{margin-bottom:8px;}
+.sum-content p:last-child{margin-bottom:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.final{display:none;background:var(--navy);color:#e8edf8;border-radius:14px;
+  padding:28px 24px;margin-top:8px;text-align:center;font-family:sans-serif;
+  animation:fadeIn .4s ease;}
+.final.show{display:block;}
+.final h2{color:var(--gold-light);font-size:1.1rem;letter-spacing:.1em;margin-bottom:14px;}
+.final p{font-size:.9rem;line-height:1.9;margin-bottom:6px;}
+.score{font-size:2.2rem;color:var(--gold-light);font-weight:bold;margin:12px 0;}
+.score span{font-size:1rem;color:#a8b4cc;}
+@media(max-width:600px){.kundoku-text{font-size:1.05rem;}.header h1{font-size:1.25rem;}}</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-badge">漢詩読解 ／ 梅花無尽蔵　令和7年度第1回</div>
+  <h1>清見が関の詩</h1>
+  <div class="sub">書き下し文の意味を読み取る練習（全8問）</div>
+</div>
+<div class="container">
+<div class="intro-box">
+  <strong>この詩について：</strong><br>
+  室町時代の僧・万里集九の詩文集『梅花無尽蔵』に収められた五言絶句です。駿河国の名所「清見が関」と「三保松原」の絶景を詠んでいます。<br><br>
+  <strong>学習の進め方：</strong>① 書き下し文をよく読みます。② マークされた部分の意味を選んでください。③ 1問でも解くと段落まとめが見られます。
+</div>
+
+<!-- 起句・承句 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">一</div>
+    <div class="section-title">起句・承句 ― 旅と清見が関の絶景
+      <small>何度も危険を冒した旅、しかし清見が関の南は天下随一</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p1"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      東遊＝関東への旅 ／ 屢々＝たびたび ／ 危機＝危険な場面 ／ 雖も＝〜だけれど（逆接） ／ 清見関＝駿河国の歌枕 ／ 稀＝めったにない
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文（起句・承句）</div>
+      <div class="kundoku-text">東遊すること屢々危機を踏むと雖も、清見関の南は天下に稀なり。</div>
+    </div>
+    <div class="question-zone" id="q1">
+      <div class="q-label">問１</div>
+      <div class="q-text"><span class="hl">東遊すること屢々危機を踏むと雖も</span><br>この句の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q1',false,'「屢々」は「たびたび」の意。一度だけではありません。')"><span class="cnum">①</span><span>関東へ遊びに行った際、一度だけ危険な目にあったが</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',true,'正解！「雖も」＝逆接「〜だけれど」、「屢々」＝たびたび、「危機を踏む」＝危険な目にあう。何度も危険を経験してきたが、という意味です。')"><span class="cnum">②</span><span>関東への旅では、幾度も危ない場面を経験したけれど</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「雖も」は逆接「〜だけれど」。危険を目的として旅したわけではありません。')"><span class="cnum">③</span><span>関東への旅は危険だとわかっていたので、たびたび準備をして出かけたが</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「東遊」は関東への旅。逃げているわけではありません。')"><span class="cnum">④</span><span>関東の危険な場所を避けながら、何とか旅を続けたけれど</span></button>
+      </div>
+      <div class="feedback" id="f_q1"></div>
+    </div>
+    <div class="question-zone" id="q2" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問２</div>
+      <div class="q-text"><span class="hl">清見関の南は天下に稀なり</span><br>この句の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q2',false,'「稀」は「めったにない・比類がない」の意。危険が少ないという意味ではありません。')"><span class="cnum">①</span><span>清見が関の南側は、天下でも危険が少ない珍しい場所だ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「天下に稀」は「世に並ぶものがない」の意。人が少ないということではありません。')"><span class="cnum">②</span><span>清見が関の南には、世界でもまれなほど人が住んでいない。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',true,'正解！「天下に稀なり」＝世に比べるものがないほど素晴らしい。清見が関の南の景色が絶景であることを称えています。')"><span class="cnum">③</span><span>清見が関の南の景色は、世にも稀なほど美しい。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「稀」は称賛の意味。欠点を述べているのではありません。')"><span class="cnum">④</span><span>清見が関の南は、天下でも特別な景色はほとんどない。</span></button>
+      </div>
+      <div class="feedback" id="f_q2"></div>
+    </div>
+    <div class="question-zone" id="q3" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問３　「雖」の読みと意味</div>
+      <div class="q-text">起句に登場する「<strong>雖も</strong>」の読み方と意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q3',false,'「もし〜ならば」は仮定の意味。「雖」は逆接です。')"><span class="cnum">①</span><span>「もし」と読み、仮定を表す</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「ゆゑに」は「〜だから」の順接。「雖」は逆接です。')"><span class="cnum">②</span><span>「ゆゑに」と読み、理由を表す</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',true,'正解！「雖」は「いへども」と読み、逆接「〜だけれども」を表します。')"><span class="cnum">③</span><span>「いへども」と読み、逆接を表す（〜だけれど）</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「ごとし」は比況（〜のようだ）の意味。「雖」は逆接です。')"><span class="cnum">④</span><span>「ごとし」と読み、比況を表す（〜のようだ）</span></button>
+      </div>
+      <div class="feedback" id="f_q3"></div>
+    </div>
+    <div class="sum-zone" id="s1">
+      <button class="sum-btn" onclick="toggleSum('sc1',this)"><span>📖</span> 起句・承句のまとめを見る</button>
+      <div class="sum-content" id="sc1">
+        <h4>起句・承句 ／ まとめ</h4>
+        <p><strong style="color:var(--gold-light)">起句：</strong>関東への旅は何度も危険を経験してきたが（逆接・<strong style="color:var(--gold-light)">雖も</strong>）、</p>
+        <p><strong style="color:var(--gold-light)">承句：</strong>清見が関の南の景色は世に並ぶものがないほど素晴らしい（<strong style="color:var(--gold-light)">天下に稀なり</strong>）。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 転句・結句 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">二</div>
+    <div class="section-title">転句・結句 ― 三保松原と羽衣伝説
+      <small>波の向こうの三保松原、今も枝に天女の衣</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p2"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      三保松原＝羽衣伝説で有名な名勝（現・静岡市） ／ 隔てて＝間に挟んで ／ 六銖衣＝天人の着る極めて軽い衣 ／ 至今＝今に至るまで
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文（転句・結句）</div>
+      <div class="kundoku-text">三保松原は波を隔てて暮れ、至今も枝に六銖の衣有り。</div>
+    </div>
+    <div class="question-zone" id="q4">
+      <div class="q-label">問４</div>
+      <div class="q-text"><span class="hl">三保松原は波を隔てて暮れ</span><br>この句の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q4',false,'「暮れ」は夕暮れの意味。沈んでいくのではなく夕暮れの中に見えているのです。')"><span class="cnum">①</span><span>三保松原は波にさらわれて、海の底に沈んでいった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「隔て」は「距離・隔たりがある」の意。波を越えて近づいたのではありません。')"><span class="cnum">②</span><span>三保松原に向かって、波を越えて夕暮れ時に近づいていった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',true,'正解！清見が関から海（波）を隔てた向こうに三保松原が夕暮れの中に見える、という情景描写です。')"><span class="cnum">③</span><span>三保松原は（海の）波を隔てた向こうに、夕暮れの中に見えている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「波を隔てて」は視覚的な距離感の描写。防衛の意味ではありません。')"><span class="cnum">④</span><span>三保松原は夕暮れに波によって外敵から守られている。</span></button>
+      </div>
+      <div class="feedback" id="f_q4"></div>
+    </div>
+    <div class="question-zone" id="q5" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問５</div>
+      <div class="q-text"><span class="hl">至今も枝に六銖の衣有り</span><br>この句の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q5',false,'「至今」は「今に至るまで（今も）」の意。過去のことを述べているのではありません。')"><span class="cnum">①</span><span>かつて、その松の枝に天女の羽衣がかけられたことがあった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「六銖の衣」は天女の羽衣。漁師の網ではありません。')"><span class="cnum">②</span><span>今も枝には漁師がかけた薄い衣（網）が残っている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',true,'正解！「至今」＝今に至るまで、「六銖の衣」＝天女の羽衣。羽衣伝説を踏まえ、今もその衣が松の枝にかかっているかのような幻想的な結びです。')"><span class="cnum">③</span><span>今もその松の枝に、（伝説の）天女の羽衣がかかっている（ようだ）。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「六銖の衣」は天女の衣。松の木が衰えるという意味ではありません。')"><span class="cnum">④</span><span>今となっては、その松の枝も衰えて細くなっている。</span></button>
+      </div>
+      <div class="feedback" id="f_q5"></div>
+    </div>
+    <div class="question-zone" id="q6" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問６　一二点の読み順</div>
+      <div class="q-text">結句「至今枝<span style="color:var(--red);font-weight:bold;">二</span>有<span style="color:var(--red);font-weight:bold;">一</span>六銖衣」の一二点について、読む順番として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q6',false,'一二点は「一」の字を先に読んでから「二」の字に返ります。逆ではありません。')"><span class="cnum">①</span><span>「二」（枝）→「一」（有）の順に読む</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'一二点がある場合は必ず「一」→「二」の順に返ります。')"><span class="cnum">②</span><span>一二点を無視して左から順に読む</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',true,'正解！一二点は「一」のついた字（有）を先に読んでから「二」のついた字（枝）に返ります。「至今→有（一）→枝（二）→六銖衣」→「至今も枝に六銖の衣有り」となります。')"><span class="cnum">③</span><span>「至今→有（一）→枝（二）→六銖衣」の順（「一」を先に読み「二」に返る）</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「至今」は副詞句で「有」の後に戻って読むものではありません。')"><span class="cnum">④</span><span>「有（一）→枝（二）→至今→六銖衣」の順に読む</span></button>
+      </div>
+      <div class="feedback" id="f_q6"></div>
+    </div>
+    <div class="sum-zone" id="s2">
+      <button class="sum-btn" onclick="toggleSum('sc2',this)"><span>📖</span> 転句・結句のまとめを見る</button>
+      <div class="sum-content" id="sc2">
+        <h4>転句・結句 ／ まとめ</h4>
+        <p><strong style="color:var(--gold-light)">転句：</strong>海（波）を隔てた向こうに三保松原が夕暮れの中に見える。</p>
+        <p><strong style="color:var(--gold-light)">結句：</strong>「至今」＝今に至るまで、「六銖の衣」＝天女の羽衣。羽衣伝説と現実の景色を融合させた幻想的な結び。</p>
+        <p><strong style="color:var(--gold-light)">一二点：</strong>「一」→「二」の順に返る。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 詩全体 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">三</div>
+    <div class="section-title">詩全体の読解
+      <small>詩の内容・表現の特徴を確認する</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p3"></div></div>
+  <div class="section-body">
+    <div class="question-zone" id="q7">
+      <div class="q-label">問７</div>
+      <div class="q-text">「三保松原」の詩の中での役割として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q7',false,'三保松原は景観として登場しています。難所・危険な場所ではありません。')"><span class="cnum">①</span><span>旅人が越えなければならない難所として描かれている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'三保松原は波の向こうに見える場所。詩人が足を踏み入れた場所ではありません。')"><span class="cnum">②</span><span>詩人が実際に足を踏み入れ、羽衣を発見した場所として描かれている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',true,'正解！清見が関から波を隔てて見える三保松原は、羽衣伝説の地。詩はその伝説（六銖の衣）と現実の景色を重ね合わせています。')"><span class="cnum">③</span><span>波の向こうに夕暮れの中に見える名勝として、羽衣伝説と結びつけて詠まれている。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'三保松原は景色と伝説のために登場。危機の原因ではありません。')"><span class="cnum">④</span><span>東遊（関東の旅）で経験した危機の原因として描かれている。</span></button>
+      </div>
+      <div class="feedback" id="f_q7"></div>
+    </div>
+    <div class="question-zone" id="q8" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問８　詩全体の主旨</div>
+      <div class="q-text">この詩の説明として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q8',false,'旅の苦労（起句）はありますが、主旨は清見が関の絶景への賛嘆と伝説との融合です。')"><span class="cnum">①</span><span>関東への旅の苦労を訴え、二度と旅をするまいと誓った詩。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'天女への恋愛感情を詠んだ詩ではありません。')"><span class="cnum">②</span><span>三保松原の羽衣伝説に登場する天女への恋慕を詠んだ詩。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'清見が関の軍事的役割については記述がありません。')"><span class="cnum">③</span><span>清見が関が軍事的な要衝であることを讃えた詩。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',true,'正解！危険を越えた旅の末に出会った清見が関の絶景を称え（起・承）、三保松原を羽衣伝説と重ねて幻想的に詠んだ（転・結）詩です。')"><span class="cnum">④</span><span>幾度も危険を越えた旅で出会った清見が関の絶景を称え、三保松原の羽衣伝説と重ねて詠んだ詩。</span></button>
+      </div>
+      <div class="feedback" id="f_q8"></div>
+    </div>
+    <div class="sum-zone" id="s3">
+      <button class="sum-btn" onclick="toggleSum('sc3',this)"><span>📖</span> 詩全体のまとめを見る</button>
+      <div class="sum-content" id="sc3">
+        <h4>詩全体 ／ まとめ</h4>
+        <p><strong style="color:var(--gold-light)">起句：</strong>東遊すること屢々危機を踏むと雖も → 何度も危険を経験したが、</p>
+        <p><strong style="color:var(--gold-light)">承句：</strong>清見関の南は天下に稀なり → 景色は世に類がないほど素晴らしい。</p>
+        <p><strong style="color:var(--gold-light)">転句：</strong>三保松原は波を隔てて暮れ → 波の向こうに夕暮れの三保松原。</p>
+        <p><strong style="color:var(--gold-light)">結句：</strong>至今も枝に六銖の衣有り → 今も松の枝に天女の羽衣が残っているかのようだ。</p>
+        <p><strong style="color:var(--gold-light)">重要語：</strong>「雖も」＝逆接 ／「稀なり」＝比類がない ／「至今」＝今に至るまで ／「六銖の衣」＝天女の羽衣</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <h2>✨ 全問完了</h2>
+  <div class="score" id="sc">―<span> / 8問</span></div>
+  <p id="sm"></p>
+  <p style="margin-top:16px;font-size:.82rem;color:#a8b4cc;">起・承・転・結の流れをまとめで確認しましょう。</p>
+</div>
+</div>
+<script>
+window._TOTAL=8;
+window._SEC={q1:1,q2:1,q3:1,q4:2,q5:2,q6:2,q7:3,q8:3};
+window._NEXT={q1:'q2',q2:'q3',q3:null,q4:'q5',q5:'q6',q6:null,q7:'q8',q8:null};
+window._STOT={1:3,2:3,3:2};
+function ans(btn,id,ok,msg){
+  if(window._used&&window._used[id])return;
+  if(!window._used)window._used={};
+  window._used[id]=true;
+  document.getElementById(id).querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById('f_'+id);
+  fb.textContent=(ok?'✓ 正解！　':'✗ 不正解。　')+msg;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  if(ok)window._correct=(window._correct||0)+1;
+  window._done=(window._done||0)+1;
+  const s=window._SEC[id];
+  window._sdone=window._sdone||{};
+  window._sdone[s]=(window._sdone[s]||0)+1;
+  document.getElementById('p'+s).style.width=(window._sdone[s]/window._STOT[s]*100)+'%';
+  if(!(window._sopen&&window._sopen[s])){
+    if(!window._sopen)window._sopen={};
+    window._sopen[s]=true;
+    document.getElementById('s'+s).classList.add('unlocked');
+  }
+  const nxt=window._NEXT[id];
+  if(nxt){const nz=document.getElementById(nxt);nz.style.opacity='1';nz.style.pointerEvents='auto';}
+  if(window._done===window._TOTAL)setTimeout(showFin,600);
+}
+function showFin(){
+  const el=document.getElementById('fin');el.classList.add('show');
+  document.getElementById('sc').innerHTML=(window._correct||0)+'<span> / '+window._TOTAL+'問</span>';
+  const p=Math.round((window._correct||0)/window._TOTAL*100);
+  document.getElementById('sm').textContent=
+    p>=86?'素晴らしい！ 書き下し文の読解がとてもよくできています。':
+    p>=57?'よく頑張りました。間違えた問題の解説をもう一度読み返してみましょう。':
+    '難しい問題がありましたね。書き下し文と語注を照らし合わせながらもう一度取り組んでみましょう。';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function toggleSum(id,btn){
+  const el=document.getElementById(id);
+  const show=el.classList.toggle('show');
+  btn.childNodes[1].textContent=show?' 閉じる':' まとめを見る';
+}
+</script>
+</body>
+</html>

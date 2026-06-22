@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古文 Unit3 古文の敬語｜江原予備校</title>
+<style>
+  :root {
+    --cream:#fdf8f0;--navy:#001858;--navy-mid:#1a3a6b;
+    --gold:#e8a020;--gold-light:#fef6e4;
+    --green:#16a34a;--green-light:#dcfce7;
+    --brown:#92400e;--brown-light:#fef3c7;
+    --red:#dc2626;--red-light:#fee2e2;
+    --purple:#7c4dbd;--purple-light:#f0eafb;
+    --teal:#1b8a8a;--teal-light:#e6f7f7;
+    --orange:#ea580c;--orange-light:#fff7ed;
+    --gray:#6b7280;--gray-light:#f3f4f6;
+    --radius:14px;--shadow:0 2px 12px rgba(0,24,88,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;color:var(--navy);min-height:100vh;}
+  header{background:var(--navy);color:white;padding:18px 24px;display:flex;align-items:center;gap:14px;}
+  .header-badge{background:var(--brown);color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em;white-space:nowrap;}
+  header h1{font-size:17px;font-weight:700;}
+  main{max-width:820px;margin:0 auto;padding:24px 14px 80px;}
+  .phase-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .phase-badge{background:var(--brown);color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;}
+  .phase-note{font-size:13px;color:var(--gray);}
+
+  .intro-card{background:white;border-radius:var(--radius);padding:20px 22px;margin-bottom:22px;box-shadow:var(--shadow);border-left:5px solid var(--brown);}
+  .intro-card .label{font-size:11px;color:var(--brown);font-weight:700;letter-spacing:.08em;margin-bottom:5px;}
+  .intro-card p{font-size:14px;line-height:1.8;color:var(--navy-mid);}
+
+  .section-title{font-size:15px;font-weight:800;color:var(--navy);margin:28px 0 14px;padding-left:12px;border-left:4px solid var(--brown);}
+
+  /* 敬語の仕組み説明 */
+  .keigo-explain{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  @media(max-width:520px){.keigo-explain{grid-template-columns:1fr;}}
+  .ke-card{background:white;border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow);text-align:center;}
+  .ke-s{border-top:5px solid var(--purple);}
+  .ke-k{border-top:5px solid var(--teal);}
+  .ke-t{border-top:5px solid var(--orange);}
+  .ke-emoji{font-size:1.8em;margin-bottom:6px;}
+  .ke-name{font-size:15px;font-weight:800;margin-bottom:5px;}
+  .ke-s .ke-name{color:var(--purple);}
+  .ke-k .ke-name{color:var(--teal);}
+  .ke-t .ke-name{color:var(--orange);}
+  .ke-desc{font-size:12.5px;color:var(--gray);line-height:1.6;margin-bottom:8px;}
+  .ke-formula{font-size:11.5px;font-weight:700;padding:5px 8px;border-radius:8px;display:inline-block;}
+  .ke-s .ke-formula{background:var(--purple-light);color:var(--purple);}
+  .ke-k .ke-formula{background:var(--teal-light);color:var(--teal);}
+  .ke-t .ke-formula{background:var(--orange-light);color:var(--orange);}
+
+  /* 重要ポイントボックス */
+  .point-box{background:var(--navy);color:white;border-radius:var(--radius);padding:16px 22px;margin-bottom:24px;font-size:14px;line-height:1.9;}
+  .point-box .pt-label{font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:.06em;margin-bottom:8px;}
+  .point-box ul{padding-left:18px;}
+  .point-box li{margin-bottom:4px;}
+
+  /* 敬語動詞テーブル */
+  .keigo-table{width:100%;border-collapse:collapse;background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:28px;font-size:14px;}
+  .keigo-table th{padding:11px 14px;font-size:12px;font-weight:700;letter-spacing:.04em;text-align:center;}
+  .keigo-table th:first-child{background:var(--navy);color:white;text-align:left;}
+  .keigo-table th.h-s{background:var(--purple);color:white;}
+  .keigo-table th.h-k{background:var(--teal);color:white;}
+  .keigo-table th.h-t{background:var(--orange);color:white;}
+  .keigo-table td{padding:11px 14px;border-top:1px solid #f0f0f0;vertical-align:middle;text-align:center;}
+  .keigo-table td:first-child{font-weight:700;color:var(--navy);text-align:left;background:var(--gray-light);}
+  .keigo-table td.s{color:var(--purple);font-weight:700;}
+  .keigo-table td.k{color:var(--teal);font-weight:700;}
+  .keigo-table td.t{color:var(--orange);font-weight:700;}
+  .keigo-table tr:hover td{background:#fafafa;}
+  .keigo-table tr:hover td:first-child{background:#eef0f3;}
+
+  /* フラッシュカード */
+  .flash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+  @media(max-width:540px){.flash-grid{grid-template-columns:repeat(2,1fr);}}
+  .flash-card{background:white;border-radius:12px;box-shadow:var(--shadow);padding:14px 10px;cursor:pointer;border:2px solid #e5e7eb;transition:all .2s;min-height:100px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;}
+  .flash-card:hover{border-color:var(--brown);transform:translateY(-2px);}
+  .flash-card.flipped{background:var(--brown-light);border-color:var(--brown);}
+  .fc-front{width:100%;}
+  .fc-word{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+  .fc-read{font-size:11.5px;color:var(--gray);}
+  .fc-back{display:none;width:100%;}
+  .flash-card.flipped .fc-front{display:none;}
+  .flash-card.flipped .fc-back{display:block;}
+  .fc-kind{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-bottom:4px;display:inline-block;}
+  .fc-kind.s{background:var(--purple-light);color:var(--purple);}
+  .fc-kind.k{background:var(--teal-light);color:var(--teal);}
+  .fc-kind.t{background:var(--orange-light);color:var(--orange);}
+  .fc-mean{font-size:14px;font-weight:800;color:var(--brown);margin-bottom:3px;}
+  .fc-note{font-size:11px;color:var(--gray);line-height:1.5;}
+  .fc-tap{font-size:10px;color:var(--gray);position:absolute;bottom:5px;right:7px;}
+  .flash-card.flipped .fc-tap{display:none;}
+
+  /* 例文ボックス */
+  .example-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
+  .ex-card{background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .ex-header{padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.05em;}
+  .ex-header.s{background:var(--purple-light);color:var(--purple);}
+  .ex-header.k{background:var(--teal-light);color:var(--teal);}
+  .ex-header.t{background:var(--orange-light);color:var(--orange);}
+  .ex-body{padding:14px 18px;}
+  .ex-sentence{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.8;}
+  .ex-sentence mark{padding:1px 4px;border-radius:4px;font-style:normal;}
+  .ex-sentence mark.s{background:rgba(124,77,189,.15);color:var(--purple);}
+  .ex-sentence mark.k{background:rgba(27,138,138,.15);color:var(--teal);}
+  .ex-sentence mark.t{background:rgba(234,88,12,.15);color:var(--orange);}
+  .ex-mean{font-size:14px;color:var(--navy-mid);line-height:1.8;margin-bottom:6px;}
+  .ex-point{font-size:13px;background:var(--gold-light);border-radius:7px;padding:8px 12px;color:var(--navy-mid);line-height:1.7;border-left:3px solid var(--gold);}
+
+  /* ミニテスト */
+  .mini-quiz-area{background:var(--gray-light);border-radius:var(--radius);padding:18px;margin-bottom:10px;}
+  .mq-title{font-size:13px;font-weight:700;color:var(--brown);margin-bottom:10px;letter-spacing:.04em;}
+  .mq-q{font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.7;}
+  .mq-choices{display:flex;flex-direction:column;gap:7px;}
+  .mq-btn{display:flex;align-items:center;gap:9px;background:white;border:2px solid transparent;border-radius:9px;padding:10px 14px;cursor:pointer;text-align:left;font-family:inherit;font-size:14px;line-height:1.6;color:var(--navy);transition:all .18s;width:100%;}
+  .mq-btn:hover:not(:disabled){border-color:var(--gold);background:var(--gold-light);}
+  .mq-num{font-weight:700;font-size:12px;color:var(--gray);background:var(--gray-light);min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mq-btn.correct{background:var(--green-light);border-color:var(--green);}
+  .mq-btn.correct .mq-num{background:var(--green);color:white;}
+  .mq-btn.wrong{background:var(--red-light);border-color:var(--red);color:#999;text-decoration:line-through;}
+  .mq-btn.wrong .mq-num{background:var(--red);color:white;}
+  .mq-btn:disabled{cursor:default;}
+  .mq-feedback{display:none;margin-top:10px;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.8;}
+  .mq-feedback.show{display:block;animation:slideDown .2s ease;}
+  .mq-feedback.ok{background:var(--green-light);border-left:4px solid var(--green);color:#1a5c35;}
+  .mq-feedback.ng{background:var(--red-light);border-left:4px solid var(--red);color:#7a2020;}
+  .mq-t{font-weight:800;margin-bottom:4px;font-size:14px;}
+
+  /* 総合問題 */
+  .quiz-section{background:white;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:22px;margin-bottom:28px;}
+  .quiz-label{font-size:12px;font-weight:700;color:var(--brown);letter-spacing:.08em;margin-bottom:8px;}
+  .quiz-q{font-size:15px;line-height:1.9;color:var(--navy);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f0f0f0;}
+  .quiz-q .hl{border-bottom:2px solid var(--navy);padding-bottom:1px;}
+  .conv-box{background:var(--gray-light);border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14.5px;line-height:1.85;}
+  .conv-line{margin-bottom:5px;}
+  .conv-line:last-child{margin-bottom:0;}
+  .quiz-choices{display:flex;flex-direction:column;gap:8px;}
+  .quiz-btn{display:flex;align-items:flex-start;gap:10px;background:var(--gray-light);border:2px solid transparent;border-radius:10px;padding:13px 15px;cursor:pointer;text-align:left;font-family:inherit;font-size:14.5px;line-height:1.7;color:var(--navy);transition:all .18s;width:100%;}
+  .quiz-btn:hover:not(:disabled){border-color:var(--brown-light);background:var(--brown-light);}
+  .quiz-num{font-weight:700;font-size:12px;color:var(--gray);background:white;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .quiz-btn.correct{background:var(--green-light);border-color:var(--green);}
+  .quiz-btn.correct .quiz-num{background:var(--green);color:white;}
+  .quiz-btn.wrong{background:var(--red-light);border-color:var(--red);color:#999;text-decoration:line-through;}
+  .quiz-btn.wrong .quiz-num{background:var(--red);color:white;}
+  .quiz-btn:disabled{cursor:default;}
+  .quiz-feedback{display:none;margin-top:10px;padding:14px 16px;border-radius:10px;font-size:14px;line-height:1.85;}
+  .quiz-feedback.show{display:block;animation:slideDown .2s ease;}
+  .quiz-feedback.ok{background:var(--green-light);border-left:4px solid var(--green);color:#1a5c35;}
+  .quiz-feedback.ng{background:var(--red-light);border-left:4px solid var(--red);color:#7a2020;}
+  .qfb-title{font-weight:800;margin-bottom:6px;font-size:15px;}
+  .divider{border:none;border-top:2px dashed #e5e7eb;}
+
+  /* 完了ナビ */
+  .completion-nav{display:none;background:white;border-radius:var(--radius);padding:26px 22px;margin-top:24px;box-shadow:var(--shadow);text-align:center;animation:slideDown .4s ease;}
+  .completion-nav.show{display:block;}
+  .comp-emoji{font-size:2.4em;margin-bottom:8px;}
+  .comp-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:5px;}
+  .comp-sub{font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7;}
+  .nav-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:50px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .18s;}
+  .nav-btn-next{background:var(--navy);color:white;}
+  .nav-btn-next:hover{background:var(--navy-mid);transform:translateY(-1px);}
+  .nav-btn-index{background:white;color:var(--navy);border:2px solid #d0d5e0;}
+  .nav-btn-index:hover{border-color:var(--navy);transform:translateY(-1px);}
+
+  canvas#confetti{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:none;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<header>
+  <span class="header-badge">古文 基本アイテム</span>
+  <h1>Unit 3 ── 古文の敬語</h1>
+</header>
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">古文フェーズ</span>
+    <span class="phase-note">敬語を見ると「誰が偉い人か」がわかります。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">このユニットについて</div>
+    <p>古文の敬語は、現代語の敬語と同じ仕組みです。<br>
+    <strong>「誰の動作か」「誰に対する動作か」</strong>を敬語から読み取ることで、主語が省略された古文でも「誰が何をしたか」がわかるようになります。<br>
+    最重要の敬語動詞を<strong>10語</strong>に絞って覚えましょう。</p>
+  </div>
+
+  <!-- 三種類の説明 -->
+  <div class="section-title">👑 古文の敬語にも三種類ある</div>
+  <div class="keigo-explain">
+    <div class="ke-card ke-s">
+      <div class="ke-emoji">👑</div>
+      <div class="ke-name">尊敬語</div>
+      <div class="ke-desc">貴人（偉い人）の動作を<strong>高めて</strong>表す</div>
+      <div class="ke-formula">貴人の動作 ↑</div>
+    </div>
+    <div class="ke-card ke-k">
+      <div class="ke-emoji">🙇</div>
+      <div class="ke-name">謙譲語</div>
+      <div class="ke-desc">自分や身分の低い人の動作を<strong>低めて</strong>表す</div>
+      <div class="ke-formula">自分の動作 ↓</div>
+    </div>
+    <div class="ke-card ke-t">
+      <div class="ke-emoji">🤝</div>
+      <div class="ke-name">丁寧語</div>
+      <div class="ke-desc">読み手・聞き手への<strong>丁寧さ</strong>を表す</div>
+      <div class="ke-formula">話し方 ✨ 丁寧に</div>
+    </div>
+  </div>
+
+  <div class="point-box">
+    <div class="pt-label">🔑 古文の敬語を読む最重要ポイント</div>
+    <ul>
+      <li>尊敬語が使われている → その動作の<strong>主語は貴人（偉い人）</strong></li>
+      <li>謙譲語が使われている → その動作の主語は<strong>身分の低い人</strong>（貴人に向けた動作）</li>
+      <li>敬語を見つけると<strong>省略された主語</strong>を推測できる</li>
+    </ul>
+  </div>
+
+  <!-- 最重要敬語動詞テーブル -->
+  <div class="section-title">📋 最重要 敬語動詞10語</div>
+  <table class="keigo-table">
+    <thead>
+      <tr>
+        <th>現代語</th>
+        <th class="h-s">👑 尊敬語（貴人の動作）</th>
+        <th class="h-k">🙇 謙譲語（自分の動作）</th>
+        <th class="h-t">🤝 丁寧語</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>いる・ある</td>
+        <td class="s">おはす・おはします</td>
+        <td class="k">侍り（はべり）</td>
+        <td class="t">侍り（はべり）</td>
+      </tr>
+      <tr>
+        <td>行く・来る</td>
+        <td class="s">おはす・いでたまふ</td>
+        <td class="k">参る（まゐる）</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>言う</td>
+        <td class="s">のたまふ・おほせらる</td>
+        <td class="k">申す（まうす）</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>する・〜なさる</td>
+        <td class="s">たまふ（給ふ）</td>
+        <td class="k">〜たてまつる</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>もらう・食べる</td>
+        <td class="s">—</td>
+        <td class="k">たてまつる・いただく</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>見る</td>
+        <td class="s">ごらんず（御覧ず）</td>
+        <td class="k">拝見す（はいけんす）</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>思う・知る</td>
+        <td class="s">おぼしめす</td>
+        <td class="k">存ず（ぞんず）</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>あげる</td>
+        <td class="s">—</td>
+        <td class="k">奉る（たてまつる）</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>くれる</td>
+        <td class="s">たまふ（給ふ）</td>
+        <td class="k">—</td>
+        <td class="t">—</td>
+      </tr>
+      <tr>
+        <td>（補助）〜する</td>
+        <td class="s">〜たまふ（給ふ）</td>
+        <td class="k">〜たてまつる・〜まゐらす</td>
+        <td class="t">〜侍り</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- フラッシュカード -->
+  <div class="section-title">📋 フラッシュカードで覚えよう</div>
+  <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">カードをタップして、意味・種類を確認しましょう。</p>
+  <div class="flash-grid" id="flashGrid"></div>
+
+  <!-- 例文で確認 -->
+  <div class="section-title">📖 例文で読み方を確認しよう</div>
+  <div class="example-cards">
+
+    <div class="ex-card">
+      <div class="ex-header s">👑 尊敬語の例——「たまふ（給ふ）」</div>
+      <div class="ex-body">
+        <div class="ex-sentence">帝、この歌を<mark class="s">きこしめし</mark>て、いとあはれとおぼしめしけり。</div>
+        <div class="ex-mean">現代語訳：帝がこの歌をお聞きになって、たいそうしみじみとお思いになった。</div>
+        <div class="ex-point">「きこしめす」「おぼしめす」はどちらも最高の尊敬語。→ この文の主語は<strong>帝（天皇）</strong>とわかります。</div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header k">🙇 謙譲語の例——「参る（まゐる）」</div>
+      <div class="ex-body">
+        <div class="ex-sentence">翌朝、宮のもとへ<mark class="k">参り</mark>たり。</div>
+        <div class="ex-mean">現代語訳：翌朝、宮のところへ参上した。</div>
+        <div class="ex-point">「参る」は謙譲語（自分が行く）。→ この文の主語は<strong>身分の低い人物</strong>で、「宮（高貴な人）」のところへ行ったことがわかります。</div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header s">👑 尊敬語の例——「のたまふ」</div>
+      <div class="ex-body">
+        <div class="ex-sentence">「いかに思ふぞ」と<mark class="s">のたまへ</mark>ば、</div>
+        <div class="ex-mean">現代語訳：「どのように思うか」とおっしゃると、</div>
+        <div class="ex-point">「のたまふ」は「言ふ」の尊敬語。→ この台詞を言っているのは<strong>貴人（偉い人）</strong>とわかります。</div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-header t">🤝 丁寧語の例——「侍り（はべり）」</div>
+      <div class="ex-body">
+        <div class="ex-sentence">さらに知らぬことに<mark class="t">侍り</mark>。</div>
+        <div class="ex-mean">現代語訳：まったく知らないことでございます。</div>
+        <div class="ex-point">「侍り（はべり）」は丁寧語として文末によく使われます。「〜でございます」に近い感覚で読みましょう。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ミニテスト -->
+  <div class="section-title">✏️ ミニテスト</div>
+  <div class="mini-quiz-area">
+    <div class="mq-title">📝 ミニテスト①</div>
+    <div class="mq-q">「のたまふ」はどの種類の敬語で、どの意味ですか。最も正しいものを選んでください。</div>
+    <div class="mq-choices" id="mqc1">
+      <button class="mq-btn" onclick="mqAns('mqc1','mqf1',this,false)"><span class="mq-num">①</span>謙譲語 ── 申し上げる</button>
+      <button class="mq-btn" onclick="mqAns('mqc1','mqf1',this,true)"><span class="mq-num">②</span>尊敬語 ── おっしゃる（言う）</button>
+      <button class="mq-btn" onclick="mqAns('mqc1','mqf1',this,false)"><span class="mq-num">③</span>丁寧語 ── 言います</button>
+      <button class="mq-btn" onclick="mqAns('mqc1','mqf1',this,false)"><span class="mq-num">④</span>尊敬語 ── いらっしゃる（いる）</button>
+    </div>
+    <div class="mq-feedback" id="mqf1"></div>
+  </div>
+
+  <div class="mini-quiz-area" style="margin-top:10px;">
+    <div class="mq-title">📝 ミニテスト②</div>
+    <div class="mq-q">次の文で、「たまふ」が使われているとき、その動作の主語は誰だと考えられますか。<br>「御文を<mark style="background:rgba(124,77,189,.15);color:#7c4dbd;padding:1px 3px;border-radius:3px;">書きたまひ</mark>ける。」</div>
+    <div class="mq-choices" id="mqc2">
+      <button class="mq-btn" onclick="mqAns('mqc2','mqf2',this,false)"><span class="mq-num">①</span>身分の低い人物</button>
+      <button class="mq-btn" onclick="mqAns('mqc2','mqf2',this,true)"><span class="mq-num">②</span>貴人（身分の高い人）</button>
+      <button class="mq-btn" onclick="mqAns('mqc2','mqf2',this,false)"><span class="mq-num">③</span>主語はわからない</button>
+      <button class="mq-btn" onclick="mqAns('mqc2','mqf2',this,false)"><span class="mq-num">④</span>複数の人物</button>
+    </div>
+    <div class="mq-feedback" id="mqf2"></div>
+  </div>
+
+  <div class="mini-quiz-area" style="margin-top:10px;">
+    <div class="mq-title">📝 ミニテスト③</div>
+    <div class="mq-q">「参る（まゐる）」は何の謙譲語ですか。</div>
+    <div class="mq-choices" id="mqc3">
+      <button class="mq-btn" onclick="mqAns('mqc3','mqf3',this,false)"><span class="mq-num">①</span>「言う」の謙譲語</button>
+      <button class="mq-btn" onclick="mqAns('mqc3','mqf3',this,false)"><span class="mq-num">②</span>「見る」の謙譲語</button>
+      <button class="mq-btn" onclick="mqAns('mqc3','mqf3',this,true)"><span class="mq-num">③</span>「行く・来る」の謙譲語</button>
+      <button class="mq-btn" onclick="mqAns('mqc3','mqf3',this,false)"><span class="mq-num">④</span>「もらう」の謙譲語</button>
+    </div>
+    <div class="mq-feedback" id="mqf3"></div>
+  </div>
+
+  <!-- 総合確認問題 -->
+  <div class="section-title">✏️ 総合確認問題</div>
+  <div class="quiz-section">
+
+    <div class="quiz-block">
+      <div class="quiz-label">問い 1</div>
+      <div class="quiz-q">次の文で下線部「<span class="hl">おはします</span>」は何の尊敬語ですか。<br>「帝、御殿に<span class="hl">おはします</span>。」</div>
+      <div class="quiz-choices" id="qc1">
+        <button class="quiz-btn" onclick="quizAns(1,this,false,0)"><span class="quiz-num">①</span>「言う」の尊敬語</button>
+        <button class="quiz-btn" onclick="quizAns(1,this,false,1)"><span class="quiz-num">②</span>「行く」の尊敬語</button>
+        <button class="quiz-btn" onclick="quizAns(1,this,true,2)"><span class="quiz-num">③</span>「いる・ある」の尊敬語</button>
+        <button class="quiz-btn" onclick="quizAns(1,this,false,3)"><span class="quiz-num">④</span>「思う」の尊敬語</button>
+      </div>
+      <div class="quiz-feedback" id="qf1"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="quiz-block">
+      <div class="quiz-label">問い 2</div>
+      <div class="quiz-q">次の文の主語として最も適切なものはどれですか。<br>
+        <div class="conv-box">「宮のもとへ<span style="font-weight:700;color:var(--teal);">参り</span>たれば、御文をたまはりける。」</div>
+        （宮のところへ参上したところ、お手紙をいただいた。）
+      </div>
+      <div class="quiz-choices" id="qc2">
+        <button class="quiz-btn" onclick="quizAns(2,this,false,0)"><span class="quiz-num">①</span>宮（貴人）</button>
+        <button class="quiz-btn" onclick="quizAns(2,this,true,1)"><span class="quiz-num">②</span>語り手・身分の低い人物</button>
+        <button class="quiz-btn" onclick="quizAns(2,this,false,2)"><span class="quiz-num">③</span>帝（天皇）</button>
+        <button class="quiz-btn" onclick="quizAns(2,this,false,3)"><span class="quiz-num">④</span>わからない</button>
+      </div>
+      <div class="quiz-feedback" id="qf2"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="quiz-block">
+      <div class="quiz-label">問い 3</div>
+      <div class="quiz-q">「申す（まうす）」はどの種類の敬語ですか。</div>
+      <div class="quiz-choices" id="qc3">
+        <button class="quiz-btn" onclick="quizAns(3,this,false,0)"><span class="quiz-num">①</span>尊敬語（貴人が言う）</button>
+        <button class="quiz-btn" onclick="quizAns(3,this,true,1)"><span class="quiz-num">②</span>謙譲語（自分が申し上げる）</button>
+        <button class="quiz-btn" onclick="quizAns(3,this,false,2)"><span class="quiz-num">③</span>丁寧語（丁寧に言う）</button>
+        <button class="quiz-btn" onclick="quizAns(3,this,false,3)"><span class="quiz-num">④</span>尊敬語と謙譲語の両方</button>
+      </div>
+      <div class="quiz-feedback" id="qf3"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="quiz-block">
+      <div class="quiz-label">問い 4</div>
+      <div class="quiz-q">次の文のうち、<strong>尊敬語が使われているもの</strong>はどれですか。</div>
+      <div class="quiz-choices" id="qc4">
+        <button class="quiz-btn" onclick="quizAns(4,this,false,0)"><span class="quiz-num">①</span>「かくと申しける。」（このように申し上げた。）</button>
+        <button class="quiz-btn" onclick="quizAns(4,this,true,1)"><span class="quiz-num">②</span>「かくとのたまへば、」（このようにおっしゃると、）</button>
+        <button class="quiz-btn" onclick="quizAns(4,this,false,2)"><span class="quiz-num">③</span>「宮に参りたり。」（宮のところへ参上した。）</button>
+        <button class="quiz-btn" onclick="quizAns(4,this,false,3)"><span class="quiz-num">④</span>「さやうに侍り。」（そのようでございます。）</button>
+      </div>
+      <div class="quiz-feedback" id="qf4"></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="quiz-block">
+      <div class="quiz-label">問い 5</div>
+      <div class="quiz-q">次の文で、敬語から読み取れることとして最も正しいものはどれですか。<br>
+        <div class="conv-box">「帝、この絵を<span style="font-weight:700;color:var(--purple);">ごらんじ</span>て、いみじうめでたまひけり。」<br>（帝がこの絵をご覧になって、たいそうお褒めになった。）</div>
+      </div>
+      <div class="quiz-choices" id="qc5">
+        <button class="quiz-btn" onclick="quizAns(5,this,false,0)"><span class="quiz-num">①</span>「ごらんず」は謙譲語なので、動作の主語は身分の低い人物だ。</button>
+        <button class="quiz-btn" onclick="quizAns(5,this,true,1)"><span class="quiz-num">②</span>「ごらんず」は「見る」の尊敬語なので、動作の主語は帝だとわかる。</button>
+        <button class="quiz-btn" onclick="quizAns(5,this,false,2)"><span class="quiz-num">③</span>「めでたまふ」は謙譲語なので、動作の主語は身分の低い人物だ。</button>
+        <button class="quiz-btn" onclick="quizAns(5,this,false,3)"><span class="quiz-num">④</span>敬語だけでは主語は判断できない。</button>
+      </div>
+      <div class="quiz-feedback" id="qf5"></div>
+    </div>
+
+  </div>
+
+  <!-- 完了ナビ -->
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">Unit 3 クリアです！</div>
+    <div class="comp-sub">古文の敬語、よく覚えられました。<br>敬語を見れば「誰の動作か」がわかります。<br>次は「助動詞6つだけ」に進みましょう。</div>
+    <div class="nav-btn-row">
+      <a href="kobun_04.html" class="nav-btn nav-btn-next">次の単元へ ▶ Unit 4「助動詞6つだけ」</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+<script>
+// フラッシュカードデータ
+const CARDS = [
+  {word:'おはす',    read:'おわす',    kind:'s', mean:'いらっしゃる（いる・行く・来る）', note:'最高の尊敬語。主語は必ず貴人'},
+  {word:'たまふ',    read:'たまう',    kind:'s', mean:'〜なさる・〜てくださる',           note:'補助動詞として最もよく出る'},
+  {word:'のたまふ',  read:'のたまう',  kind:'s', mean:'おっしゃる（言う）',               note:'「言ふ」の尊敬語'},
+  {word:'ごらんず',  read:'ごらんず',  kind:'s', mean:'ご覧になる（見る）',               note:'「見る」の尊敬語'},
+  {word:'きこしめす',read:'きこしめす',kind:'s', mean:'お聞きになる（聞く）',             note:'最高の尊敬語'},
+  {word:'おぼしめす',read:'おぼしめす',kind:'s', mean:'お思いになる（思う）',             note:'最高の尊敬語'},
+  {word:'参る',      read:'まゐる',    kind:'k', mean:'参上する（行く・来る）',           note:'「行く・来る」の謙譲語'},
+  {word:'申す',      read:'まうす',    kind:'k', mean:'申し上げる（言う）',               note:'「言ふ」の謙譲語'},
+  {word:'奉る',      read:'たてまつる',kind:'k', mean:'差し上げる・〜申し上げる',         note:'「あげる」の謙譲語。補助動詞にも'},
+  {word:'侍り',      read:'はべり',    kind:'t', mean:'ございます（ある・いる）',         note:'丁寧語。文末に「〜侍り」の形で出る'},
+];
+
+function buildFlash() {
+  const grid = document.getElementById('flashGrid');
+  const kindLabel = {s:'👑 尊敬語', k:'🙇 謙譲語', t:'🤝 丁寧語'};
+  CARDS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'flash-card';
+    card.innerHTML = `
+      <div class="fc-front">
+        <div class="fc-word">${c.word}</div>
+        <div class="fc-read">（${c.read}）</div>
+      </div>
+      <div class="fc-back">
+        <span class="fc-kind ${c.kind}">${kindLabel[c.kind]}</span>
+        <div class="fc-mean">${c.mean}</div>
+        <div class="fc-note">${c.note}</div>
+      </div>
+      <div class="fc-tap">タップして確認</div>`;
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      card.querySelector('.fc-tap').style.display = card.classList.contains('flipped') ? 'none' : 'block';
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ミニテスト
+const mqFB = {
+  mqf1: {
+    ok: '「のたまふ」は「言ふ（いう）」の尊敬語で、現代語の「おっしゃる」に相当します。貴人が話すときに使われます。この言葉が出てきたら主語は偉い人物です。',
+    ng: '正解は②です。「のたまふ」は「言ふ」の尊敬語で「おっしゃる」という意味です。「いらっしゃる」は「おはす」です。'
+  },
+  mqf2: {
+    ok: '「たまふ（給ふ）」は尊敬語の補助動詞です。「書きたまふ」は「お書きになる」という意味で、動作の主語は貴人（身分の高い人）です。',
+    ng: '正解は②です。「たまふ」は尊敬語なので、この動作（手紙を書く）の主語は貴人（身分の高い人）です。'
+  },
+  mqf3: {
+    ok: '「参る（まゐる）」は「行く・来る」の謙譲語です。貴人のいる場所へ自分が「行く・来る」ときに使います。現代語でも「参ります」という表現が残っています。',
+    ng: '正解は③です。「参る」は「行く・来る」の謙譲語です。「申す」が「言う」の謙譲語です。混同しないようにしましょう。'
+  },
+};
+
+function mqAns(choicesId, fbId, btn, isCorrect) {
+  document.querySelectorAll(`#${choicesId} .mq-btn`).forEach(b => b.disabled = true);
+  const fb = document.getElementById(fbId);
+  const d = mqFB[fbId];
+  if (isCorrect) {
+    btn.classList.add('correct');
+    launchConfetti();
+    fb.className = 'mq-feedback show ok';
+    fb.innerHTML = `<div class="mq-t">✅ 正解！</div>${d.ok}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll(`#${choicesId} .mq-btn`).forEach(b => {
+      if (b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+    });
+    fb.className = 'mq-feedback show ng';
+    fb.innerHTML = `<div class="mq-t">惜しい、確認してみましょう。</div>${d.ng}`;
+  }
+}
+
+// 総合確認問題
+const quizFB = {
+  1:{correct:2, ok:'「おはします」は「いる・ある」の最高の尊敬語です。「帝、御殿におはします」＝「帝が御殿にいらっしゃる」という意味です。主語が帝（天皇）であることが敬語からわかります。', ng:'正解は③です。「おはす・おはします」は「いる・ある（行く・来る）」の尊敬語です。最高の尊敬語で、主語が貴人（天皇・后など）のときに使われます。'},
+  2:{correct:1, ok:'「参る（まゐる）」は「行く・来る」の謙譲語です。謙譲語は自分（身分の低い人）の動作を低めて表すので、「参りたれば」の主語は語り手（身分の低い人物）です。「宮」は行く先であり、主語ではありません。', ng:'正解は②です。「参る」は謙譲語（自分が行く）なので、動作の主語は語り手・身分の低い人物です。「宮」は行く先（目的地）であり、主語ではありません。'},
+  3:{correct:1, ok:'「申す（まうす）」は「言ふ（言う）」の謙譲語で、現代語の「申し上げる」に相当します。自分が貴人に対して「言う」ときに使います。', ng:'正解は②です。「申す」は「言う」の謙譲語（申し上げる）です。「言ふ」の尊敬語は「のたまふ」です。'},
+  4:{correct:1, ok:'「のたまふ」は「言ふ（いう）」の尊敬語（おっしゃる）です。この言葉が使われているので、話している人物は貴人（身分の高い人）です。①「申す」は謙譲語、③「参る」は謙譲語、④「侍り」は丁寧語です。', ng:'正解は②です。「のたまふ」は「言う」の尊敬語（おっしゃる）です。①「申す」は謙譲語、③「参る」は謙譲語、④「侍り」は丁寧語です。'},
+  5:{correct:1, ok:'「ごらんず」は「見る」の尊敬語です。尊敬語が使われているので、この動作（絵を見る）の主語は貴人です。文脈からも「帝」が主語とわかります。「めでたまふ」の「たまふ」も尊敬語の補助動詞なので、同じく主語は帝です。', ng:'正解は②です。「ごらんず」は「見る」の尊敬語なので、動作の主語は貴人です。「めでたまふ」の「たまふ」も尊敬語の補助動詞です。敬語の種類→主語の推測、という読み方を身につけましょう。'},
+};
+
+let quizAnswered = 0;
+const totalQuiz = 5;
+
+function quizAns(qNum, btn, isCorrect, idx) {
+  document.querySelectorAll(`#qc${qNum} .quiz-btn`).forEach(b => b.disabled = true);
+  const fb = document.getElementById('qf' + qNum);
+  const d = quizFB[qNum];
+  if (isCorrect) {
+    btn.classList.add('correct');
+    launchConfetti();
+    fb.className = 'quiz-feedback show ok';
+    fb.innerHTML = `<div class="qfb-title">✅ 正解です！</div>${d.ok}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll(`#qc${qNum} .quiz-btn`)[d.correct].classList.add('correct');
+    fb.className = 'quiz-feedback show ng';
+    fb.innerHTML = `<div class="qfb-title">惜しい、確認してみましょう。</div>${d.ng}`;
+  }
+  quizAnswered++;
+  if (quizAnswered >= totalQuiz) {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      nav.classList.add('show');
+      nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1400);
+  }
+}
+
+function launchConfetti() {
+  const cvs = document.getElementById('confetti');
+  cvs.width = innerWidth; cvs.height = innerHeight; cvs.style.display = 'block';
+  const ctx = cvs.getContext('2d');
+  const parts = Array.from({length:110}, () => ({
+    x:Math.random()*innerWidth, y:-10,
+    vx:(Math.random()-.5)*5, vy:Math.random()*3.5+2,
+    r:Math.random()*6+3,
+    color:['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+    rot:Math.random()*360, rv:(Math.random()-.5)*8,
+  }));
+  let frame;
+  (function draw() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    parts.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rv;
+    });
+    if(parts.some(p=>p.y<innerHeight)) frame=requestAnimationFrame(draw);
+    else cvs.style.display='none';
+  })();
+  setTimeout(()=>{cvs.style.display='none'; cancelAnimationFrame(frame);},3000);
+}
+
+buildFlash();
+</script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢文読解 ― 伝習録「樹を種ゑる者」</title>
+<style>:root{
+  --navy:#1a2744;--navy-mid:#2a3d6b;--navy-pale:#e8ecf4;
+  --gold:#c9a84c;--gold-light:#f0d98a;--red:#c0392b;
+  --green:#1e7e5a;--green-light:#d4f0e4;--cream:#faf8f2;
+  --text:#1a1a2e;--muted:#6b7aa1;--border:#c8d0e4;
+  --shadow:rgba(26,39,68,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+  color:#fff;padding:28px 24px 22px;text-align:center;}
+.header-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--gold-light);
+  border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:10px;font-family:sans-serif;}
+.header h1{font-size:1.5rem;font-weight:normal;letter-spacing:.1em;line-height:1.6;}
+.header .sub{font-size:.82rem;color:var(--gold-light);margin-top:6px;font-family:sans-serif;opacity:.85;}
+.container{max-width:860px;margin:0 auto;padding:28px 16px;}
+.intro-box{background:#fff;border:1px solid var(--border);border-left:4px solid var(--navy);
+  border-radius:8px;padding:18px 20px;margin-bottom:28px;font-size:.9rem;line-height:1.9;
+  color:#3a3a4a;font-family:sans-serif;}
+.intro-box strong{color:var(--navy);}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:28px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.section-header{background:var(--navy);color:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;}
+.section-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  color:var(--gold-light);font-family:sans-serif;font-weight:bold;flex-shrink:0;}
+.section-title{font-size:.95rem;letter-spacing:.05em;line-height:1.5;}
+.section-title small{display:block;font-size:.75rem;color:var(--gold-light);
+  font-family:sans-serif;margin-top:2px;opacity:.85;}
+.prog-wrap{background:var(--navy-pale);height:5px;margin:0 20px;border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  border-radius:20px;transition:width .5s;width:0;}
+.section-body{padding:22px 20px;}
+.notes-box{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;
+  padding:12px 16px;margin-bottom:18px;font-family:sans-serif;font-size:.8rem;
+  color:var(--muted);line-height:1.8;}
+.notes-box strong{color:var(--navy);}
+/* 書き下し文：縦書き */
+.kundoku-wrap{background:var(--navy-pale);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin-bottom:20px;overflow-x:auto;}
+.kundoku-label{font-size:.72rem;color:var(--muted);font-family:sans-serif;
+  letter-spacing:1.5px;margin-bottom:12px;}
+.kundoku-text{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:inline-block;font-size:1.25rem;line-height:2.0;
+  letter-spacing:0.35em;color:var(--navy);
+  font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  min-height:80px;
+}
+/* 問い */
+.question-zone{background:#f4f6fb;border:1px solid var(--border);border-radius:10px;
+  padding:18px 18px 14px;margin-bottom:16px;transition:opacity .3s;}
+.q-label{font-size:.78rem;color:var(--navy);font-family:sans-serif;
+  font-weight:bold;margin-bottom:8px;letter-spacing:.05em;}
+.q-text{font-size:.92rem;color:#1a1a2e;line-height:1.7;margin-bottom:14px;font-family:sans-serif;}
+.hl{background:var(--gold-light);padding:1px 6px;border-radius:4px;
+  font-family:'Hiragino Mincho ProN',serif;font-size:1rem;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.cbtn{background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 16px;font-size:.88rem;font-family:sans-serif;line-height:1.6;
+  cursor:pointer;text-align:left;transition:all .18s;color:var(--text);
+  display:flex;align-items:flex-start;gap:10px;}
+.cbtn:hover:not([disabled]){border-color:var(--navy);background:var(--navy-pale);transform:translateX(2px);}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--navy-pale);
+  color:var(--navy);font-size:.78rem;display:flex;align-items:center;
+  justify-content:center;font-weight:bold;flex-shrink:0;margin-top:1px;}
+.cbtn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.cbtn.correct .cnum{background:var(--green);color:#fff;}
+.cbtn.wrong{background:#fde8e6;border-color:var(--red);color:var(--red);opacity:.75;}
+.cbtn.wrong .cnum{background:var(--red);color:#fff;}
+.cbtn[disabled]{cursor:default;}
+.feedback{display:none;margin-top:12px;padding:11px 14px;border-radius:8px;
+  font-size:.85rem;font-family:sans-serif;line-height:1.7;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);color:var(--green);border-left:4px solid var(--green);}
+.feedback.ng{background:#fde8e6;color:#8b1a10;border-left:4px solid var(--red);}
+/* まとめ */
+.sum-zone{margin-top:20px;display:none;}
+.sum-zone.unlocked{display:block;}
+.sum-btn{background:var(--navy);color:var(--gold-light);border:none;border-radius:8px;
+  padding:10px 20px;font-size:.85rem;font-family:sans-serif;cursor:pointer;
+  letter-spacing:.05em;display:flex;align-items:center;gap:8px;transition:background .2s;}
+.sum-btn:hover{background:var(--navy-mid);}
+.sum-content{display:none;margin-top:10px;background:var(--navy);color:#e8edf8;
+  border-radius:10px;padding:18px 20px;font-family:sans-serif;font-size:.88rem;
+  line-height:1.9;animation:fadeIn .3s ease;}
+.sum-content.show{display:block;}
+.sum-content h4{color:var(--gold-light);font-size:.78rem;letter-spacing:1.5px;margin-bottom:10px;}
+.sum-content p{margin-bottom:8px;}
+.sum-content p:last-child{margin-bottom:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.final{display:none;background:var(--navy);color:#e8edf8;border-radius:14px;
+  padding:28px 24px;margin-top:8px;text-align:center;font-family:sans-serif;
+  animation:fadeIn .4s ease;}
+.final.show{display:block;}
+.final h2{color:var(--gold-light);font-size:1.1rem;letter-spacing:.1em;margin-bottom:14px;}
+.final p{font-size:.9rem;line-height:1.9;margin-bottom:6px;}
+.score{font-size:2.2rem;color:var(--gold-light);font-weight:bold;margin:12px 0;}
+.score span{font-size:1rem;color:#a8b4cc;}
+@media(max-width:600px){.kundoku-text{font-size:1.05rem;}.header h1{font-size:1.25rem;}}</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-badge">漢文読解 ／ 伝習録　令和5年度第1回</div>
+  <h1>樹を種ゑる者</h1>
+  <div class="sub">書き下し文の意味を読み取る練習（全7問）</div>
+</div>
+<div class="container">
+<div class="intro-box">
+  <strong>この文章について：</strong><br>
+  明代の儒学者・王陽明の語録『伝習録』の一節です。樹木の栽培を比喩として、徳を育てることと学問の心構えを論じています。<br><br>
+  <strong>学習の進め方：</strong>① 書き下し文をよく読みます。② マークされた部分の意味を選んでください。③ 1問でも解くと段落まとめが見られます。
+</div>
+
+<!-- 第一段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">一</div>
+    <div class="section-title">樹木と徳の涵養
+      <small>木を育てるように徳を養い、余計な枝を取り除く</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p1"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      種樹＝木を植える ／ 培ふ＝養い育てる ／ 種徳＝人格を育てる ／ 刪る＝取り除く ／ 繁枝＝茂った余計な枝
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">樹を種ゑる者は、必ず其の根を培ひ、徳を種ゑる者は、必ず其の心を養ふ。樹の之を長ぜんと欲せば、必ず始め生じたる時に於て、其の繁枝を刪る。</div>
+    </div>
+    <div class="question-zone" id="q1">
+      <div class="q-label">問１</div>
+      <div class="q-text"><span class="hl">樹を種ゑる者は、必ず其の根を培ひ</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q1',false,'「培ふ」は「養い育てる」の意。根を切り取るのではありません。')"><span class="cnum">①</span><span>木を植える人は、必ずその根を切り取って</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',true,'正解！「種ゑる」＝植える、「培ふ」＝養い育てる。木を植える人はまず根をしっかり養う、という比喩の冒頭です。')"><span class="cnum">②</span><span>木を植える人は、必ずその根を養い育てて</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「種ゑる」は「植える」の意。木を売る話ではありません。')"><span class="cnum">③</span><span>木を売ろうとする人は、必ずその根を大切にして</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「必ず」とあるので例外なく行うこと。たまにではありません。')"><span class="cnum">④</span><span>木を植える人は、たまにその根を整えて</span></button>
+      </div>
+      <div class="feedback" id="f_q1"></div>
+    </div>
+    <div class="question-zone" id="q2" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問２</div>
+      <div class="q-text"><span class="hl">樹の之を長ぜんと欲せば、必ず始め生じたる時に於て、其の繁枝を刪る</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q2',false,'「始め生じたる時」は木が生え始めた最初の頃。木が枯れてからではありません。')"><span class="cnum">①</span><span>木を長く育てたければ、木が枯れた後に余計な枝を取り除く。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「刪る」は「取り除く」の意。繁枝を大切に育てるのではありません。')"><span class="cnum">②</span><span>木を大きく育てたければ、生え始めた頃から茂った枝を大切に育てる。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',true,'正解！「欲せば」＝〜したければ、「始め生じたる時」＝生え始めた最初の時期に、「繁枝を刪る」＝余計な枝を取り除く。早い時期に余分な枝を整えることが大切だという教えです。')"><span class="cnum">③</span><span>木を大きく育てたければ、必ず生え始めた頃に茂った余計な枝を取り除く。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「繁枝を刪る」は余計な枝だけを取り除くこと。すべての枝を切るのではありません。')"><span class="cnum">④</span><span>木を長く育てたければ、生え始めた頃にすべての枝を切り取る。</span></button>
+      </div>
+      <div class="feedback" id="f_q2"></div>
+    </div>
+    <div class="sum-zone" id="s1">
+      <button class="sum-btn" onclick="toggleSum('sc1',this)"><span>📖</span> 第一段落のまとめを見る</button>
+      <div class="sum-content" id="sc1">
+        <h4>第一段落 ／ まとめ</h4>
+        <p>「<strong style="color:var(--gold-light)">樹を種ゑる者は必ず其の根を培ひ</strong>」「<strong style="color:var(--gold-light)">徳を種ゑる者は必ず其の心を養ふ</strong>」― 木を育てることと徳を育てることを対比させている。</p>
+        <p>木を大きく育てたければ、生え始めの最初の時期に余計な枝（<strong style="color:var(--gold-light)">繁枝</strong>）を取り除くことが必要。これは徳の修養でも同じ。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">二</div>
+    <div class="section-title">外好を去り、志を立てる
+      <small>余計な興味を捨て、善への志に専念する</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p2"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      外好＝外部への余計な興味・趣味 ／ 精神＝心の集中力 ／ 漏泄＝もれ出る ／ 専一＝一つのことに集中する
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">外に詩文を好むが如くんば、則ち精神日に漸く漏泄して、詩文の上に在りて去る。故に志を立てることは専一を貴とす。</div>
+    </div>
+    <div class="question-zone" id="q3">
+      <div class="q-label">問３</div>
+      <div class="q-text"><span class="hl">精神日に漸く漏泄して、詩文の上に在りて去る</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q3',false,'「漏泄する」は精神（集中力）が漏れ出ること。詩文の才能が上がるのではありません。')"><span class="cnum">①</span><span>精神（集中力）が日ごとに少しずつ高まり、詩文の上達につながっていく。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',true,'正解！「漸く漏泄する」＝だんだん漏れ出ていく、「詩文の上に在りて去る」＝詩文の方へ移ってしまう。学問への集中力が詩文への興味に奪われていくことを示しています。')"><span class="cnum">②</span><span>精神（集中力）が日ごとにだんだん漏れ出て、詩文の方へ移ってしまう。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「漏泄」は「漏れ出ること」。精神が固まるのではなく、散漫になることを示しています。')"><span class="cnum">③</span><span>精神（集中力）が日ごとに固まって、詩文の中に完全に宿るようになる。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「日に漸く」は少しずつ・だんだんと。突然ではありません。')"><span class="cnum">④</span><span>精神（集中力）が突然失われて、詩文から完全に離れてしまう。</span></button>
+      </div>
+      <div class="feedback" id="f_q3"></div>
+    </div>
+    <div class="question-zone" id="q4" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問４</div>
+      <div class="q-text"><span class="hl">故に志を立てることは専一を貴とす</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q4',false,'「専一」は一つのことに集中すること。多くのことを同時に行うことではありません。')"><span class="cnum">①</span><span>だから志を立てることは、多くのことに同時に取り組むことを大切にする。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「貴とす」は「大切にする」の意。慎重に時間をかけて考えることとは違います。')"><span class="cnum">②</span><span>だから志を立てる際は、慎重に時間をかけて考えることが大切だ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',true,'正解！「故に」＝それゆえ（前の話を受けた結論）、「専一を貴とす」＝一つのことに集中することを大切にする。外好を去ったうえで志に専念することの重要性を説いています。')"><span class="cnum">③</span><span>だから志を立てることは、一つのことに集中することを大切にする。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「貴とす」は価値があるという意味。困難だという意味ではありません。')"><span class="cnum">④</span><span>だから志を立てることは、それ一つに集中するのが難しい。</span></button>
+      </div>
+      <div class="feedback" id="f_q4"></div>
+    </div>
+    <div class="sum-zone" id="s2">
+      <button class="sum-btn" onclick="toggleSum('sc2',this)"><span>📖</span> 第二段落のまとめを見る</button>
+      <div class="sum-content" id="sc2">
+        <h4>第二段落 ／ まとめ</h4>
+        <p>詩文などの「<strong style="color:var(--gold-light)">外好</strong>」を持つと、精神が日ごとに漏れ出て（<strong style="color:var(--gold-light)">漏泄</strong>）詩文の方へ移ってしまう。</p>
+        <p>だから（<strong style="color:var(--gold-light)">故に</strong>）、志を立てることは一つのことへの集中（<strong style="color:var(--gold-light)">専一</strong>）を大切にすることが重要だと結論している。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">三</div>
+    <div class="section-title">善の志と樹木の成長
+      <small>助けず忘れずひたすら育てる</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p3"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      学者＝学問をする人 ／ 一念＝ひとたび心に思う ／ 抽く＝伸びてくる ／ 刊落す＝切り落とす ／ 勿助＝むやみに手を加えるな ／ 勿忘＝忘れるな ／ 培植＝養い育てること
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">学者、一たび善を為さんとする志を念じて、樹の初め生じたる時の如く、便ち芽を抽き、亦た須く刊落すべし。但だ助くること勿れ、忘るること勿れ、只だ管に之を培植せよ。</div>
+    </div>
+    <div class="question-zone" id="q5">
+      <div class="q-label">問５</div>
+      <div class="q-text"><span class="hl">学者、一たび善を為さんとする志を念じて</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q5',false,'「学者」は「学問をする人」の意。有名な著名人ではありません。')"><span class="cnum">①</span><span>有名な学者が、善いことをしようという志を一度だけ持ったとして</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「念じて」は「心に思い念ずる」の意。人々に伝えるのではありません。')"><span class="cnum">②</span><span>学問をする人が、善を実践しようとする志を人々に一度だけ伝えたとして</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',true,'正解！「学者」＝学問をする人、「一たび」＝ひとたび、「念じて」＝心に思い念ずる。学ぶ者がいったん善を実践しようという志を持ったならば、という仮定の導入です。')"><span class="cnum">③</span><span>学問をする人が、ひとたび善を実践しようとする志を心に持ったとして</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「一たび」は「ひとたび」の意。毎日繰り返すことではありません。')"><span class="cnum">④</span><span>学問をする人が、善い行いをしようという志を毎日心に念じて</span></button>
+      </div>
+      <div class="feedback" id="f_q5"></div>
+    </div>
+    <div class="question-zone" id="q6" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問６</div>
+      <div class="q-text"><span class="hl">但だ助くること勿れ、忘るること勿れ、只だ管に之を培植せよ</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q6',false,'「勿れ」は「〜するな」という禁止。他の人の助けを求めることを禁じているのではありません。')"><span class="cnum">①</span><span>ただ他の人の助けを求めるな、決して忘れるな、ただひたすら努力して育てよ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',true,'正解！「助くること勿れ」＝むやみに手を加えるな、「忘るること勿れ」＝忘れるな、「只だ管に培植せよ」＝ただひたすら養い育てよ。焦らず・怠らず育てることが大切だという教えです。')"><span class="cnum">②</span><span>ただむやみに手を加えるな、忘れるな、ただひたすら（志を）養い育てよ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「勿れ」は禁止。手伝うことを強制しているのではありません。')"><span class="cnum">③</span><span>ただ人を助け、忘れずに、ひたすら植え付け続けよ。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「忘るること勿れ」は忘れてはいけない、の意。忘れてもよいとは言っていません。')"><span class="cnum">④</span><span>時に手を加え、時に忘れ、少しずつ育てよ。</span></button>
+      </div>
+      <div class="feedback" id="f_q6"></div>
+    </div>
+    <div class="question-zone" id="q7" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問７　本文全体の主旨</div>
+      <div class="q-text">この文章（伝習録）の内容の説明として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q7',false,'樹木の話は比喩として使われています。実際の農業について論じているのではありません。')"><span class="cnum">①</span><span>樹木の栽培方法と農業の大切さについて論じた文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'詩文の学習を勧めているのではなく、詩文などの「外好」は捨てるべきだと説いています。')"><span class="cnum">②</span><span>詩文などの多様な学問を積極的に学ぶことの大切さを説いた文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',true,'正解！樹木の栽培（根を培う・繁枝を刪る）を比喩として、徳を育て善への志に専念することの重要性を説いた文章です。')"><span class="cnum">③</span><span>樹木の栽培を比喩として、徳を育て善への志に専念することの大切さを説いた文章。</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'本文は内面の修養（徳・志）の話。師への礼儀や人間関係の話ではありません。')"><span class="cnum">④</span><span>師匠への礼儀と人間関係を大切にすることの重要性を論じた文章。</span></button>
+      </div>
+      <div class="feedback" id="f_q7"></div>
+    </div>
+    <div class="sum-zone" id="s3">
+      <button class="sum-btn" onclick="toggleSum('sc3',this)"><span>📖</span> 全体まとめを見る</button>
+      <div class="sum-content" id="sc3">
+        <h4>全体まとめ</h4>
+        <p>「<strong style="color:var(--gold-light)">勿助・勿忘・只だ管に培植せよ</strong>」＝むやみに急かさず・忘れず・ひたすら育てる。この三つが志を育てる心構え。</p>
+        <p><strong style="color:var(--gold-light)">比喩の構造：</strong>「根を培ふ」→徳の根本を養う ／「繁枝を刪る」→外好を去る ／「芽を抽く」→善への志が芽生える ／「培植」→志を養い続ける</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <h2>✨ 全問完了</h2>
+  <div class="score" id="sc">―<span> / 7問</span></div>
+  <p id="sm"></p>
+  <p style="margin-top:16px;font-size:.82rem;color:#a8b4cc;">「樹木と徳の比喩」の構造をまとめで整理しておきましょう。</p>
+</div>
+</div>
+<script>
+window._TOTAL=7;
+window._SEC={q1:1,q2:1,q3:2,q4:2,q5:3,q6:3,q7:3};
+window._NEXT={q1:'q2',q2:null,q3:'q4',q4:null,q5:'q6',q6:'q7',q7:null};
+window._STOT={1:2,2:2,3:3};
+function ans(btn,id,ok,msg){
+  if(window._used&&window._used[id])return;
+  if(!window._used)window._used={};
+  window._used[id]=true;
+  document.getElementById(id).querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById('f_'+id);
+  fb.textContent=(ok?'✓ 正解！　':'✗ 不正解。　')+msg;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  if(ok)window._correct=(window._correct||0)+1;
+  window._done=(window._done||0)+1;
+  const s=window._SEC[id];
+  window._sdone=window._sdone||{};
+  window._sdone[s]=(window._sdone[s]||0)+1;
+  document.getElementById('p'+s).style.width=(window._sdone[s]/window._STOT[s]*100)+'%';
+  if(!(window._sopen&&window._sopen[s])){
+    if(!window._sopen)window._sopen={};
+    window._sopen[s]=true;
+    document.getElementById('s'+s).classList.add('unlocked');
+  }
+  const nxt=window._NEXT[id];
+  if(nxt){const nz=document.getElementById(nxt);nz.style.opacity='1';nz.style.pointerEvents='auto';}
+  if(window._done===window._TOTAL)setTimeout(showFin,600);
+}
+function showFin(){
+  const el=document.getElementById('fin');el.classList.add('show');
+  document.getElementById('sc').innerHTML=(window._correct||0)+'<span> / '+window._TOTAL+'問</span>';
+  const p=Math.round((window._correct||0)/window._TOTAL*100);
+  document.getElementById('sm').textContent=
+    p>=86?'素晴らしい！ 書き下し文の読解がとてもよくできています。':
+    p>=57?'よく頑張りました。間違えた問題の解説をもう一度読み返してみましょう。':
+    '難しい問題がありましたね。書き下し文と語注を照らし合わせながらもう一度取り組んでみましょう。';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function toggleSum(id,btn){
+  const el=document.getElementById(id);
+  const show=el.classList.toggle('show');
+  btn.childNodes[1].textContent=show?' 閉じる':' まとめを見る';
+}
+</script>
+</body>
+</html>

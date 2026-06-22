@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古文攻略② 枕草子｜江原予備校</title>
+<style>
+  :root {
+    --cream:#fdf8f0;--navy:#001858;--navy-mid:#1a3a6b;
+    --gold:#e8a020;--gold-light:#fef6e4;
+    --green:#16a34a;--green-light:#dcfce7;
+    --brown:#92400e;--brown-light:#fef3c7;
+    --red:#dc2626;--red-light:#fee2e2;
+    --purple:#7c4dbd;--purple-light:#f0eafb;
+    --teal:#1b8a8a;--teal-light:#e6f7f7;
+    --pink:#f582ae;--pink-light:#fde8f2;
+    --gray:#6b7280;--gray-light:#f3f4f6;
+    --radius:14px;--shadow:0 2px 12px rgba(0,24,88,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;color:var(--navy);min-height:100vh;}
+  header{background:var(--navy);color:white;padding:18px 24px;display:flex;align-items:center;gap:14px;}
+  .header-badge{background:var(--pink);color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em;white-space:nowrap;}
+  header h1{font-size:17px;font-weight:700;}
+  main{max-width:820px;margin:0 auto;padding:24px 14px 80px;}
+  .phase-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .phase-badge{background:var(--pink);color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;}
+  .phase-note{font-size:13px;color:var(--gray);}
+
+  .intro-card{background:white;border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow);border-left:5px solid var(--pink);}
+  .intro-card .label{font-size:11px;color:var(--pink);font-weight:700;letter-spacing:.08em;margin-bottom:5px;}
+  .intro-card p{font-size:14px;line-height:1.8;color:var(--navy-mid);}
+
+  .hint-box{background:var(--navy);color:white;border-radius:var(--radius);padding:16px 20px;margin-bottom:22px;font-size:13.5px;line-height:1.8;}
+  .hint-box .ht-label{font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:.06em;margin-bottom:8px;}
+  .hint-box ol{padding-left:18px;}
+  .hint-box li{margin-bottom:4px;}
+
+  /* 資料ボタン */
+  .shiryo-btn{display:inline-flex;align-items:center;gap:7px;background:var(--teal);color:white;border:none;border-radius:20px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;margin-bottom:18px;}
+  .shiryo-btn:hover{background:var(--teal-light);color:var(--teal);}
+  .shiryo-panel{display:none;background:var(--teal-light);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;border-left:5px solid var(--teal);animation:slideDown .22s ease;}
+  .shiryo-panel.open{display:block;}
+  .shiryo-panel .sp-title{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:10px;}
+  .shiryo-panel p{font-size:14px;line-height:1.85;color:var(--navy-mid);}
+  .shiryo-panel .sp-person{margin-top:10px;font-size:13px;color:var(--navy-mid);}
+  .shiryo-panel .sp-person span{font-weight:700;color:var(--navy);}
+
+  /* ポップアップ */
+  .popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,24,88,.35);z-index:2000;align-items:center;justify-content:center;padding:16px;}
+  .popup-overlay.open{display:flex;animation:fadeIn .18s ease;}
+  .popup-box{background:white;border-radius:16px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,24,88,.25);animation:popIn .2s ease;overflow:hidden;}
+  .popup-header{padding:13px 18px 11px;display:flex;align-items:center;justify-content:space-between;}
+  .popup-header.kw-header{background:var(--brown-light);}
+  .popup-header.ch-header{background:var(--purple-light);}
+  .popup-word{font-size:17px;font-weight:800;}
+  .kw-header .popup-word{color:var(--brown);}
+  .ch-header .popup-word{color:var(--purple);}
+  .popup-close{background:rgba(0,0,0,.08);border:none;width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .popup-body{padding:14px 18px 18px;}
+  .popup-mean{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.6;}
+  .popup-context{font-size:13.5px;color:var(--navy-mid);line-height:1.75;background:var(--gray-light);border-radius:8px;padding:10px 12px;}
+  .popup-context .ctx-label{font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px;}
+
+  /* 文ブロック */
+  .sentences{display:flex;flex-direction:column;gap:24px;margin-bottom:28px;}
+  .sentence-block{background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .sb-num{background:var(--pink);color:white;font-size:11px;font-weight:700;padding:4px 14px;display:inline-block;}
+  .sb-season{background:var(--pink-light);color:var(--pink);font-size:11px;font-weight:700;padding:4px 12px;display:inline-block;margin-left:4px;border-radius:10px;}
+
+  .kobun-text{font-size:20px;font-weight:700;line-height:2.2;color:var(--navy);padding:18px 20px 10px;}
+  .kw{border-bottom:2px dotted var(--brown);cursor:pointer;position:relative;color:var(--brown);font-weight:800;transition:background .15s;}
+  .kw:hover{background:var(--brown-light);border-radius:3px;}
+  .chuu{color:var(--purple);font-size:13px;font-weight:700;cursor:pointer;vertical-align:super;margin-left:1px;border-bottom:1px dotted var(--purple);}
+  .chuu:hover{background:var(--purple-light);border-radius:3px;}
+
+  /* アクションボタン */
+  .action-row{display:flex;gap:8px;padding:0 18px 14px;flex-wrap:wrap;}
+  .action-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;}
+  .btn-shugo{background:var(--green-light);color:var(--green);}
+  .btn-shugo:hover{background:var(--green);color:white;}
+  .btn-imi{background:var(--gold-light);color:var(--gold);}
+  .btn-imi:hover{background:var(--gold);color:white;}
+
+  /* 主語パネル */
+  .shugo-panel{display:none;margin:0 18px 12px;background:var(--green-light);border-radius:10px;padding:12px 16px;border-left:4px solid var(--green);animation:slideDown .2s ease;}
+  .shugo-panel.open{display:block;}
+  .shugo-panel p{font-size:14px;line-height:1.8;color:#1a5c35;}
+  .shugo-panel strong{font-size:15px;}
+
+  /* 意味問題 */
+  .imi-panel{display:none;margin:0 18px 16px;animation:slideDown .2s ease;}
+  .imi-panel.open{display:block;}
+  .imi-q{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.7;padding:10px 14px;background:var(--gold-light);border-radius:8px;border-left:3px solid var(--gold);}
+  .imi-choices{display:flex;flex-direction:column;gap:7px;}
+  .imi-btn{display:flex;align-items:center;gap:9px;background:var(--gray-light);border:2px solid transparent;border-radius:9px;padding:11px 14px;cursor:pointer;text-align:left;font-family:inherit;font-size:14px;line-height:1.6;color:var(--navy);transition:all .18s;width:100%;}
+  .imi-btn:hover:not(:disabled){border-color:var(--gold);background:var(--gold-light);}
+  .imi-num{font-weight:700;font-size:12px;color:var(--gray);background:white;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .imi-btn.correct{background:var(--green-light);border-color:var(--green);}
+  .imi-btn.correct .imi-num{background:var(--green);color:white;}
+  .imi-btn.wrong{background:var(--red-light);border-color:var(--red);color:#999;text-decoration:line-through;}
+  .imi-btn.wrong .imi-num{background:var(--red);color:white;}
+  .imi-btn:disabled{cursor:default;}
+  .imi-feedback{display:none;margin-top:10px;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.8;}
+  .imi-feedback.show{display:block;animation:slideDown .2s ease;}
+  .imi-feedback.ok{background:var(--green-light);border-left:4px solid var(--green);color:#1a5c35;}
+  .imi-feedback.ng{background:var(--red-light);border-left:4px solid var(--red);color:#7a2020;}
+  .imi-fb-t{font-weight:800;margin-bottom:4px;font-size:14px;}
+
+  /* 要点 */
+  .yoten-section{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:28px;}
+  .yoten-title{font-size:14px;font-weight:800;color:var(--pink);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--pink-light);}
+  .yoten-list{display:flex;flex-direction:column;gap:10px;}
+  .yoten-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--gray-light);border-radius:9px;animation:slideDown .3s ease;}
+  .yoten-num{background:var(--pink);color:white;font-size:11px;font-weight:700;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .yoten-text{font-size:13.5px;color:var(--navy-mid);line-height:1.7;}
+  .yoten-empty{font-size:13px;color:var(--gray);font-style:italic;}
+
+  /* 完了ナビ */
+  .completion-nav{display:none;background:white;border-radius:var(--radius);padding:26px 22px;margin-top:24px;box-shadow:var(--shadow);text-align:center;animation:slideDown .4s ease;}
+  .completion-nav.show{display:block;}
+  .comp-emoji{font-size:2.4em;margin-bottom:8px;}
+  .comp-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:5px;}
+  .comp-sub{font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7;}
+  .nav-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:50px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .18s;}
+  .nav-btn-next{background:var(--navy);color:white;}
+  .nav-btn-next:hover{background:var(--navy-mid);transform:translateY(-1px);}
+  .nav-btn-index{background:white;color:var(--navy);border:2px solid #d0d5e0;}
+  .nav-btn-index:hover{border-color:var(--navy);transform:translateY(-1px);}
+
+  canvas#confetti{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:none;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+  <div class="popup-box" id="popupBox">
+    <div class="popup-header" id="popupHeader">
+      <span class="popup-word" id="popupWord"></span>
+      <button class="popup-close" onclick="closePopupBtn()">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="popup-mean" id="popupMean"></div>
+      <div class="popup-context">
+        <div class="ctx-label" id="popupCtxLabel"></div>
+        <div id="popupCtx"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <span class="header-badge">古文攻略</span>
+  <h1>古文攻略 ② ── 枕草子「春はあけぼの」</h1>
+</header>
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">古文攻略シリーズ</span>
+    <span class="phase-note">清少納言の感性を1文ずつ読み解いていきましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">この教材の使い方</div>
+    <p>
+      📖 <strong>茶色の単語</strong>をタップ → 意味がポップアップで出ます<br>
+      📌 <strong>（注○）</strong>をタップ → 脚注がポップアップで出ます<br>
+      👤 <strong>「主語の確認」</strong>ボタン → この文の主語がわかります<br>
+      📜 <strong>「資料を読む」</strong>ボタン → 場面の説明が読めます<br>
+      ✏️ <strong>「この文の意味は？」</strong>ボタン → 4択問題に挑戦できます
+    </p>
+  </div>
+
+  <div class="hint-box">
+    <div class="ht-label">🎯 古文攻略の3つのヒント</div>
+    <ol>
+      <li>まず<strong>資料（リード文）</strong>を読んで、作品と作者を把握しよう</li>
+      <li>枕草子は<strong>「〜は〇〇」という断定の文体</strong>が特徴。清少納言の感想を読み取ろう</li>
+      <li><strong>「をかし」「あはれ」</strong>などの感情語に注目しよう</li>
+    </ol>
+  </div>
+
+  <button class="shiryo-btn" onclick="toggleShiryo()">📜 資料を読む（作品・作者の説明）</button>
+  <div class="shiryo-panel" id="shiryoPanel">
+    <div class="sp-title">📜 資料（作品・作者の説明）</div>
+    <p>
+      <strong>『枕草子（まくらのそうし）』</strong>は平安時代中期（約1000年前）に<strong>清少納言（せいしょうなごん）</strong>が書いたエッセイ（随筆）です。<br><br>
+      「春はあけぼの」で始まるこの章は、四季それぞれの「趣深い（をかし）」時間帯や情景を描いた、日本文学を代表する名文です。<br><br>
+      清少納言は一条天皇の中宮（皇后）・<strong>定子（ていし）</strong>に仕えた女房（宮廷の女性)で、鋭い感性と豊かな知識を持つ人物として知られています。
+    </p>
+    <div class="sp-person">
+      <span>作者：</span>清少納言（せいしょうなごん）── 平安時代の女流作家。宮廷で働く女性。<br>
+      <span>文体：</span>「〜は〇〇（がよい）」という省略の多い簡潔な文体が特徴。
+    </div>
+  </div>
+
+  <div class="sentences">
+
+    <!-- 文1 春 -->
+    <div class="sentence-block" id="sb1">
+      <span class="sb-num">第 1 文</span>
+      <span class="sb-season">🌸 春</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('春はあけぼの','春は夜明けがよい','枕草子の書き出しの一文。「は」は主題を示す助詞。「あけぼの」＝夜明け・明け方のこと。「春は夜明けの頃（がよい）」という意味で、「よい・趣深い」は省略されています。')">春は<wbr>あけぼの</span>。
+        <span class="kw" onclick="showKw('やうやう白くなりゆく','だんだんと白くなっていく','「やうやう」は「だんだんと・しだいに」（au→ou のルールで「ようよう」と読む）。「白くなりゆく」は夜明けに空が少しずつ明るくなる様子を表します。')">やうやう<wbr>白くなりゆく</span>、
+        <span class="kw" onclick="showKw('山ぎは','山の稜線・山際','「山ぎは（山際）」は、山と空の境目のこと。地平線の山のシルエットが見えるあたりを指します。')">山ぎは</span>
+        <span class="kw" onclick="showKw('すこしあかりて','少し明るくなって','夜明けの空が山の稜線のあたりから少しずつ明るくなってきた様子。「あかり」は「明るくなる」という動詞です。')">すこしあかりて</span>、
+        <span class="kw" onclick="showKw('むらさきだちたる雲の','紫がかった雲が','「むらさきだつ」は「紫色を帯びる・紫がかる」という意味。夜明けの空に浮かぶ美しい紫色の雲を描写しています。')">むらさきだちたる<wbr>雲の</span>、
+        <span class="kw" onclick="showKw('細くたなびきたる','細くたなびいている','「たなびく」は「横に長く薄くたなびく・水平に広がる」という意味。雲が細く横に伸びている様子を表します。')">細く<wbr>たなびきたる</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo1')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi1')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo1">
+        <p>この文には明確な主語（人物）はありません。<strong>「春の夜明けの情景」そのもの</strong>が主題です。<br>
+        清少納言が「春は夜明け（がよい）」と述べ、その美しさを描写しています。<strong>「よい」という言葉は省略</strong>されているので注意しましょう。</p>
+      </div>
+      <div class="imi-panel" id="imi1">
+        <div class="imi-q">第1文「春はあけぼの。やうやう白くなりゆく山ぎは、すこしあかりて、むらさきだちたる雲の細くたなびきたる。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic1">
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">①</span>春は夜がよい。夜の山が白く光り、紫色の雲が厚く立ちこめている。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">②</span>春は正午がよい。山の頂上が白く輝き、紫の雲が大きく広がっている。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">③</span>春の夜明けは怖い。山の向こうから紫色の雲が押し寄せてくる。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,true)"><span class="imi-num">④</span>春は夜明けがよい。だんだんと白くなっていく山際が少し明るくなって、紫がかった雲が細くたなびいている。</button>
+        </div>
+        <div class="imi-feedback" id="if1"></div>
+      </div>
+    </div>
+
+    <!-- 文2 夏 -->
+    <div class="sentence-block" id="sb2">
+      <span class="sb-num">第 2 文</span>
+      <span class="sb-season">☀️ 夏</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('夏は夜','夏は夜がよい','「夏は夜（がよい）」。春と同じく「よい・趣深い」が省略されています。清少納言は夏の夜の美しさを最もよいと感じていました。')">夏は夜</span>。
+        <span class="kw" onclick="showKw('月のころはさらなり','月の出ている頃は言うまでもない','「さらなり」は「言うまでもない・当然だ」という意味。月明かりの夜の美しさは当然のこととして、さらにその先を描写します。')">月のころは<wbr>さらなり</span>、
+        <span class="kw" onclick="showKw('やみもなほ','暗い夜もやはり（よい）','「やみ（闇）」は月のない暗い夜のこと。「なほ」は「やはり・それでも」という意味。月のない暗い夜でも趣があると述べています。')">やみも<wbr>なほ</span>、
+        <span class="kw" onclick="showKw('ほたるの多く飛びちがひたる','蛍がたくさん飛び交っているのも','「飛びちがふ」は「飛び交う・あちこちに飛ぶ」という意味。蛍が夜の闇の中を飛び交う美しい情景です。')">ほたるの<wbr>多く<wbr>飛びちがひたる</wbr></span>、
+        また、一つ二つなど、
+        <span class="kw" onclick="showKw('ほのかにうち光りて行くもをかし','かすかに光って飛んでいくのも趣深い','「ほのか」は「かすか・うっすら」という意味。「をかし」は「趣深い・おもしろい・美しい」という枕草子の最重要語。清少納言の感想を表しています。')">ほのかにうち<wbr>光りて<wbr>行くも<wbr>をかし</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo2')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi2')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo2">
+        <p>この文には人物の主語はありません。<strong>「夏の夜の情景」</strong>が主題です。<br>
+        「ほたるの飛びちがひたる」「ほのかに光りて行くも」のように、<strong>蛍の動きが主語</strong>です。<br>
+        文末の「をかし」は清少納言の感想（趣深い・よい）を表します。</p>
+      </div>
+      <div class="imi-panel" id="imi2">
+        <div class="imi-q">第2文の「やみもなほ、ほたるの多く飛びちがひたる」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic2">
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,true)"><span class="imi-num">①</span>暗い夜でもやはり（よい）、蛍がたくさん飛び交っているのも（趣深い）。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">②</span>暗い夜は怖いので、蛍がたくさん飛んでいてもよくない。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">③</span>暗い夜になると、蛍が一匹も飛ばなくなってしまう。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">④</span>暗い夜は月が出ているときより美しく、蛍が空高く飛んでいる。</button>
+        </div>
+        <div class="imi-feedback" id="if2"></div>
+      </div>
+    </div>
+
+    <!-- 文3 秋 -->
+    <div class="sentence-block" id="sb3">
+      <span class="sb-num">第 3 文</span>
+      <span class="sb-season">🍂 秋</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('秋は夕暮れ','秋は夕暮れがよい','「秋は夕暮れ（がよい）」。「よい」は省略。清少納言は秋の夕暮れの情景を最もよいと感じていました。')">秋は夕暮れ</span>。
+        <span class="kw" onclick="showKw('夕日のさして山の端いと近うなりたるに','夕日が差して山の端にとても近くなったところに','「夕日のさす」は夕日が水平に差し込む様子。「山の端（やまのは）」は山の稜線・山の縁のこと。夕日が沈む直前の情景です。')">夕日のさして<wbr>山の端<wbr>いと近うなりたるに</span>、
+        <span class="kw" onclick="showKw('からすのねどころへ行くとて','烏が寝床へ帰ろうとして','「ねどころ」は「寝床・巣」のこと。烏（カラス）が夕方に巣に帰る様子。「〜とて」は「〜しようとして」という意味。')">からすの<wbr>ねどころへ<wbr>行くとて</span>、
+        <span class="kw" onclick="showKw('三つ四つ、二つ三つなど飛び急ぐさへあはれなり','三羽四羽、二羽三羽と飛び急ぐ様子までしみじみとする','「飛び急ぐ」は急いで飛んでいく様子。「さへ」は「〜までも」という意味。「あはれなり」は「しみじみとした感動がある・趣深い」という枕草子のもう一つの重要語。')">三つ四つ、<wbr>二つ三つなど<wbr>飛び急ぐ<wbr>さへあはれなり</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo3')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi3')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo3">
+        <p>「からすのねどころへ行くとて〜飛び急ぐ」の主語は <strong>「からす（烏）」</strong> です。<br>
+        「あはれなり」は清少納言の感想です。夕暮れに巣へ帰る烏の姿に、しみじみとした感動（あはれ）を覚えています。<br>
+        <strong>「をかし」が知的な趣、「あはれ」がしみじみとした感動</strong>、と使い分けています。</p>
+      </div>
+      <div class="imi-panel" id="imi3">
+        <div class="imi-q">第3文の「三つ四つ、二つ三つなど飛び急ぐさへあはれなり」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic3">
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">①</span>三羽四羽の烏が急いで飛んでいるのは恐ろしい。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">②</span>三羽四羽の烏が急いで飛んでいるのはうるさくて嫌だ。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,true)"><span class="imi-num">③</span>三羽四羽、二羽三羽と（巣へ）急いで飛んでいく様子までもがしみじみと趣深い。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">④</span>三羽四羽の烏がゆっくりと飛んでいるのが美しい。</button>
+        </div>
+        <div class="imi-feedback" id="if3"></div>
+      </div>
+    </div>
+
+    <!-- 文4 冬 -->
+    <div class="sentence-block" id="sb4">
+      <span class="sb-num">第 4 文</span>
+      <span class="sb-season">❄️ 冬</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('冬はつとめて','冬は早朝がよい','「つとめて」は「早朝・朝早く」という意味。「つとに」とも言います。冬の早朝の情景を描きます。')">冬はつとめて</span>。
+        <span class="kw" onclick="showKw('雪の降りたるはいふべきにもあらず','雪の降った朝は言うまでもない','「いふべきにもあらず」は「言うまでもない・もちろんよい」という意味。雪の美しさは当然として、さらに続けます。')">雪の降りたるは<wbr>いふべきにもあらず</span>、
+        <span class="kw" onclick="showKw('霜のいとしろきも','霜がたいそう白いのも','「霜（しも）」は冬の朝に地面や草に降りる白いもの。「いと」は「たいそう・とても」の意味。霜で真っ白になった朝の情景です。')">霜のいと<wbr>しろきも</span>、また、
+        <span class="kw" onclick="showKw('さらでも','そうでなくても','「さらでも」は「そうでなくても・そうでない場合でも」という意味。雪も霜もない朝でも、という流れです。')">さらでも</span>、
+        <span class="kw" onclick="showKw('いと寒きに','たいそう寒い時に','「いと」はたいそう・とても。冬の厳しい寒さを表します。')">いと寒きに</span>、
+        <span class="kw" onclick="showKw('火などいそぎおこして','火などを急いでおこして','「おこす」は「火を起こす・燃やす」という意味。寒い朝に急いで炭火をおこす様子。')">火などいそぎ<wbr>おこして</span>、
+        <span class="kw" onclick="showKw('炭もて渡るもいとつきづきし','炭を持って運ぶのもたいそう似つかわしい','「つきづきし」は「似合っている・ふさわしい・いかにもその通りだ」という意味。冬の朝に炭を運ぶ様子が冬らしくてよいと感じています。')">炭もて渡るも<wbr>いとつきづきし</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo4')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi4')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo4">
+        <p>「火などいそぎおこして」「炭もて渡るも」の主語は <strong>宮廷で働く人（女房など）</strong> です。<br>
+        「雪の降りたるは」の主語は <strong>「雪」</strong>、「霜のいとしろきも」の主語は <strong>「霜」</strong> です。<br>
+        「つきづきし」は「冬らしくてよい・似合っている」という清少納言の感想です。</p>
+      </div>
+      <div class="imi-panel" id="imi4">
+        <div class="imi-q">第4文の「炭もて渡るもいとつきづきし」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic4">
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">①</span>炭を持って歩くのはたいそう危険だ。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,true)"><span class="imi-num">②</span>炭を持って運ぶのもたいそう冬らしくて似合っている（よい）。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">③</span>炭を持って歩くのはたいそう大変でつらい。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">④</span>炭を持って歩く人がたいそう多くてにぎやかだ。</button>
+        </div>
+        <div class="imi-feedback" id="if4"></div>
+      </div>
+    </div>
+
+    <!-- 文5 昼はつきづきしくもなく -->
+    <div class="sentence-block" id="sb5">
+      <span class="sb-num">第 5 文</span>
+      <span class="sb-season">☀️ 昼</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('昼になりて','昼になって','春・夏・秋・冬の各時間帯を描いてきた後、「昼」については肯定的でない評価を述べます。')">昼になりて</span>、
+        <span class="kw" onclick="showKw('ぬるくゆるびもていけば','（寒さが）ゆるんでいくと','「ぬるく」は「なまぬるい・温くなる」、「ゆるぶ」は「ゆるむ・和らぐ」という意味。冬の厳しい寒さが昼になって和らいでいく様子。')">ぬるくゆるびも<wbr>ていけば</span>、
+        <span class="kw" onclick="showKw('火桶の火も白き灰がちになりてわろし','火桶の火も白い灰だらけになってよくない','「火桶（ひおけ）」は炭火を入れる丸い容器。昼になって炭が燃え尽きて白い灰だらけになった様子。「わろし」は「よくない・よくない状態だ」という意味。')">火桶の火も<wbr>白き灰がちになりて<wbr>わろし</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo5')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi5')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo5">
+        <p>「ぬるくゆるびもていけば」の主語は <strong>「寒さ・気温」</strong> です。<br>
+        「火桶の火も白き灰がちになりて」の主語は <strong>「火桶の火」</strong> です。<br>
+        文末の「<strong>わろし</strong>」は「よくない・好ましくない」という清少納言の<strong>否定的な評価</strong>です。四季の中で唯一否定的に描かれる場面です。</p>
+      </div>
+      <div class="imi-panel" id="imi5">
+        <div class="imi-q">第5文「火桶の火も白き灰がちになりてわろし」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic5">
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">①</span>火桶の白い灰がたいそう美しくてよい。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">②</span>火桶の白い灰を見て、清少納言はしみじみとした気持ちになった。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">③</span>火桶の火が白く輝いているのがたいそう明るい。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,true)"><span class="imi-num">④</span>火桶の火も白い灰だらけになってしまってよくない（興ざめだ）。</button>
+        </div>
+        <div class="imi-feedback" id="if5"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 要点積み上げ -->
+  <div class="yoten-section">
+    <div class="yoten-title">📋 ここまでの要点（問題を解くと積み上がります）</div>
+    <div class="yoten-list" id="yotenList">
+      <div class="yoten-empty" id="yotenEmpty">まだ問題を解いていません。問題に答えると要点が表示されます。</div>
+    </div>
+  </div>
+
+  <!-- 完了ナビ -->
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">古文攻略② クリアです！</div>
+    <div class="comp-sub">枕草子「春はあけぼの」の5文を読み解きました。<br>「をかし」「あはれ」「わろし」など清少納言の感情語に注目できましたか？</div>
+    <div class="nav-btn-row">
+      <a href="kobun_kouryaku_03.html" class="nav-btn nav-btn-next">次の単元へ ▶ 古文攻略③</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+<script>
+function toggleShiryo() {
+  document.getElementById('shiryoPanel').classList.toggle('open');
+}
+function showKw(word, mean, ctx) {
+  document.getElementById('popupHeader').className = 'popup-header kw-header';
+  document.getElementById('popupWord').textContent = word;
+  document.getElementById('popupMean').textContent = mean;
+  document.getElementById('popupCtxLabel').textContent = 'この文での意味・使われ方';
+  document.getElementById('popupCtx').textContent = ctx;
+  document.getElementById('popupOverlay').classList.add('open');
+}
+function showChuu(num, word, desc) {
+  document.getElementById('popupHeader').className = 'popup-header ch-header';
+  document.getElementById('popupWord').textContent = `（注${num}）${word}`;
+  document.getElementById('popupMean').textContent = '脚注（語句の説明）';
+  document.getElementById('popupCtxLabel').textContent = '説明';
+  document.getElementById('popupCtx').textContent = desc;
+  document.getElementById('popupOverlay').classList.add('open');
+}
+function closePopup(e) {
+  if (e.target === document.getElementById('popupOverlay'))
+    document.getElementById('popupOverlay').classList.remove('open');
+}
+function closePopupBtn() {
+  document.getElementById('popupOverlay').classList.remove('open');
+}
+const shugoState = {};
+function toggleShugo(id) {
+  shugoState[id] = !shugoState[id];
+  document.getElementById(id).classList.toggle('open', shugoState[id]);
+}
+const imiState = {};
+function toggleImi(id) {
+  imiState[id] = !imiState[id];
+  document.getElementById(id).classList.toggle('open', imiState[id]);
+}
+
+const YOTEN = [
+  '第1文（春）：春は夜明けがよい。「やうやう」＝だんだんと。紫がかった雲が細くたなびく夜明けの情景（「をかし」の美の世界）',
+  '第2文（夏）：夏は夜がよい。月の夜はもちろん、暗い夜の蛍の光も趣深い（「をかし」）。「さらなり」＝言うまでもない',
+  '第3文（秋）：秋は夕暮れがよい。巣に帰る烏が二羽三羽と飛び急ぐ様子までしみじみとする（「あはれ」）',
+  '第4文（冬）：冬は早朝がよい。雪・霜はもちろん、火を急いでおこして炭を運ぶ様子も冬らしくてよい（「つきづきし」＝似合っている）',
+  '第5文（昼）：昼になって寒さがゆるみ、火桶の灰が白くなるのはよくない（「わろし」）。四季の中で唯一否定的な評価',
+];
+
+const answered = {};
+let answeredCount = 0;
+const totalQ = 5;
+
+const imiFB = {
+  if1: {ok:'「春はあけぼの」は「春は夜明け（がよい）」という意味です。「やうやう」は「だんだんと（ようよう）」、「むらさきだちたる」は「紫がかった」、「たなびきたる」は「たなびいている」という意味です。夜明けの美しい情景を描いています。', ng:'正解は②です。「あけぼの」は「夜明け・明け方」、「やうやう」は「だんだんと」という意味です。「よい」という言葉は省略されています。'},
+  if2: {ok:'「やみもなほ」は「暗い夜でもやはり（よい）」という意味です。「飛びちがひたる」は「飛び交っている」、「をかし」は「趣深い・よい」という清少納言の感想です。月のない夜の蛍の美しさを述べています。', ng:'正解は②です。「なほ」は「やはり・それでも」、「をかし」は「趣深い・よい」という意味です。清少納言は暗い夜の蛍の光も美しいと感じています。'},
+  if3: {ok:'「飛び急ぐ」は「急いで飛んでいく」、「さへ」は「〜までも」、「あはれなり」は「しみじみとした感動がある・趣深い」という意味です。巣に帰る烏の姿にしみじみとした趣を感じています。', ng:'正解は③です。「さへ」は「〜までも」、「あはれなり」は「しみじみとした感動・趣深い」という意味です。清少納言は烏が飛び急ぐ様子も美しいと感じています。'},
+  if4: {ok:'「つきづきし」は「似合っている・ふさわしい・いかにも冬らしい」という意味です。厳しい寒さの中で炭を急いで運ぶ様子が、冬の早朝らしくてよいと清少納言は感じています。', ng:'正解は③です。「つきづきし」は「似合っている・冬らしくてよい」という意味の形容詞です。清少納言は冬の朝の炭運びの姿を肯定的に描いています。'},
+  if5: {ok:'「わろし」は「よくない・感心しない・興ざめだ」という意味です。昼になって寒さがゆるみ、炭が燃え尽きて白い灰だらけになった火桶を見て、清少納言は「よくない」と感じています。四季の中で唯一否定的な表現が使われています。', ng:'正解は③です。「わろし」は「よくない・興ざめだ」という意味です。「よろし（よい）」と混同しないよう注意しましょう。清少納言は火桶の灰を見て否定的な評価をしています。'},
+};
+
+function imiAns(choicesId, fbId, btn, isCorrect) {
+  if (answered[choicesId]) return;
+  answered[choicesId] = true;
+  document.querySelectorAll(`#${choicesId} .imi-btn`).forEach(b => b.disabled = true);
+  const fb = document.getElementById(fbId);
+  const d = imiFB[fbId];
+  if (isCorrect) {
+    btn.classList.add('correct');
+    launchConfetti();
+    fb.className = 'imi-feedback show ok';
+    fb.innerHTML = `<div class="imi-fb-t">✅ 正解！</div>${d.ok}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll(`#${choicesId} .imi-btn`).forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(',true,')) b.classList.add('correct');
+    });
+    fb.className = 'imi-feedback show ng';
+    fb.innerHTML = `<div class="imi-fb-t">惜しい、確認してみましょう。</div>${d.ng}`;
+  }
+  const qNum = parseInt(choicesId.replace('ic','')) - 1;
+  addYoten(qNum);
+  answeredCount++;
+  if (answeredCount >= totalQ) {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      nav.classList.add('show');
+      nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1400);
+  }
+}
+
+function addYoten(idx) {
+  const list = document.getElementById('yotenList');
+  const empty = document.getElementById('yotenEmpty');
+  if (empty) empty.remove();
+  const item = document.createElement('div');
+  item.className = 'yoten-item';
+  item.innerHTML = `<div class="yoten-num">${idx+1}</div><div class="yoten-text">${YOTEN[idx]}</div>`;
+  list.appendChild(item);
+}
+
+function launchConfetti() {
+  const cvs = document.getElementById('confetti');
+  cvs.width = innerWidth; cvs.height = innerHeight; cvs.style.display = 'block';
+  const ctx = cvs.getContext('2d');
+  const parts = Array.from({length:100}, () => ({
+    x:Math.random()*innerWidth, y:-10,
+    vx:(Math.random()-.5)*5, vy:Math.random()*3.5+2,
+    r:Math.random()*6+3,
+    color:['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+    rot:Math.random()*360, rv:(Math.random()-.5)*8,
+  }));
+  let frame;
+  (function draw() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    parts.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rv;
+    });
+    if(parts.some(p=>p.y<innerHeight)) frame=requestAnimationFrame(draw);
+    else cvs.style.display='none';
+  })();
+  setTimeout(()=>{cvs.style.display='none'; cancelAnimationFrame(frame);},3000);
+}
+</script>
+</body>
+</html>

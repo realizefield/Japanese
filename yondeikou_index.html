@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0055)file:///C:/Users/tinbu/Downloads/yondeikou_index_1.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>読んでいこう — 国語読解プログラム</title>
 <style>
@@ -101,32 +101,57 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
 <canvas id="cnf"></canvas>
 <div class="top-header">
   <h1>📖 読んでいこう — 国語読解プログラム</h1>
-  <p>近代文学の創作要約文で段階的に読解力を育てる — 全7回 ＋ 会話文読解</p>
+  <p>高校入試・高認・大学受験 ― 基礎の基礎から使える国語学習プログラム</p>
   <div class="summary-bar">
     <div class="sum-item"><span class="sum-dot sum-dot-a"></span>A 完璧 <span class="sum-count" id="cnt-a">0</span></div>
     <div class="sum-item"><span class="sum-dot sum-dot-b"></span>B 良好 <span class="sum-count" id="cnt-b">0</span></div>
-    <div class="sum-item"><span class="sum-dot sum-dot-c"></span>C 要復習 <span class="sum-count" id="cnt-c">0</span></div>
-    <div class="sum-item"><span class="sum-dot sum-dot-n"></span>未学習 <span class="sum-count" id="cnt-n">0</span></div>
+    <div class="sum-item"><span class="sum-dot sum-dot-c"></span>C 要復習 <span class="sum-count" id="cnt-c">1</span></div>
+    <div class="sum-item"><span class="sum-dot sum-dot-n"></span>未学習 <span class="sum-count" id="cnt-n">38</span></div>
   </div>
 </div>
 <div class="tab-nav">
-  <button class="tnav on" onclick="switchTab('tab-units',this)">📋 全単元</button>
-  <button class="tnav"    onclick="switchTab('tab-record',this)">📊 学習記録</button>
-  <button class="tnav"    onclick="scrollToKaiwa()">💬 会話文読解</button>
+  <button class="tnav on" onclick="switchTab(&#39;tab-units&#39;,this)">📋 全単元</button>
+  <button class="tnav" onclick="switchTab(&#39;tab-record&#39;,this)">📊 学習記録</button>
+  <button class="tnav" onclick="scrollToSection(&#39;grid-basic&#39;)" style="border-color:#2563eb;color:#2563eb">📖 現代文</button>
+  <button class="tnav" onclick="scrollToSection(&#39;grid-kobun-kiso&#39;)" style="border-color:#92400e;color:#92400e">📜 古文</button>
+  <button class="tnav" onclick="scrollToSection(&#39;grid-kanbun-unit&#39;)" style="border-color:#1e3a5f;color:#1e3a5f">漢 漢文</button>
+  <button class="tnav" onclick="scrollToSection(&#39;grid-keigo1&#39;)" style="border-color:#e8a020;color:#e8a020">🎓 敬語</button>
+  <button class="tnav" onclick="scrollToSection(&#39;grid-kaiwa-nyumon&#39;)" style="border-color:#1b8a8a;color:#1b8a8a">💬 会話文</button>
 </div>
 <div class="wrap">
 <div class="tab-sec on" id="tab-units">
   <div class="progress-wrap">
     <div class="progress-lbl">📊 習熟度</div>
     <div class="progress-bar-bg"><div class="progress-bar-fill" id="progFill" style="width:0%"></div></div>
-    <div class="progress-pct" id="progPct">0%　A評価 <span id="progNote">0 / 7</span> 回</div>
+    <div class="progress-pct" id="progPct">0%　A評価 <span id="progNote">0 / 39</span> 回</div>
   </div>
 
   <div class="unit">
     <div class="unit-hd" style="background:linear-gradient(90deg,#1a202c,#2d3748)"><span class="unit-num">🔍</span><span class="unit-title">読解捜査室</span><span class="unit-badge">消去法トレーニング</span></div>
     <div class="unit-body">
       <div class="group-label">🔍 まずはここから — 消去法の基本を身につける</div>
-      <div class="sec-grid" id="grid-sousa"></div>
+      <div class="sec-grid" id="grid-sousa"><div class="sec-card" data-id="s01">
+      <div class="sc-hd">
+        <span class="sc-num">捜査1</span>
+        <span class="sc-title">読解捜査室 — 消去法入門</span>
+        <span class="sc-status studying" id="st-s01">学習中</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>「違う」を見つけて消す練習</li><li>本文に書いていないものを消去する</li><li>2つ消去して3択にする体験</li><li>正解を消そうとすると「合っていそうですよ」と教えてくれる</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-s01">1</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-s01">6/20</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_sousa.html" class="sc-btn" onclick="touch(&#39;s01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;s01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;s01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;s01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
     </div>
   </div>
 
@@ -134,7 +159,49 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
     <div class="unit-hd sec-a"><span class="unit-num">基礎編</span><span class="unit-title">読解の土台をつくる</span><span class="unit-badge">第1回〜第2回</span></div>
     <div class="unit-body">
       <div class="group-label">📖 まず読んでみよう</div>
-      <div class="sec-grid" id="grid-basic"></div>
+      <div class="sec-grid" id="grid-basic"><div class="sec-card" data-id="y01">
+      <div class="sc-hd">
+        <span class="sc-num">第1回</span>
+        <span class="sc-title">坊っちゃん</span>
+        <span class="sc-status" id="st-y01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>負けず嫌いな性格の紹介</li><li>段落ごとの要点を選ぶ</li><li>ポイント・keywordマーカー</li><li>消去法の基本練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_01_v3.html" class="sc-btn" onclick="touch(&#39;y01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="y02">
+      <div class="sc-hd">
+        <span class="sc-num">第2回</span>
+        <span class="sc-title">吾輩は猫である</span>
+        <span class="sc-status" id="st-y02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>猫の目線で世界を観察する</li><li>「しかし」「つまり」の役割</li><li>視点を読み取る練習</li><li>5段落の要点まとめ</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_02_neko.html" class="sc-btn" onclick="touch(&#39;y02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
     </div>
   </div>
 
@@ -142,7 +209,70 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
     <div class="unit-hd sec-b"><span class="unit-num">実践編</span><span class="unit-title">消去法と論理的読解</span><span class="unit-badge">第3回〜第5回</span></div>
     <div class="unit-body">
       <div class="group-label">🔍 消去法の武器を手に入れる</div>
-      <div class="sec-grid" id="grid-practice"></div>
+      <div class="sec-grid" id="grid-practice"><div class="sec-card" data-id="y03">
+      <div class="sc-hd">
+        <span class="sc-num">第3回</span>
+        <span class="sc-title">蜘蛛の糸</span>
+        <span class="sc-status" id="st-y03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>善行→チャンス→利己心→失敗の因果関係</li><li>時間の流れで因果関係を証明する</li><li>「本文に書いていないこと」を見抜く</li><li>極端な言葉を疑う</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_03_kumo.html" class="sc-btn" onclick="touch(&#39;y03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="y04">
+      <div class="sc-hd">
+        <span class="sc-num">第4回</span>
+        <span class="sc-title">夢十夜・運慶</span>
+        <span class="sc-status" id="st-y04">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>「つくる」と「見つけ出す」の対比</li><li>もっともらしいが本文と違う選択肢</li><li>比喩の読み取り</li><li>論理の連鎖を証明する</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y04">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y04">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_04_unkei.html" class="sc-btn" onclick="touch(&#39;y04&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y04&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y04&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y04&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="y05">
+      <div class="sc-hd">
+        <span class="sc-num">第5回</span>
+        <span class="sc-title">トロッコ</span>
+        <span class="sc-status" id="st-y05">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>あこがれ→爽快感→恐怖→安堵の感情の地図</li><li>描写から感情を読む（景色・体の動き）</li><li>光と闇の対比</li><li>「理由のわからない寂しさ」の読み取り</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y05">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y05">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_05_torokko.html" class="sc-btn" onclick="touch(&#39;y05&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y05&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y05&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y05&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
     </div>
   </div>
 
@@ -150,7 +280,500 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
     <div class="unit-hd sec-c"><span class="unit-num">応用編</span><span class="unit-title">心理と価値観を読む</span><span class="unit-badge">第6回〜第7回</span></div>
     <div class="unit-body">
       <div class="group-label">💛 人物の内面を読み取る</div>
-      <div class="sec-grid" id="grid-advanced"></div>
+      <div class="sec-grid" id="grid-advanced"><div class="sec-card" data-id="y06">
+      <div class="sc-hd">
+        <span class="sc-num">第6回</span>
+        <span class="sc-title">走れメロス</span>
+        <span class="sc-status" id="st-y06">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>暴君の背景を知ると行動の意味が変わる</li><li>友を疑った罪悪感と葛藤</li><li>弱さの告白が信頼を深める</li><li>王の変化の論理を証明する</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y06">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y06">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_06_melos.html" class="sc-btn" onclick="touch(&#39;y06&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y06&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y06&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y06&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="y07">
+      <div class="sc-hd">
+        <span class="sc-num">第7回</span>
+        <span class="sc-title">馬鹿一</span>
+        <span class="sc-status" id="st-y07">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>二人の画家の価値観の対立</li><li>「おもしろい」の中にある純粋さ</li><li>葛藤＝感動と認めたくない気持ちの衝突</li><li>作者がどちらの側に立つかを読む</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-y07">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-y07">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/yondeikou_07_bakaichi.html" class="sc-btn" onclick="touch(&#39;y07&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;y07&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;y07&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;y07&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
+    </div>
+  </div>
+
+  <!-- 古文 -->
+  <div class="unit">
+    <div class="unit-hd" style="background:linear-gradient(90deg,#78350f,#92400e)"><span class="unit-num">古文</span><span class="unit-title">古文読解</span><span class="unit-badge">基本アイテム〜古文攻略</span></div>
+    <div class="unit-body">
+      <div class="group-label">📚 基本アイテム — 古文の基礎知識</div>
+      <div class="sec-grid" id="grid-kobun-kiso"><div class="sec-card s-c" data-id="kb01">
+      <div class="sc-hd">
+        <span class="sc-num">Unit1</span>
+        <span class="sc-title">歴史的仮名遣い</span>
+        <span class="sc-status partial" id="st-kb01">📌 要復習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>「ゐ・ゑ・を」「はひふへほ→わいうえお」</li><li>「au→ou」「iu→yuu」の変換</li><li>読み方のルールを身につける</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kb01">1</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kb01">6/22</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_kiso_unit1.html" class="sc-btn" onclick="touch(&#39;kb01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kb01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kb01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c sel" onclick="rate(&#39;kb01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kb02">
+      <div class="sc-hd">
+        <span class="sc-num">Unit2</span>
+        <span class="sc-title">古文単語30語</span>
+        <span class="sc-status" id="st-kb02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>現代語と意味が違う単語を覚える</li><li>「いとをかし」「あはれ」など頻出語</li><li>フラッシュカード形式で練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kb02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kb02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_kiso_unit2.html" class="sc-btn" onclick="touch(&#39;kb02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kb02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kb02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kb02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kb03">
+      <div class="sc-hd">
+        <span class="sc-num">Unit3</span>
+        <span class="sc-title">古文の敬語</span>
+        <span class="sc-status" id="st-kb03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>尊敬語・謙譲語・丁寧語の区別</li><li>「のたまふ」「まゐる」など頻出語</li><li>誰が誰に対して使うかを読み取る</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kb03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kb03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_kiso_unit3.html" class="sc-btn" onclick="touch(&#39;kb03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kb03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kb03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kb03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kb04">
+      <div class="sc-hd">
+        <span class="sc-num">Unit4</span>
+        <span class="sc-title">助動詞6つ</span>
+        <span class="sc-status" id="st-kb04">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>き・けり・む・べし・なり・たり</li><li>過去・推量・断定の意味を整理</li><li>文末から文の意味を読み取る</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kb04">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kb04">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_kiso_unit4.html" class="sc-btn" onclick="touch(&#39;kb04&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kb04&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kb04&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kb04&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kb05">
+      <div class="sc-hd">
+        <span class="sc-num">Unit5</span>
+        <span class="sc-title">主語の読み取り方</span>
+        <span class="sc-status" id="st-kb05">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>「は」「が」「も」で主語を探す</li><li>敬語から主語を特定する</li><li>省略された主語を補う練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kb05">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kb05">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_kiso_unit5.html" class="sc-btn" onclick="touch(&#39;kb05&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kb05&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kb05&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kb05&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
+      <div class="group-label">⚔️ 古文攻略 — 過去問で実戦練習</div>
+      <div class="sec-grid" id="grid-kobun-attack"><div class="sec-card" data-id="ka01">
+      <div class="sc-hd">
+        <span class="sc-num">攻略①</span>
+        <span class="sc-title">竹取物語</span>
+        <span class="sc-status" id="st-ka01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>かぐや姫の誕生と成長</li><li>古文の世界観を読む</li><li>登場人物の関係を整理する</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-ka01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-ka01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_ko01_taketori.html" class="sc-btn" onclick="touch(&#39;ka01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;ka01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;ka01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;ka01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="ka02">
+      <div class="sc-hd">
+        <span class="sc-num">攻略②</span>
+        <span class="sc-title">枕草子</span>
+        <span class="sc-status" id="st-ka02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>清少納言の感性を読む</li><li>「をかし」の世界を体験する</li><li>随筆の読み方を身につける</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-ka02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-ka02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_ko02_makura.html" class="sc-btn" onclick="touch(&#39;ka02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;ka02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;ka02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;ka02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="ka03">
+      <div class="sc-hd">
+        <span class="sc-num">攻略③</span>
+        <span class="sc-title">伊勢物語</span>
+        <span class="sc-status" id="st-ka03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>歌物語のしくみを理解する</li><li>和歌と地の文の関係を読む</li><li>業平の恋の物語</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-ka03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-ka03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_ko03_ise.html" class="sc-btn" onclick="touch(&#39;ka03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;ka03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;ka03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;ka03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="ka04">
+      <div class="sc-hd">
+        <span class="sc-num">攻略④</span>
+        <span class="sc-title">源氏物語</span>
+        <span class="sc-status studying" id="st-ka04">学習中</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>光源氏の世界に入る</li><li>場面の情景を読む</li><li>敬語から人物関係を読み取る</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-ka04">1</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-ka04">6/22</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kobun_ko04_genji.html" class="sc-btn" onclick="touch(&#39;ka04&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;ka04&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;ka04&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;ka04&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
+    </div>
+  </div>
+
+  <!-- 漢文 -->
+  <div class="unit">
+    <div class="unit-hd" style="background:linear-gradient(90deg,#1a2744,#2a3d6b)"><span class="unit-num">漢文</span><span class="unit-title">漢文読解</span><span class="unit-badge">基礎〜高認過去問</span></div>
+    <div class="unit-body">
+      <div class="group-label">🔰 漢文基礎ユニット</div>
+      <div class="sec-grid" id="grid-kanbun-unit"><div class="sec-card" data-id="kn_u01">
+      <div class="sc-hd">
+        <span class="sc-num">基礎①</span>
+        <span class="sc-title">返り点・レ点の読み方</span>
+        <span class="sc-status" id="st-kn_u01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>レ点・一二点の仕組みを理解する</li><li>読む順番を番号で入力する練習</li><li>返り点入門</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_u01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_u01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_kaeriten.html" class="sc-btn" onclick="touch(&#39;kn_u01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_u01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_u01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_u01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kn_u02">
+      <div class="sc-hd">
+        <span class="sc-num">基礎②</span>
+        <span class="sc-title">一二点・上中下点</span>
+        <span class="sc-status" id="st-kn_u02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>一二三点と上中下点の使い方</li><li>複合した返り点の読み順</li><li>実例で練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_u02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_u02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_kiso.html" class="sc-btn" onclick="touch(&#39;kn_u02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_u02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_u02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_u02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
+      <div class="group-label">📝 高認過去問 — 書き下し文読解</div>
+      <div class="sec-grid" id="grid-kanbun-kako"><div class="sec-card" data-id="kn_r51">
+      <div class="sc-hd">
+        <span class="sc-num">R5-1</span>
+        <span class="sc-title">伝習録「樹を種ゑる者」</span>
+        <span class="sc-status" id="st-kn_r51">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>王陽明の教え — 徳と志の涵養</li><li>「培ふ・刪る・培植」の意味</li><li>漢文の読解 7問</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_r51">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_r51">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_r5_1.html" class="sc-btn" onclick="touch(&#39;kn_r51&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_r51&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_r51&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_r51&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kn_r52">
+      <div class="sc-hd">
+        <span class="sc-num">R5-2</span>
+        <span class="sc-title">呂氏春秋「師曠・荊文王」</span>
+        <span class="sc-status" id="st-kn_r52">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>師曠の知音と荊文王の諫臣</li><li>「果して・知音者・爵す」の意味</li><li>漢文の読解 8問</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_r52">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_r52">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_r5_2.html" class="sc-btn" onclick="touch(&#39;kn_r52&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_r52&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_r52&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_r52&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kn_r62">
+      <div class="sc-hd">
+        <span class="sc-num">R6-2</span>
+        <span class="sc-title">淮南子「重耳と釐負羈」</span>
+        <span class="sc-status" id="st-kn_r62">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>重耳の亡命と恩義の物語</li><li>「尅つ・令す・無からしむ」の意味</li><li>漢文の読解 9問</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_r62">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_r62">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_r6_2.html" class="sc-btn" onclick="touch(&#39;kn_r62&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_r62&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_r62&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_r62&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kn_r71">
+      <div class="sc-hd">
+        <span class="sc-num">R7-1</span>
+        <span class="sc-title">梅花無尽蔵「清見が関」</span>
+        <span class="sc-status" id="st-kn_r71">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>五言絶句 — 清見が関の絶景</li><li>「雖も・稀なり・至今」の意味</li><li>漢詩の読解 8問</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_r71">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_r71">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_r7_1.html" class="sc-btn" onclick="touch(&#39;kn_r71&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_r71&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_r71&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_r71&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kn_r72">
+      <div class="sc-hd">
+        <span class="sc-num">R7-2</span>
+        <span class="sc-title">古文真宝「富人の稼」</span>
+        <span class="sc-status" id="st-kn_r72">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>豊かな農家と貧しい農家の農法</li><li>「蓋し・故に・豈に〜や」の意味</li><li>漢文の読解 8問</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_r72">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_r72">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kanbun_r7_2.html" class="sc-btn" onclick="touch(&#39;kn_r72&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kn_r72&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kn_r72&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kn_r72&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
+    </div>
+  </div>
+
+  <!-- 敬語 -->
+  <div class="unit">
+    <div class="unit-hd" style="background:linear-gradient(90deg,#8a6020,#c9a84c)"><span class="unit-num">敬語</span><span class="unit-title">敬語・語彙</span><span class="unit-badge">入門〜実戦</span></div>
+    <div class="unit-body">
+      <div class="group-label">🎓 敬語トレーニング</div>
+      <div class="sec-grid" id="grid-keigo1"><div class="sec-card" data-id="kg01">
+      <div class="sc-hd">
+        <span class="sc-num">敬語①</span>
+        <span class="sc-title">敬語の基本</span>
+        <span class="sc-status" id="st-kg01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>尊敬語・謙譲語・丁寧語の区別</li><li>フラッシュカード形式</li><li>例文の正誤判断</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kg01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kg01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/keigo_01.html" class="sc-btn" onclick="touch(&#39;kg01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kg01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kg01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kg01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kg02">
+      <div class="sc-hd">
+        <span class="sc-num">敬語②</span>
+        <span class="sc-title">敬語の使い方</span>
+        <span class="sc-status" id="st-kg02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>場面に応じた敬語の選択</li><li>二重敬語に注意</li><li>実例で練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kg02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kg02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/keigo_02.html" class="sc-btn" onclick="touch(&#39;kg02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kg02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kg02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kg02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kg03">
+      <div class="sc-hd">
+        <span class="sc-num">敬語③</span>
+        <span class="sc-title">日常のNG表現</span>
+        <span class="sc-status" id="st-kg03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>街でよく見る間違い敬語</li><li>「〜させていただく」の誤用</li><li>正しい表現に直す練習</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kg03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kg03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/keigo_03.html" class="sc-btn" onclick="touch(&#39;kg03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kg03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kg03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kg03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="kg04">
+      <div class="sc-hd">
+        <span class="sc-num">敬語④</span>
+        <span class="sc-title">敬語 実戦問題</span>
+        <span class="sc-status" id="st-kg04">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>高認・入試レベルの問題</li><li>10問・スコア表示</li><li>総仕上げ</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kg04">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kg04">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/keigo_04.html" class="sc-btn" onclick="touch(&#39;kg04&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;kg04&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;kg04&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;kg04&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
     </div>
   </div>
 
@@ -158,13 +781,244 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
     <div class="unit-hd" style="background:linear-gradient(90deg,#1b8a8a,#0e6655)"><span class="unit-num">会話文</span><span class="unit-title">会話文読解</span><span class="unit-badge">入門〜高認実戦</span></div>
     <div class="unit-body">
       <div class="group-label">💬 入門 — 2人の会話から読み解く</div>
-      <div class="sec-grid" id="grid-kaiwa-nyumon"></div>
+      <div class="sec-grid" id="grid-kaiwa-nyumon"><div class="sec-card" data-id="k_n01">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">入門①</span>
+        <span class="sc-title kaiwa">放課後の会話</span>
+        <span class="sc-status" id="st-k_n01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>誰が何を言っているかを追う</li><li>迷いの原因を読み取る</li><li>ここに注意・解説・話の流れの使い方</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_n01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_n01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_nyumon_01.html" class="sc-btn" onclick="touch(&#39;k_n01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_n01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_n01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_n01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_n02">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">入門②</span>
+        <span class="sc-title kaiwa">すれ違う気持ち</span>
+        <span class="sc-status" id="st-k_n02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>気持ちのすれ違いを読む</li><li>本音と表面の言葉の違い</li><li>行動の裏にある動機を選ぶ</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_n02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_n02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_nyumon_02.html" class="sc-btn" onclick="touch(&#39;k_n02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_n02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_n02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_n02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_n03">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">入門③</span>
+        <span class="sc-title kaiwa">話題の中の第三者</span>
+        <span class="sc-status" id="st-k_n03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>その場にいない人物を区別する</li><li>話している2人と話題の人を整理</li><li>根拠にもとづく判断を読む</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_n03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_n03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_nyumon_03.html" class="sc-btn" onclick="touch(&#39;k_n03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_n03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_n03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_n03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
       <div class="group-label">🗣 基礎 — 3人の会話・立場の違いを読む</div>
-      <div class="sec-grid" id="grid-kaiwa-kiso"></div>
+      <div class="sec-grid" id="grid-kaiwa-kiso"><div class="sec-card" data-id="k_k01">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">基礎①</span>
+        <span class="sc-title kaiwa">三人の放課後</span>
+        <span class="sc-status" id="st-k_k01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>3人の会話の流れを追う</li><li>途中から加わる人物の役割</li><li>気持ちの変化を会話全体でたどる</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_k01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_k01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_kiso_01.html" class="sc-btn" onclick="touch(&#39;k_k01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_k01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_k01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_k01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_k02">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">基礎②</span>
+        <span class="sc-title kaiwa">地域会議の一幕</span>
+        <span class="sc-status" id="st-k_k02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>ですます調の議論を読む</li><li>「ただ」「しかしながら」の役割</li><li>対立から合意へのきっかけを読む</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_k02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_k02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_kiso_02.html" class="sc-btn" onclick="touch(&#39;k_k02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_k02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_k02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_k02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_k03">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">基礎③</span>
+        <span class="sc-title kaiwa">職場の引き継ぎ</span>
+        <span class="sc-status" id="st-k_k03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>立場の違いによる言葉の使い分け</li><li>敬語から関係性を読む</li><li>本当の理由を言葉の奥から探す</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_k03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_k03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_kiso_03.html" class="sc-btn" onclick="touch(&#39;k_k03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_k03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_k03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_k03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
       <div class="group-label">📋 標準 — 意図と変化を会話全体で追う</div>
-      <div class="sec-grid" id="grid-kaiwa-hyojun"></div>
+      <div class="sec-grid" id="grid-kaiwa-hyojun"><div class="sec-card" data-id="k_h01">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">標準①</span>
+        <span class="sc-title kaiwa">図書館の運営会議</span>
+        <span class="sc-status" id="st-k_h01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>12発言の会話全体を見渡す</li><li>傍線部の意図を読む（問い1）</li><li>会話全体の変化を追う（問い2）</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_h01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_h01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_hyojun_01.html" class="sc-btn" onclick="touch(&#39;k_h01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_h01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_h01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_h01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_h02">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">標準②</span>
+        <span class="sc-title kaiwa">福祉施設の運営協議</span>
+        <span class="sc-status" id="st-k_h02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>意見の対立と歩み寄りの構造を読む</li><li>やわらかい表現の裏の主張を読む</li><li>解決策の変化の流れを追う</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_h02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_h02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_hyojun_02.html" class="sc-btn" onclick="touch(&#39;k_h02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_h02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_h02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_h02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_h03">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">標準③</span>
+        <span class="sc-title kaiwa">環境委員会の議論</span>
+        <span class="sc-status" id="st-k_h03">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>複数の論点が絡む議論を整理する</li><li>「言い過ぎ」「言い足りない」を見極める</li><li>傍線部の意図と会話全体の変化</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_h03">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_h03">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_hyojun_03.html" class="sc-btn" onclick="touch(&#39;k_h03&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_h03&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_h03&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_h03&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
       <div class="group-label">🎯 高認実戦 — 本番レベルの会話文に挑戦</div>
-      <div class="sec-grid" id="grid-kaiwa-jissen"></div>
+      <div class="sec-grid" id="grid-kaiwa-jissen"><div class="sec-card" data-id="k_j01">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">実戦①</span>
+        <span class="sc-title kaiwa">商店街活性化の協議</span>
+        <span class="sc-status" id="st-k_j01">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>14発言・3問構成</li><li>消去法の実践（言い過ぎ・会話外情報）</li><li>傍線部・懸念の理由・会話全体の読み取り</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_j01">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_j01">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_jissen_01.html" class="sc-btn" onclick="touch(&#39;k_j01&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_j01&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_j01&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_j01&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div><div class="sec-card" data-id="k_j02">
+      <div class="sc-hd kaiwa">
+        <span class="sc-num kaiwa">実戦②</span>
+        <span class="sc-title kaiwa">図書館と学校の連携協議</span>
+        <span class="sc-status" id="st-k_j02">未学習</span>
+      </div>
+      <div class="sc-body">
+        <ul class="sc-topics"><li>14発言・3問構成・最終回</li><li>傍線部の意図・役割の整理・全体の読み取り</li><li>全11回の会話文読解 完全修了</li></ul>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-k_j02">0</span></div>
+        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-k_j02">─</span></div>
+      </div>
+      <div class="sc-btn-row">
+        <a href="file:///C:/Users/tinbu/Downloads/kaiwa_jissen_02.html" class="sc-btn" onclick="touch(&#39;k_j02&#39;)">📖 学習する</a>
+      </div>
+      <div class="abc-row">
+        <span class="abc-lbl">理解度：</span>
+        <button class="abc-btn abc-a" onclick="rate(&#39;k_j02&#39;,&#39;a&#39;,this)">A 完璧</button>
+        <button class="abc-btn abc-b" onclick="rate(&#39;k_j02&#39;,&#39;b&#39;,this)">B 良好</button>
+        <button class="abc-btn abc-c" onclick="rate(&#39;k_j02&#39;,&#39;c&#39;,this)">C 要復習</button>
+      </div></div></div>
     </div>
   </div>
 </div>
@@ -172,7 +1026,7 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
 <div class="tab-sec" id="tab-record">
   <div class="record-wrap">
     <div class="record-title">📊 学習記録</div>
-    <div id="record-list"></div>
+    <div id="record-list"><div class="prog-row"><div class="prog-num">捜査1</div><div class="prog-title">読解捜査室 — 消去法入門</div><div class="prog-grade">未学習</div><div class="prog-meta">1回 / 6/20</div></div><div class="prog-row"><div class="prog-num">1</div><div class="prog-title">坊っちゃん</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">2</div><div class="prog-title">吾輩は猫である</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">3</div><div class="prog-title">蜘蛛の糸</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">4</div><div class="prog-title">夢十夜・運慶</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">5</div><div class="prog-title">トロッコ</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">6</div><div class="prog-title">走れメロス</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">7</div><div class="prog-title">馬鹿一</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">Unit1</div><div class="prog-title">歴史的仮名遣い</div><div class="prog-grade c">C 要復習</div><div class="prog-meta">1回 / 6/22</div></div><div class="prog-row"><div class="prog-num">Unit2</div><div class="prog-title">古文単語30語</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">Unit3</div><div class="prog-title">古文の敬語</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">Unit4</div><div class="prog-title">助動詞6つ</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">Unit5</div><div class="prog-title">主語の読み取り方</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">攻略①</div><div class="prog-title">竹取物語</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">攻略②</div><div class="prog-title">枕草子</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">攻略③</div><div class="prog-title">伊勢物語</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">攻略④</div><div class="prog-title">源氏物語</div><div class="prog-grade">未学習</div><div class="prog-meta">1回 / 6/22</div></div><div class="prog-row"><div class="prog-num">基礎①</div><div class="prog-title">返り点・レ点の読み方</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">基礎②</div><div class="prog-title">一二点・上中下点</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">R5-1</div><div class="prog-title">伝習録「樹を種ゑる者」</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">R5-2</div><div class="prog-title">呂氏春秋「師曠・荊文王」</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">R6-2</div><div class="prog-title">淮南子「重耳と釐負羈」</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">R7-1</div><div class="prog-title">梅花無尽蔵「清見が関」</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">R7-2</div><div class="prog-title">古文真宝「富人の稼」</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">敬語①</div><div class="prog-title">敬語の基本</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">敬語②</div><div class="prog-title">敬語の使い方</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">敬語③</div><div class="prog-title">日常のNG表現</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">敬語④</div><div class="prog-title">敬語 実戦問題</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">入門①</div><div class="prog-title">放課後の会話</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">入門②</div><div class="prog-title">すれ違う気持ち</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">入門③</div><div class="prog-title">話題の中の第三者</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">基礎①</div><div class="prog-title">三人の放課後</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">基礎②</div><div class="prog-title">地域会議の一幕</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">基礎③</div><div class="prog-title">職場の引き継ぎ</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">標準①</div><div class="prog-title">図書館の運営会議</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">標準②</div><div class="prog-title">福祉施設の運営協議</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">標準③</div><div class="prog-title">環境委員会の議論</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">実戦①</div><div class="prog-title">商店街活性化の協議</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div><div class="prog-row"><div class="prog-num">実戦②</div><div class="prog-title">図書館と学校の連携協議</div><div class="prog-grade">未学習</div><div class="prog-meta">0回 / ─</div></div></div>
   </div>
 </div>
 </div>
@@ -212,6 +1066,71 @@ const UNITS = [
   {id:'y07',num:'第7回',title:'馬鹿一',group:'advanced',
    sub:['二人の画家の価値観の対立','「おもしろい」の中にある純粋さ','葛藤＝感動と認めたくない気持ちの衝突','作者がどちらの側に立つかを読む'],
    href:'yondeikou_07_bakaichi.html'},
+  // ── 古文基本アイテム ──
+  {id:'kb01',num:'Unit1',title:'歴史的仮名遣い',group:'kobun-kiso',
+   sub:['「ゐ・ゑ・を」「はひふへほ→わいうえお」','「au→ou」「iu→yuu」の変換','読み方のルールを身につける'],
+   href:'kobun_kiso_unit1.html'},
+  {id:'kb02',num:'Unit2',title:'古文単語30語',group:'kobun-kiso',
+   sub:['現代語と意味が違う単語を覚える','「いとをかし」「あはれ」など頻出語','フラッシュカード形式で練習'],
+   href:'kobun_kiso_unit2.html'},
+  {id:'kb03',num:'Unit3',title:'古文の敬語',group:'kobun-kiso',
+   sub:['尊敬語・謙譲語・丁寧語の区別','「のたまふ」「まゐる」など頻出語','誰が誰に対して使うかを読み取る'],
+   href:'kobun_kiso_unit3.html'},
+  {id:'kb04',num:'Unit4',title:'助動詞6つ',group:'kobun-kiso',
+   sub:['き・けり・む・べし・なり・たり','過去・推量・断定の意味を整理','文末から文の意味を読み取る'],
+   href:'kobun_kiso_unit4.html'},
+  {id:'kb05',num:'Unit5',title:'主語の読み取り方',group:'kobun-kiso',
+   sub:['「は」「が」「も」で主語を探す','敬語から主語を特定する','省略された主語を補う練習'],
+   href:'kobun_kiso_unit5.html'},
+  // ── 古文攻略 ──
+  {id:'ka01',num:'攻略①',title:'竹取物語',group:'kobun-attack',
+   sub:['かぐや姫の誕生と成長','古文の世界観を読む','登場人物の関係を整理する'],
+   href:'kobun_ko01_taketori.html'},
+  {id:'ka02',num:'攻略②',title:'枕草子',group:'kobun-attack',
+   sub:['清少納言の感性を読む','「をかし」の世界を体験する','随筆の読み方を身につける'],
+   href:'kobun_ko02_makura.html'},
+  {id:'ka03',num:'攻略③',title:'伊勢物語',group:'kobun-attack',
+   sub:['歌物語のしくみを理解する','和歌と地の文の関係を読む','業平の恋の物語'],
+   href:'kobun_ko03_ise.html'},
+  {id:'ka04',num:'攻略④',title:'源氏物語',group:'kobun-attack',
+   sub:['光源氏の世界に入る','場面の情景を読む','敬語から人物関係を読み取る'],
+   href:'kobun_ko04_genji.html'},
+  // ── 漢文ユニット（基礎） ──
+  {id:'kn_u01',num:'基礎①',title:'返り点・レ点の読み方',group:'kanbun-unit',
+   sub:['レ点・一二点の仕組みを理解する','読む順番を番号で入力する練習','返り点入門'],
+   href:'kanbun_kaeriten.html'},
+  {id:'kn_u02',num:'基礎②',title:'一二点・上中下点',group:'kanbun-unit',
+   sub:['一二三点と上中下点の使い方','複合した返り点の読み順','実例で練習'],
+   href:'kanbun_kiso.html'},
+  // ── 漢文過去問 ──
+  {id:'kn_r51',num:'R5-1',title:'伝習録「樹を種ゑる者」',group:'kanbun-kako',
+   sub:['王陽明の教え — 徳と志の涵養','「培ふ・刪る・培植」の意味','漢文の読解 7問'],
+   href:'kanbun_r5_1.html'},
+  {id:'kn_r52',num:'R5-2',title:'呂氏春秋「師曠・荊文王」',group:'kanbun-kako',
+   sub:['師曠の知音と荊文王の諫臣','「果して・知音者・爵す」の意味','漢文の読解 8問'],
+   href:'kanbun_r5_2.html'},
+  {id:'kn_r62',num:'R6-2',title:'淮南子「重耳と釐負羈」',group:'kanbun-kako',
+   sub:['重耳の亡命と恩義の物語','「尅つ・令す・無からしむ」の意味','漢文の読解 9問'],
+   href:'kanbun_r6_2.html'},
+  {id:'kn_r71',num:'R7-1',title:'梅花無尽蔵「清見が関」',group:'kanbun-kako',
+   sub:['五言絶句 — 清見が関の絶景','「雖も・稀なり・至今」の意味','漢詩の読解 8問'],
+   href:'kanbun_r7_1.html'},
+  {id:'kn_r72',num:'R7-2',title:'古文真宝「富人の稼」',group:'kanbun-kako',
+   sub:['豊かな農家と貧しい農家の農法','「蓋し・故に・豈に〜や」の意味','漢文の読解 8問'],
+   href:'kanbun_r7_2.html'},
+  // ── 敬語 ──
+  {id:'kg01',num:'敬語①',title:'敬語の基本',group:'keigo1',
+   sub:['尊敬語・謙譲語・丁寧語の区別','フラッシュカード形式','例文の正誤判断'],
+   href:'keigo_01.html'},
+  {id:'kg02',num:'敬語②',title:'敬語の使い方',group:'keigo1',
+   sub:['場面に応じた敬語の選択','二重敬語に注意','実例で練習'],
+   href:'keigo_02.html'},
+  {id:'kg03',num:'敬語③',title:'日常のNG表現',group:'keigo1',
+   sub:['街でよく見る間違い敬語','「〜させていただく」の誤用','正しい表現に直す練習'],
+   href:'keigo_03.html'},
+  {id:'kg04',num:'敬語④',title:'敬語 実戦問題',group:'keigo1',
+   sub:['高認・入試レベルの問題','10問・スコア表示','総仕上げ'],
+   href:'keigo_04.html'},
   // ── 会話文読解 ──
   {id:'k_n01',num:'入門①',title:'放課後の会話',group:'kaiwa-nyumon',
    sub:['誰が何を言っているかを追う','迷いの原因を読み取る','ここに注意・解説・話の流れの使い方'],
@@ -263,7 +1182,7 @@ function touch(id){
 }
 
 function buildCards(){
-  const grids={sousa:'grid-sousa',basic:'grid-basic',practice:'grid-practice',advanced:'grid-advanced','kaiwa-nyumon':'grid-kaiwa-nyumon','kaiwa-kiso':'grid-kaiwa-kiso','kaiwa-hyojun':'grid-kaiwa-hyojun','kaiwa-jissen':'grid-kaiwa-jissen'};
+  const grids={sousa:'grid-sousa',basic:'grid-basic',practice:'grid-practice',advanced:'grid-advanced','kobun-kiso':'grid-kobun-kiso','kobun-attack':'grid-kobun-attack','kanbun-unit':'grid-kanbun-unit','kanbun-kako':'grid-kanbun-kako',keigo1:'grid-keigo1','kaiwa-nyumon':'grid-kaiwa-nyumon','kaiwa-kiso':'grid-kaiwa-kiso','kaiwa-hyojun':'grid-kaiwa-hyojun','kaiwa-jissen':'grid-kaiwa-jissen'};
   UNITS.forEach(u=>{
     const el=document.createElement('div');
     el.className='sec-card'; el.dataset.id=u.id;
@@ -356,6 +1275,17 @@ function switchTab(id,btn){
 
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 
+function scrollToSection(gridId){
+  document.querySelectorAll('.tab-sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tnav').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-units').classList.add('on');
+  document.querySelectorAll('.tnav')[0].classList.add('on');
+  setTimeout(()=>{
+    const el=document.getElementById(gridId);
+    if(el) el.closest('.unit').scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
 function scrollToKaiwa(){
   // 全単元タブを表示してから会話文セクションへスクロール
   document.querySelectorAll('.tab-sec').forEach(s=>s.classList.remove('on'));
@@ -396,5 +1326,6 @@ function launchConfetti(){
 
 document.addEventListener('DOMContentLoaded',()=>{buildCards();render();});
 </script>
-</body>
-</html>
+
+
+</body></html>

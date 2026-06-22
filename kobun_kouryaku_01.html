@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古文攻略① 竹取物語｜江原予備校</title>
+<style>
+  :root {
+    --cream:#fdf8f0;--navy:#001858;--navy-mid:#1a3a6b;
+    --gold:#e8a020;--gold-light:#fef6e4;
+    --green:#16a34a;--green-light:#dcfce7;
+    --brown:#92400e;--brown-light:#fef3c7;
+    --red:#dc2626;--red-light:#fee2e2;
+    --purple:#7c4dbd;--purple-light:#f0eafb;
+    --teal:#1b8a8a;--teal-light:#e6f7f7;
+    --gray:#6b7280;--gray-light:#f3f4f6;
+    --radius:14px;--shadow:0 2px 12px rgba(0,24,88,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;color:var(--navy);min-height:100vh;}
+  header{background:var(--navy);color:white;padding:18px 24px;display:flex;align-items:center;gap:14px;}
+  .header-badge{background:var(--brown);color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em;white-space:nowrap;}
+  header h1{font-size:17px;font-weight:700;}
+  main{max-width:820px;margin:0 auto;padding:24px 14px 80px;}
+  .phase-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .phase-badge{background:var(--brown);color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;}
+  .phase-note{font-size:13px;color:var(--gray);}
+
+  /* 導入カード */
+  .intro-card{background:white;border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow);border-left:5px solid var(--brown);}
+  .intro-card .label{font-size:11px;color:var(--brown);font-weight:700;letter-spacing:.08em;margin-bottom:5px;}
+  .intro-card p{font-size:14px;line-height:1.8;color:var(--navy-mid);}
+
+  /* 攻略ヒント */
+  .hint-box{background:var(--navy);color:white;border-radius:var(--radius);padding:16px 20px;margin-bottom:22px;font-size:13.5px;line-height:1.8;}
+  .hint-box .ht-label{font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:.06em;margin-bottom:8px;}
+  .hint-box ol{padding-left:18px;}
+  .hint-box li{margin-bottom:4px;}
+
+  /* 資料パネル */
+  .shiryo-btn{display:inline-flex;align-items:center;gap:7px;background:var(--teal);color:white;border:none;border-radius:20px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;margin-bottom:18px;}
+  .shiryo-btn:hover{background:var(--teal-light);color:var(--teal);}
+  .shiryo-panel{display:none;background:var(--teal-light);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;border-left:5px solid var(--teal);animation:slideDown .22s ease;}
+  .shiryo-panel.open{display:block;}
+  .shiryo-panel .sp-title{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:10px;letter-spacing:.04em;}
+  .shiryo-panel p{font-size:14px;line-height:1.85;color:var(--navy-mid);}
+  .shiryo-panel .sp-person{margin-top:10px;font-size:13px;color:var(--navy-mid);}
+  .shiryo-panel .sp-person span{font-weight:700;color:var(--navy);}
+
+  /* 文ブロック */
+  .sentences{display:flex;flex-direction:column;gap:24px;margin-bottom:28px;}
+  .sentence-block{background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .sb-num{background:var(--brown);color:white;font-size:11px;font-weight:700;padding:4px 14px;display:inline-block;}
+
+  /* 古文テキスト */
+  .kobun-text{font-size:20px;font-weight:700;line-height:2.2;color:var(--navy);padding:18px 20px 10px;}
+
+  /* 重要語ハイライト */
+  .kw{border-bottom:2px dotted var(--brown);cursor:pointer;position:relative;color:var(--brown);font-weight:800;transition:background .15s;}
+  .kw:hover{background:var(--brown-light);border-radius:3px;}
+
+  /* 脚注マーク */
+  .chuu{color:var(--purple);font-size:13px;font-weight:700;cursor:pointer;vertical-align:super;margin-left:1px;border-bottom:1px dotted var(--purple);}
+  .chuu:hover{background:var(--purple-light);border-radius:3px;}
+
+  /* ポップアップ */
+  .popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,24,88,.35);z-index:2000;align-items:center;justify-content:center;padding:16px;}
+  .popup-overlay.open{display:flex;animation:fadeIn .18s ease;}
+  .popup-box{background:white;border-radius:16px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,24,88,.25);animation:popIn .2s ease;overflow:hidden;}
+  .popup-header{padding:13px 18px 11px;display:flex;align-items:center;justify-content:space-between;}
+  .popup-header.kw-header{background:var(--brown-light);}
+  .popup-header.ch-header{background:var(--purple-light);}
+  .popup-word{font-size:17px;font-weight:800;}
+  .kw-header .popup-word{color:var(--brown);}
+  .ch-header .popup-word{color:var(--purple);}
+  .popup-close{background:rgba(0,0,0,.08);border:none;width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .popup-body{padding:14px 18px 18px;}
+  .popup-mean{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.6;}
+  .popup-context{font-size:13.5px;color:var(--navy-mid);line-height:1.75;background:var(--gray-light);border-radius:8px;padding:10px 12px;}
+  .popup-context .ctx-label{font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px;}
+
+  /* アクションボタン行 */
+  .action-row{display:flex;gap:8px;padding:0 18px 14px;flex-wrap:wrap;}
+  .action-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;}
+  .btn-shugo{background:var(--green-light);color:var(--green);}
+  .btn-shugo:hover{background:var(--green);color:white;}
+  .btn-imi{background:var(--gold-light);color:var(--gold);}
+  .btn-imi:hover{background:var(--gold);color:white;}
+
+  /* 主語パネル */
+  .shugo-panel{display:none;margin:0 18px 12px;background:var(--green-light);border-radius:10px;padding:12px 16px;border-left:4px solid var(--green);animation:slideDown .2s ease;}
+  .shugo-panel.open{display:block;}
+  .shugo-panel p{font-size:14px;line-height:1.8;color:#1a5c35;}
+  .shugo-panel strong{font-size:15px;}
+
+  /* 意味問題 */
+  .imi-panel{display:none;margin:0 18px 16px;animation:slideDown .2s ease;}
+  .imi-panel.open{display:block;}
+  .imi-q{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.7;padding:10px 14px;background:var(--gold-light);border-radius:8px;border-left:3px solid var(--gold);}
+  .imi-choices{display:flex;flex-direction:column;gap:7px;}
+  .imi-btn{display:flex;align-items:center;gap:9px;background:var(--gray-light);border:2px solid transparent;border-radius:9px;padding:11px 14px;cursor:pointer;text-align:left;font-family:inherit;font-size:14px;line-height:1.6;color:var(--navy);transition:all .18s;width:100%;}
+  .imi-btn:hover:not(:disabled){border-color:var(--gold);background:var(--gold-light);}
+  .imi-num{font-weight:700;font-size:12px;color:var(--gray);background:white;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .imi-btn.correct{background:var(--green-light);border-color:var(--green);}
+  .imi-btn.correct .imi-num{background:var(--green);color:white;}
+  .imi-btn.wrong{background:var(--red-light);border-color:var(--red);color:#999;text-decoration:line-through;}
+  .imi-btn.wrong .imi-num{background:var(--red);color:white;}
+  .imi-btn:disabled{cursor:default;}
+  .imi-feedback{display:none;margin-top:10px;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.8;}
+  .imi-feedback.show{display:block;animation:slideDown .2s ease;}
+  .imi-feedback.ok{background:var(--green-light);border-left:4px solid var(--green);color:#1a5c35;}
+  .imi-feedback.ng{background:var(--red-light);border-left:4px solid var(--red);color:#7a2020;}
+  .imi-fb-t{font-weight:800;margin-bottom:4px;font-size:14px;}
+
+  /* 要点積み上げ */
+  .yoten-section{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:28px;}
+  .yoten-title{font-size:14px;font-weight:800;color:var(--brown);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--brown-light);}
+  .yoten-list{display:flex;flex-direction:column;gap:10px;}
+  .yoten-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--gray-light);border-radius:9px;animation:slideDown .3s ease;}
+  .yoten-num{background:var(--brown);color:white;font-size:11px;font-weight:700;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .yoten-text{font-size:13.5px;color:var(--navy-mid);line-height:1.7;}
+  .yoten-empty{font-size:13px;color:var(--gray);font-style:italic;}
+
+  /* 完了ナビ */
+  .completion-nav{display:none;background:white;border-radius:var(--radius);padding:26px 22px;margin-top:24px;box-shadow:var(--shadow);text-align:center;animation:slideDown .4s ease;}
+  .completion-nav.show{display:block;}
+  .comp-emoji{font-size:2.4em;margin-bottom:8px;}
+  .comp-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:5px;}
+  .comp-sub{font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7;}
+  .nav-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:50px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .18s;}
+  .nav-btn-next{background:var(--navy);color:white;}
+  .nav-btn-next:hover{background:var(--navy-mid);transform:translateY(-1px);}
+  .nav-btn-index{background:white;color:var(--navy);border:2px solid #d0d5e0;}
+  .nav-btn-index:hover{border-color:var(--navy);transform:translateY(-1px);}
+
+  canvas#confetti{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:none;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<!-- ポップアップ -->
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+  <div class="popup-box" id="popupBox">
+    <div class="popup-header" id="popupHeader">
+      <span class="popup-word" id="popupWord"></span>
+      <button class="popup-close" onclick="closePopupBtn()">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="popup-mean" id="popupMean"></div>
+      <div class="popup-context">
+        <div class="ctx-label" id="popupCtxLabel"></div>
+        <div id="popupCtx"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <span class="header-badge">古文攻略</span>
+  <h1>古文攻略 ① ── 竹取物語</h1>
+</header>
+<main>
+
+  <div class="phase-bar">
+    <span class="phase-badge">古文攻略シリーズ</span>
+    <span class="phase-note">1文ずつ丁寧に読んでいきましょう。</span>
+  </div>
+
+  <div class="intro-card">
+    <div class="label">この教材の使い方</div>
+    <p>
+      📖 <strong>茶色の単語</strong>をタップ → その単語の意味がポップアップで出ます<br>
+      📌 <strong>（注○）</strong>をタップ → 脚注の説明がポップアップで出ます<br>
+      👤 <strong>「主語の確認」</strong>ボタン → この文の主語がわかります<br>
+      📜 <strong>「資料を読む」</strong>ボタン → 場面の説明が読めます<br>
+      ✏️ <strong>「この文の意味は？」</strong>ボタン → 4択問題に挑戦できます
+    </p>
+  </div>
+
+  <div class="hint-box">
+    <div class="ht-label">🎯 古文攻略の3つのヒント</div>
+    <ol>
+      <li>まず<strong>資料（リード文）</strong>を読んで、場面と登場人物を把握しよう</li>
+      <li><strong>（注）</strong>が出てきたら必ず読もう。意味のヒントが書いてある</li>
+      <li>1文読むごとに<strong>「誰が何をしたか」</strong>を確認しよう</li>
+    </ol>
+  </div>
+
+  <!-- 資料ボタン -->
+  <button class="shiryo-btn" onclick="toggleShiryo()">📜 資料を読む（場面の説明）</button>
+  <div class="shiryo-panel" id="shiryoPanel">
+    <div class="sp-title">📜 資料（場面の説明）</div>
+    <p>
+      これは日本最古の物語のひとつ、<strong>『竹取物語』</strong>の書き出し部分です。<br>
+      平安時代（約1000年前）に書かれた作品で、かぐや姫の物語として知られています。<br><br>
+      舞台は平安時代の日本の山里。竹を取ることを仕事にしている老人が、ある日光る竹の中に小さな女の子を見つけます。
+    </p>
+    <div class="sp-person">
+      <span>登場人物：</span>
+      竹取の翁（たけとりのおきな）── 竹を取ることを仕事にしている老人。
+      かぐや姫（かぐやひめ）── 竹の中から見つかった女の子。
+    </div>
+  </div>
+
+  <!-- 文ブロック -->
+  <div class="sentences">
+
+    <!-- 文1 -->
+    <div class="sentence-block" id="sb1">
+      <span class="sb-num">第 1 文</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('むかし','昔・以前','「むかし」は「昔」という意味。物語の書き出しとしてよく使われる定番の言葉です。')">むかし</span>、
+        <span class="kw" onclick="showKw('たけとりのおきな','竹取の翁','竹を取ることを生業（なりわい）にしている老人のこと。「翁（おきな）」は「老人・お爺さん」という意味です。')">竹取の翁</span>
+        といふ<span class="chuu" onclick="showChuu(1,'といふ','〜という名前の・〜と呼ばれる、という意味の表現です。')">（注1）</span>
+        ものありけり。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo1')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi1')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo1">
+        <p>この文の主語は <strong>「竹取の翁（老人）」</strong> です。<br>
+        「〜ありけり」＝「〜がいた（そうだ）」。「けり」は過去の助動詞（伝聞・詠嘆）で、昔話の定番の表現です。</p>
+      </div>
+      <div class="imi-panel" id="imi1">
+        <div class="imi-q">第1文「むかし、竹取の翁といふものありけり。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic1">
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">①</span>昔、竹を取ることが好きな若者がいたそうだ。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,true)"><span class="imi-num">②</span>昔、竹取の翁と呼ばれる者がいたそうだ。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">③</span>昔、竹を取りに行く老人がいなかった。</button>
+          <button class="imi-btn" onclick="imiAns('ic1','if1',this,false)"><span class="imi-num">④</span>竹取の翁という老人が今もいる。</button>
+        </div>
+        <div class="imi-feedback" id="if1"></div>
+      </div>
+    </div>
+
+    <!-- 文2 -->
+    <div class="sentence-block" id="sb2">
+      <span class="sb-num">第 2 文</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('野山にまじりて','野山に入って','「まじる」は「混じる・交わる・入り込む」という意味。野山の中に入って仕事をしている様子を表します。')">野山にまじりて</span>、
+        <span class="kw" onclick="showKw('竹をとりつつ','竹を取りながら','「〜つつ」は「〜しながら」という意味の接続助詞。繰り返し行われる動作を表します。')">竹をとりつつ</span>、
+        <span class="kw" onclick="showKw('よろづのこと','万のこと・さまざまなこと','「よろづ（万）」は「万・すべて・さまざまな」という意味。ここでは「あらゆること・いろいろなこと」と訳します。')">よろづのこと</span>に
+        <span class="kw" onclick="showKw('つかひけり','使った・役立てた','「つかふ」は「使う・役に立てる」という意味。竹をさまざまなことに使って生計を立てていたことを表します。')">つかひけり</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo2')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi2')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo2">
+        <p>この文の主語は <strong>「竹取の翁」</strong> です。<br>
+        第1文から引き続き翁が主語です。「野山に入って竹を取りながら」という翁の日常の仕事の様子が描かれています。</p>
+      </div>
+      <div class="imi-panel" id="imi2">
+        <div class="imi-q">第2文「野山にまじりて、竹をとりつつ、よろづのことにつかひけり。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic2">
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">①</span>野山で竹を取って、一本だけ使った。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">②</span>野山に迷い込んで、竹に助けてもらった。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,false)"><span class="imi-num">③</span>野山で竹を取るのをやめて、別の仕事をした。</button>
+          <button class="imi-btn" onclick="imiAns('ic2','if2',this,true)"><span class="imi-num">④</span>野山に入って竹を取りながら、さまざまなことに使っていた。</button>
+        </div>
+        <div class="imi-feedback" id="if2"></div>
+      </div>
+    </div>
+
+    <!-- 文3 -->
+    <div class="sentence-block" id="sb3">
+      <span class="sb-num">第 3 文</span>
+      <div class="kobun-text">
+        その竹の中に、もと光る竹<span class="chuu" onclick="showChuu(2,'もと光る','根元（竹の下の部分）が光っている竹のこと。「もと」は「根元・もとのほう」という意味です。')">（注2）</span>
+        なむ<span class="chuu" onclick="showChuu(3,'なむ','係助詞「なむ」。強調の意味を持ち、「〜が（確かに）あった」という感じを表します。文末が連体形になります（係り結び）。')">（注3）</span>
+        一<span class="kw" onclick="showKw('ひとすぢ','一筋・一本','「ひとすぢ（一筋）」は「一本」という意味。竹が一本だけ光っていたことを表します。')">すぢ</span>
+        ありける。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo3')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi3')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo3">
+        <p>この文の主語は <strong>「もと光る竹（根元が光っている竹）」</strong> です。<br>
+        「〜なむありける」＝「〜が（確かに）あった」。「なむ」は強調の係助詞で、特別な竹が一本あったことを強調しています。</p>
+      </div>
+      <div class="imi-panel" id="imi3">
+        <div class="imi-q">第3文「その竹の中に、もと光る竹なむ一すぢありける。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic3">
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,true)"><span class="imi-num">①</span>その竹の中に、根元が光っている竹が一本あった。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">②</span>その竹の中に、光る竹はまったくなかった。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">③</span>その竹の中に、先が光っている竹が何本もあった。</button>
+          <button class="imi-btn" onclick="imiAns('ic3','if3',this,false)"><span class="imi-num">④</span>その竹の上の方が光っていたので、翁は驚いた。</button>
+        </div>
+        <div class="imi-feedback" id="if3"></div>
+      </div>
+    </div>
+
+    <!-- 文4 -->
+    <div class="sentence-block" id="sb4">
+      <span class="sb-num">第 4 文</span>
+      <div class="kobun-text">
+        <span class="kw" onclick="showKw('あやしがりて','不思議に思って','「あやし（怪し）」は「不思議だ・変だ・珍しい」という意味。「あやしがる」は「不思議に思う」という動詞です。')">あやしがりて</span>、
+        <span class="kw" onclick="showKw('よりて見るに','近寄って見ると','「よる」は「近寄る・近づく」という意味。翁が竹に近づいて中を覗き込んだ様子を表します。')">よりて見るに</span>、
+        <span class="kw" onclick="showKw('筒の中光りたり','筒の中が光っている','「筒（つつ）」は竹の筒状になっている部分のこと。「光りたり」の「たり」は存続の助動詞で「光っている」という意味です。')">筒の中光りたり</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo4')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi4')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo4">
+        <p>「あやしがりて・よりて見るに」の主語は <strong>「翁」</strong> です。<br>
+        「筒の中光りたり」の主語は <strong>「筒の中（竹の内側）」</strong> です。<br>
+        敬語は使われていないので、動作の主語は翁（身分の低い人）と判断できます。</p>
+      </div>
+      <div class="imi-panel" id="imi4">
+        <div class="imi-q">第4文「あやしがりて、よりて見るに、筒の中光りたり。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic4">
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">①</span>不思議に思って近寄ったが、竹の中は暗かった。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">②</span>不思議な竹を見つけたので、そのまま持って帰った。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,true)"><span class="imi-num">③</span>不思議に思って近寄って見ると、竹の筒の中が光っていた。</button>
+          <button class="imi-btn" onclick="imiAns('ic4','if4',this,false)"><span class="imi-num">④</span>竹の外側が光っていたので、翁は恐ろしくなった。</button>
+        </div>
+        <div class="imi-feedback" id="if4"></div>
+      </div>
+    </div>
+
+    <!-- 文5 -->
+    <div class="sentence-block" id="sb5">
+      <span class="sb-num">第 5 文</span>
+      <div class="kobun-text">
+        その筒の中に、
+        <span class="kw" onclick="showKw('みそかに','三寸（約9cm）ほどの','「みそ」は「三寸（さんすん）」のことで、約9センチメートル。とても小さな人の大きさを表しています。')">みそ</span>
+        ばかりなる人<span class="chuu" onclick="showChuu(4,'みそばかりなる人','「みそ（三寸）ばかり」＝約9センチほどの大きさ。「ばかり」は「〜ほど・〜くらい」という意味。それくらいの大きさの小さな人がいたということ。')">（注4）</span>、
+        <span class="kw" onclick="showKw('いとうつくしうてゐたり','たいそうかわいらしく座っていた','「いと」は「たいそう・とても」の意味。「うつくし」は古文では「かわいい・愛らしい」の意味（現代語の「美しい」とは違う！）。「ゐたり」は「座っている」の意味。')">いとうつくしうてゐたり</span>。
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-shugo" onclick="toggleShugo('shugo5')">👤 主語の確認</button>
+        <button class="action-btn btn-imi" onclick="toggleImi('imi5')">✏️ この文の意味は？</button>
+      </div>
+      <div class="shugo-panel" id="shugo5">
+        <p>この文の主語は <strong>「みそばかりなる人（三寸ほどの小さな人＝かぐや姫）」</strong> です。<br>
+        「うつくし」は古文では「かわいい・愛らしい」という意味です。現代語の「美しい」と混同しないよう注意しましょう（Unit 2 で学習済み）。</p>
+      </div>
+      <div class="imi-panel" id="imi5">
+        <div class="imi-q">第5文「その筒の中に、みそばかりなる人、いとうつくしうてゐたり。」の意味として最も正しいものはどれですか。</div>
+        <div class="imi-choices" id="ic5">
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,true)"><span class="imi-num">①</span>その竹の筒の中に、三寸（約9cm）ほどの、たいそうかわいらしい人が座っていた。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">②</span>その筒の中に、とても大きな人が怖い顔をして座っていた。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">③</span>その竹の筒の中に、三十センチほどの人が美しく立っていた。</button>
+          <button class="imi-btn" onclick="imiAns('ic5','if5',this,false)"><span class="imi-num">④</span>その竹の筒の中に、うつくしい絵が描いてあった。</button>
+        </div>
+        <div class="imi-feedback" id="if5"></div>
+      </div>
+    </div>
+
+  </div><!-- /sentences -->
+
+  <!-- 要点積み上げ -->
+  <div class="yoten-section">
+    <div class="yoten-title">📋 ここまでの要点（問題を解くと積み上がります）</div>
+    <div class="yoten-list" id="yotenList">
+      <div class="yoten-empty" id="yotenEmpty">まだ問題を解いていません。問題に答えると要点が表示されます。</div>
+    </div>
+  </div>
+
+  <!-- 完了ナビ -->
+  <div class="completion-nav" id="completionNav">
+    <div class="comp-emoji">🎉</div>
+    <div class="comp-title">古文攻略① クリアです！</div>
+    <div class="comp-sub">竹取物語の書き出し5文を読み解きました。<br>1文ずつ丁寧に読む習慣が、高認合格につながります。</div>
+    <div class="nav-btn-row">
+      <a href="kobun_kouryaku_02.html" class="nav-btn nav-btn-next">次の単元へ ▶ 古文攻略②</a>
+      <a href="yondeikou_index.html" class="nav-btn nav-btn-index">📋 目次に戻る</a>
+    </div>
+  </div>
+
+</main>
+<script>
+// ─── 資料パネル ───────────────────────────────────────────
+function toggleShiryo() {
+  const p = document.getElementById('shiryoPanel');
+  p.classList.toggle('open');
+}
+
+// ─── ポップアップ ─────────────────────────────────────────
+function showKw(word, mean, ctx) {
+  document.getElementById('popupHeader').className = 'popup-header kw-header';
+  document.getElementById('popupWord').textContent = word;
+  document.getElementById('popupMean').textContent = mean;
+  document.getElementById('popupCtxLabel').textContent = 'この文での意味・使われ方';
+  document.getElementById('popupCtx').textContent = ctx;
+  document.getElementById('popupOverlay').classList.add('open');
+}
+
+function showChuu(num, word, desc) {
+  document.getElementById('popupHeader').className = 'popup-header ch-header';
+  document.getElementById('popupWord').textContent = `（注${num}）${word}`;
+  document.getElementById('popupMean').textContent = '脚注（語句の説明）';
+  document.getElementById('popupCtxLabel').textContent = '説明';
+  document.getElementById('popupCtx').textContent = desc;
+  document.getElementById('popupOverlay').classList.add('open');
+}
+
+function closePopup(e) {
+  if (e.target === document.getElementById('popupOverlay'))
+    document.getElementById('popupOverlay').classList.remove('open');
+}
+function closePopupBtn() {
+  document.getElementById('popupOverlay').classList.remove('open');
+}
+
+// ─── 主語パネル ───────────────────────────────────────────
+const shugoState = {};
+function toggleShugo(id) {
+  shugoState[id] = !shugoState[id];
+  document.getElementById(id).classList.toggle('open', shugoState[id]);
+}
+
+// ─── 意味問題 ─────────────────────────────────────────────
+const imiState = {};
+function toggleImi(id) {
+  imiState[id] = !imiState[id];
+  document.getElementById(id).classList.toggle('open', imiState[id]);
+}
+
+// 要点データ
+const YOTEN = [
+  '第1文：竹取の翁という人物が昔いた（「けり」＝過去・伝聞の助動詞）',
+  '第2文：翁は野山に入って竹を取り、さまざまなことに使っていた（日常の仕事の描写）',
+  '第3文：竹の中に根元が光る竹が一本あった（「なむ」＝強調の係助詞）',
+  '第4文：翁が不思議に思って近寄ってみると、竹の筒の中が光っていた（「あやし」＝不思議・「たり」＝存続）',
+  '第5文：筒の中に三寸（約9cm）ほどのたいそうかわいらしい人が座っていた（「うつくし」＝かわいい・「ゐたり」＝座っている）',
+];
+
+const answered = {};
+let answeredCount = 0;
+const totalQ = 5;
+
+const imiFB = {
+  if1: {ok:'「竹取の翁といふものありけり」＝「竹取の翁と呼ばれる者がいたそうだ」です。「といふ」は「〜という名前の」、「けり」は過去の助動詞です。物語の書き出しの定番パターンです。', ng:'正解は②です。「といふ」は「〜という」、「ありけり」は「いたそうだ（過去）」という意味です。'},
+  if2: {ok:'「まじりて」は「入って」、「とりつつ」は「取りながら」、「よろづのこと」は「さまざまなこと」、「つかひけり」は「使っていた」という意味です。翁の日常の仕事の様子が描かれています。', ng:'正解は③です。「よろづ」は「万・さまざまな」という意味です。「〜つつ」は「〜しながら」という意味の接続助詞です。'},
+  if3: {ok:'「もと光る」は「根元が光っている」、「なむ」は強調の係助詞、「一すぢ」は「一本」という意味です。特別な光る竹が一本あったことが強調されています。', ng:'正解は③です。「もと」は「根元（下の部分）」、「一すぢ」は「一本」という意味です。「なむ」は強調を表す係助詞です。'},
+  if4: {ok:'「あやしがりて」は「不思議に思って」、「よりて」は「近寄って」、「筒の中光りたり」は「筒の中が光っている」という意味です。「たり」は存続の助動詞です。', ng:'正解は②です。「あやし」は「不思議・変」、「よる」は「近寄る」、「光りたり」の「たり」は「〜ている（存続）」という意味です。'},
+  if5: {ok:'「みそばかり」は「三寸（約9cm）ほど」、「いと」は「たいそう・とても」、「うつくし」は古文では「かわいい・愛らしい」（現代語の「美しい」と違う！）、「ゐたり」は「座っている」という意味です。', ng:'正解は③です。「うつくし」は古文では「かわいい・愛らしい」という意味です。「美しい」は現代語の意味で、古文では違います。「みそ」は三寸（約9cm）のことです。'},
+};
+
+function imiAns(choicesId, fbId, btn, isCorrect) {
+  if (answered[choicesId]) return;
+  answered[choicesId] = true;
+  document.querySelectorAll(`#${choicesId} .imi-btn`).forEach(b => b.disabled = true);
+  const fb = document.getElementById(fbId);
+  const d = imiFB[fbId];
+  if (isCorrect) {
+    btn.classList.add('correct');
+    launchConfetti();
+    fb.className = 'imi-feedback show ok';
+    fb.innerHTML = `<div class="imi-fb-t">✅ 正解！</div>${d.ok}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll(`#${choicesId} .imi-btn`).forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(',true,')) b.classList.add('correct');
+    });
+    fb.className = 'imi-feedback show ng';
+    fb.innerHTML = `<div class="imi-fb-t">惜しい、確認してみましょう。</div>${d.ng}`;
+  }
+  // 要点追加
+  const qNum = parseInt(choicesId.replace('ic','')) - 1;
+  addYoten(qNum);
+  answeredCount++;
+  if (answeredCount >= totalQ) {
+    setTimeout(() => {
+      const nav = document.getElementById('completionNav');
+      nav.classList.add('show');
+      nav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1400);
+  }
+}
+
+function addYoten(idx) {
+  const list = document.getElementById('yotenList');
+  const empty = document.getElementById('yotenEmpty');
+  if (empty) empty.remove();
+  const item = document.createElement('div');
+  item.className = 'yoten-item';
+  item.innerHTML = `<div class="yoten-num">${idx + 1}</div><div class="yoten-text">${YOTEN[idx]}</div>`;
+  list.appendChild(item);
+}
+
+// ─── 花吹雪 ────────────────────────────────────────────────
+function launchConfetti() {
+  const cvs = document.getElementById('confetti');
+  cvs.width = innerWidth; cvs.height = innerHeight; cvs.style.display = 'block';
+  const ctx = cvs.getContext('2d');
+  const parts = Array.from({length:100}, () => ({
+    x:Math.random()*innerWidth, y:-10,
+    vx:(Math.random()-.5)*5, vy:Math.random()*3.5+2,
+    r:Math.random()*6+3,
+    color:['#f582ae','#facc15','#34d399','#60a5fa','#f87171','#a78bfa','#fb923c'][Math.floor(Math.random()*7)],
+    rot:Math.random()*360, rv:(Math.random()-.5)*8,
+  }));
+  let frame;
+  (function draw() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    parts.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rv;
+    });
+    if(parts.some(p=>p.y<innerHeight)) frame=requestAnimationFrame(draw);
+    else cvs.style.display='none';
+  })();
+  setTimeout(()=>{cvs.style.display='none'; cancelAnimationFrame(frame);},3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢文読解 ― 淮南子「重耳と釐負羈」</title>
+<style>
+:root{
+  --navy:#1a2744;--navy-mid:#2a3d6b;--navy-pale:#e8ecf4;
+  --gold:#c9a84c;--gold-light:#f0d98a;--red:#c0392b;
+  --green:#1e7e5a;--green-light:#d4f0e4;--cream:#faf8f2;
+  --text:#1a1a2e;--muted:#6b7aa1;--border:#c8d0e4;
+  --shadow:rgba(26,39,68,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:60px;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+  color:#fff;padding:28px 24px 22px;text-align:center;}
+.header-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--gold-light);
+  border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:10px;font-family:sans-serif;}
+.header h1{font-size:1.5rem;font-weight:normal;letter-spacing:.1em;line-height:1.6;}
+.header .sub{font-size:.82rem;color:var(--gold-light);margin-top:6px;font-family:sans-serif;opacity:.85;}
+.container{max-width:860px;margin:0 auto;padding:28px 16px;}
+.intro-box{background:#fff;border:1px solid var(--border);border-left:4px solid var(--navy);
+  border-radius:8px;padding:18px 20px;margin-bottom:28px;font-size:.9rem;line-height:1.9;
+  color:#3a3a4a;font-family:sans-serif;}
+.intro-box strong{color:var(--navy);}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  margin-bottom:28px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.section-header{background:var(--navy);color:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;}
+.section-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  color:var(--gold-light);font-family:sans-serif;font-weight:bold;flex-shrink:0;}
+.section-title{font-size:.95rem;letter-spacing:.05em;line-height:1.5;}
+.section-title small{display:block;font-size:.75rem;color:var(--gold-light);
+  font-family:sans-serif;margin-top:2px;opacity:.85;}
+.prog-wrap{background:var(--navy-pale);height:5px;margin:0 20px;border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  border-radius:20px;transition:width .5s;width:0;}
+.section-body{padding:22px 20px;}
+.notes-box{background:#f8f9fc;border:1px solid var(--border);border-radius:8px;
+  padding:12px 16px;margin-bottom:18px;font-family:sans-serif;font-size:.8rem;
+  color:var(--muted);line-height:1.8;}
+.notes-box strong{color:var(--navy);}
+/* 書き下し文：縦書き */
+.kundoku-wrap{background:var(--navy-pale);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin-bottom:20px;overflow-x:auto;}
+.kundoku-label{font-size:.72rem;color:var(--muted);font-family:sans-serif;
+  letter-spacing:1.5px;margin-bottom:12px;}
+.kundoku-text{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:inline-block;font-size:1.25rem;line-height:2.0;
+  letter-spacing:0.35em;color:var(--navy);
+  font-family:'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  min-height:80px;
+}
+/* 問い */
+.question-zone{background:#f4f6fb;border:1px solid var(--border);border-radius:10px;
+  padding:18px 18px 14px;margin-bottom:16px;transition:opacity .3s;}
+.q-label{font-size:.78rem;color:var(--navy);font-family:sans-serif;
+  font-weight:bold;margin-bottom:8px;letter-spacing:.05em;}
+.q-text{font-size:.92rem;color:#1a1a2e;line-height:1.7;margin-bottom:14px;font-family:sans-serif;}
+.hl{background:var(--gold-light);padding:1px 6px;border-radius:4px;
+  font-family:'Hiragino Mincho ProN',serif;font-size:1rem;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.cbtn{background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 16px;font-size:.88rem;font-family:sans-serif;line-height:1.6;
+  cursor:pointer;text-align:left;transition:all .18s;color:var(--text);
+  display:flex;align-items:flex-start;gap:10px;}
+.cbtn:hover:not([disabled]){border-color:var(--navy);background:var(--navy-pale);transform:translateX(2px);}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--navy-pale);
+  color:var(--navy);font-size:.78rem;display:flex;align-items:center;
+  justify-content:center;font-weight:bold;flex-shrink:0;margin-top:1px;}
+.cbtn.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.cbtn.correct .cnum{background:var(--green);color:#fff;}
+.cbtn.wrong{background:#fde8e6;border-color:var(--red);color:var(--red);opacity:.75;}
+.cbtn.wrong .cnum{background:var(--red);color:#fff;}
+.cbtn[disabled]{cursor:default;}
+.feedback{display:none;margin-top:12px;padding:11px 14px;border-radius:8px;
+  font-size:.85rem;font-family:sans-serif;line-height:1.7;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);color:var(--green);border-left:4px solid var(--green);}
+.feedback.ng{background:#fde8e6;color:#8b1a10;border-left:4px solid var(--red);}
+/* まとめ */
+.sum-zone{margin-top:20px;display:none;}
+.sum-zone.unlocked{display:block;}
+.sum-btn{background:var(--navy);color:var(--gold-light);border:none;border-radius:8px;
+  padding:10px 20px;font-size:.85rem;font-family:sans-serif;cursor:pointer;
+  letter-spacing:.05em;display:flex;align-items:center;gap:8px;transition:background .2s;}
+.sum-btn:hover{background:var(--navy-mid);}
+.sum-content{display:none;margin-top:10px;background:var(--navy);color:#e8edf8;
+  border-radius:10px;padding:18px 20px;font-family:sans-serif;font-size:.88rem;
+  line-height:1.9;animation:fadeIn .3s ease;}
+.sum-content.show{display:block;}
+.sum-content h4{color:var(--gold-light);font-size:.78rem;letter-spacing:1.5px;margin-bottom:10px;}
+.sum-content p{margin-bottom:8px;}
+.sum-content p:last-child{margin-bottom:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.final{display:none;background:var(--navy);color:#e8edf8;border-radius:14px;
+  padding:28px 24px;margin-top:8px;text-align:center;font-family:sans-serif;
+  animation:fadeIn .4s ease;}
+.final.show{display:block;}
+.final h2{color:var(--gold-light);font-size:1.1rem;letter-spacing:.1em;margin-bottom:14px;}
+.final p{font-size:.9rem;line-height:1.9;margin-bottom:6px;}
+.score{font-size:2.2rem;color:var(--gold-light);font-weight:bold;margin:12px 0;}
+.score span{font-size:1rem;color:#a8b4cc;}
+@media(max-width:600px){.kundoku-text{font-size:1.05rem;}.header h1{font-size:1.25rem;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-badge">漢文読解 ／ 淮南子　令和6年度第2回</div>
+  <h1>重耳と釐負羈</h1>
+  <div class="sub">書き下し文の意味を読み取る練習（全9問）</div>
+</div>
+<div class="container">
+<div class="intro-box">
+  <strong>学習の進め方：</strong><br>
+  ① 書き下し文をよく読みます。<br>
+  ② 太線でマークされた部分の意味として最も適当なものを選んでください。<br>
+  ③ 各段落で1問でも解くと「段落まとめ」が見られるようになります。
+</div>
+
+<!-- 第一段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">一</div>
+    <div class="section-title">重耳、曹を過ぐる
+      <small>晋の公子が亡命中に曹を通り過ぎる場面</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p1"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      晋＝国名 ／ 重耳＝晋の公子・後の文公 ／ 出亡＝国を逃げ出す ／ 曹＝国名 ／ 釐負羈＝曹の大夫
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">晋の公子重耳、出亡して曹に過ぐるも礼無し焉。</div>
+    </div>
+    <div class="question-zone" id="q1">
+      <div class="q-label">問１</div>
+      <div class="q-text"><span class="hl">出亡して曹に過ぐるも礼無し焉</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q1',false,'「出亡」は「国を逃げ出して亡命する」の意。礼を知らなかったのは重耳ではなく、曹が重耳に礼遇しなかったのです。')"><span class="cnum">①</span><span>晋を脱出した重耳が曹に立ち寄ったが、曹の礼儀作法を知らなかった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',true,'正解！「出亡」＝国を逃げ出す、「過ぐ」＝通り過ぎる、「礼無し」＝曹が重耳に礼遇しなかった。')"><span class="cnum">②</span><span>晋を亡命した重耳が曹の国を通り過ぎたが、曹から礼遇を受けることはなかった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「礼無し」の主語は曹の国王。重耳が礼を忘れたのではありません。')"><span class="cnum">③</span><span>晋の国から逃げてきた重耳は、曹に着くと礼節を忘れて振る舞った。</span></button>
+        <button class="cbtn" onclick="ans(this,'q1',false,'「過ぐ」は通り過ぎること。曹に永住したのではありません。')"><span class="cnum">④</span><span>亡命した重耳が曹の国に永住したが、曹では礼儀が重んじられなかった。</span></button>
+      </div>
+      <div class="feedback" id="f_q1"></div>
+    </div>
+
+    <div class="kundoku-wrap" style="margin-top:18px;">
+      <div class="kundoku-label">▼ 書き下し文（続き）</div>
+      <div class="kundoku-text">釐負羈の妻、釐負羈に謂ひて曰はく、「君、晋の公子に礼無し。吾れ其の従者を観るに、皆賢人なり。若し以て夫子を相けて晋国に反らば、必ず曹を伐たん。子、何ぞ先づ徳を加へざる。」</div>
+    </div>
+    <div class="question-zone" id="q2" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問２</div>
+      <div class="q-text"><span class="hl">吾れ其の従者を観るに、皆賢人なり</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q2',false,'「観るに」の主語は「吾れ（妻）」。重耳の従者が観察したのではありません。')"><span class="cnum">①</span><span>あの人（重耳）の従者たちが見ると、皆が賢人のようにふるまっていた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「其の」は重耳を指します。釐負羈の従者ではありません。')"><span class="cnum">②</span><span>わたしがあなた（釐負羈）の従者たちを観察したところ、皆賢明な人物だった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',true,'正解！「吾れ」＝妻、「其の従者」＝重耳の随行者。妻が重耳の家来をみて、みな優秀だと判断したのです。')"><span class="cnum">③</span><span>わたしが重耳の従者たちを見ると、みな賢い人物ばかりだった。</span></button>
+        <button class="cbtn" onclick="ans(this,'q2',false,'「皆賢人なり」は従者全員についての評価。重耳本人だけのことではありません。')"><span class="cnum">④</span><span>わたしが重耳を見ると、賢人のように見えた。</span></button>
+      </div>
+      <div class="feedback" id="f_q2"></div>
+    </div>
+
+    <div class="question-zone" id="q3" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問３</div>
+      <div class="q-text"><span class="hl">子、何ぞ先づ徳を加へざる</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q3',false,'「何ぞ〜ざる」は「なぜ〜しないのか」という勧めの反語。禁止ではありません。')"><span class="cnum">①</span><span>あなたは今すぐ徳を示すことをやめなさい。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「加ふ」は「施す・与える」の意。礼儀を守るよう戒めることではありません。')"><span class="cnum">②</span><span>あなたはなぜ、先に重耳に対して礼儀を守るよう戒めないのですか。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',false,'「先づ」は「まず先に（自分から）施す」の意。重耳に先に見せてもらうという意味ではありません。')"><span class="cnum">③</span><span>あなたはまず重耳を招待して、徳を見せてもらうべきではないですか。</span></button>
+        <button class="cbtn" onclick="ans(this,'q3',true,'正解！「何ぞ〜ざる」＝なぜ〜しないのか（強い勧め）。妻は「先に恩徳を与えておくべきでは」と夫に進言したのです。')"><span class="cnum">④</span><span>あなたはどうして先に（重耳に）恩徳を施さないのですか。</span></button>
+      </div>
+      <div class="feedback" id="f_q3"></div>
+    </div>
+
+    <div class="sum-zone" id="s1">
+      <button class="sum-btn" onclick="toggleSum('sc1',this)"><span>📖</span> 第一段落のまとめを見る</button>
+      <div class="sum-content" id="sc1">
+        <h4>第一段落 ／ まとめ</h4>
+        <p>晋の公子<strong style="color:var(--gold-light)">重耳</strong>は亡命中、曹を通り過ぎたが礼遇されなかった。</p>
+        <p><strong style="color:var(--gold-light)">釐負羈の妻</strong>は「重耳の家来はみな賢人だ。重耳が晋に帰国すれば必ず曹を討つ。今のうちに恩を施すべき（<strong style="color:var(--gold-light)">何ぞ先づ徳を加へざる</strong>）」と夫に進言した。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">二</div>
+    <div class="section-title">壺飱と璧
+      <small>釐負羈が食物と宝玉を贈り、重耳が宝玉を返す場面</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p2"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      壺飱（こしゅん）＝壺に入れた食物 ／ 璧（へき）＝宝玉 ／ 遺る＝贈る ／ 反す＝返す
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">釐負羈、之に壺飱を遺り、而して璧を加へり。重耳其の飱を受け、而して其の璧を反す。</div>
+    </div>
+    <div class="question-zone" id="q4">
+      <div class="q-label">問４</div>
+      <div class="q-text"><span class="hl">釐負羈、之に壺飱を遺り、而して璧を加へり</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q4',false,'「遺る（おくる）」は贈り与えること。道ばたに置き忘れたのではありません。')"><span class="cnum">①</span><span>釐負羈は壺に入った食物を道ばたに遺し、そこに璧を加えておいた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',true,'正解！「之」は重耳、「遺る」は贈ること。釐負羈は食物に宝玉まで添えて重耳に贈ったのです。')"><span class="cnum">②</span><span>釐負羈は重耳に壺入りの食物を贈り、さらに璧（宝玉）も添えた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'「遺る」は意図的に贈ること。忘れていったのではありません。')"><span class="cnum">③</span><span>釐負羈は重耳のもとに壺飱を忘れていき、璧も置き忘れた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q4',false,'璧を断ったのは重耳のほう。また「而して」は逆接ではなく順接です。')"><span class="cnum">④</span><span>釐負羈は壺飱を重耳に届けたが、璧を加えることを断られた。</span></button>
+      </div>
+      <div class="feedback" id="f_q4"></div>
+    </div>
+
+    <div class="question-zone" id="q5" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問５</div>
+      <div class="q-text"><span class="hl">重耳其の飱を受け、而して其の璧を反す</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q5',false,'「反す」は「返す」の意。璧も受け取ったわけではありません。')"><span class="cnum">①</span><span>重耳は食物も璧もどちらも受け取り、感謝の言葉を返した。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'食物（飱）は受け取っています。すべて断ったわけではありません。')"><span class="cnum">②</span><span>重耳は食物も璧も両方とも断り、釐負羈のもとに返した。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',false,'「其の璧を反す」は璧を返したこと。食物を返したのではありません。')"><span class="cnum">③</span><span>重耳は璧を受け取り、食物のほうを釐負羈に返した。</span></button>
+        <button class="cbtn" onclick="ans(this,'q5',true,'正解！重耳は食物（飱）は受け取ったが、璧（宝玉）は受け取らず返しました。実用の恩は受け、財物は辞退するという節度を示したのです。')"><span class="cnum">④</span><span>重耳はその食物は受け取ったが、璧（宝玉）は返した。</span></button>
+      </div>
+      <div class="feedback" id="f_q5"></div>
+    </div>
+
+    <div class="kundoku-wrap" style="margin-top:18px;">
+      <div class="kundoku-label">▼ 書き下し文（続き）</div>
+      <div class="kundoku-text">其の国に反るに及んで、師を起こして曹を伐ちて之に尅つ。</div>
+    </div>
+    <div class="question-zone" id="q6" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問６</div>
+      <div class="q-text"><span class="hl">其の国に反るに及んで、師を起こして曹を伐ちて之に尅つ</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q6',false,'「尅つ」は「勝つ」の意。退けたのではなく重耳が攻めた側です。')"><span class="cnum">①</span><span>重耳が晋に帰国すると、曹が軍を起こして攻めてきたが、重耳はこれを退けた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',true,'正解！「其の国」＝晋、「反る」＝帰国する、「師を起こす」＝軍を挙げる、「尅つ」＝勝つ。重耳が晋に帰国後、曹に攻め込んで勝ったのです。')"><span class="cnum">②</span><span>重耳が晋に帰国すると、軍を起こして曹を討ち、これに勝った。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'攻めたのは重耳の側。曹が晋に侵攻したのではありません。')"><span class="cnum">③</span><span>曹が晋に侵攻すると、重耳は軍を率いて応戦し、これを打ち破った。</span></button>
+        <button class="cbtn" onclick="ans(this,'q6',false,'「尅つ」は「勝つ」の意。重耳は勝利しています。')"><span class="cnum">④</span><span>重耳が晋に帰国すると、曹に軍を送ったが敗れてしまった。</span></button>
+      </div>
+      <div class="feedback" id="f_q6"></div>
+    </div>
+
+    <div class="sum-zone" id="s2">
+      <button class="sum-btn" onclick="toggleSum('sc2',this)"><span>📖</span> 第二段落のまとめを見る</button>
+      <div class="sum-content" id="sc2">
+        <h4>第二段落 ／ まとめ</h4>
+        <p>釐負羈は重耳に食物と璧を贈った。重耳は食物は受け取ったが璧は返した。「実用の恩は受け・財物は辞退する」という節度を示した。</p>
+        <p>その後重耳は晋に帰国（<strong style="color:var(--gold-light)">反る</strong>）し、曹に攻め込んで勝利（<strong style="color:var(--gold-light)">尅つ</strong>）した。妻の予言通りになったのである。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三段落 -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">三</div>
+    <div class="section-title">釐負羈の里を犯さず
+      <small>重耳が恩人の一族を守るよう命令する場面</small>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="p3"></div></div>
+  <div class="section-body">
+    <div class="notes-box">
+      <strong>【語注】</strong>
+      三軍＝大軍 ／ 令す＝命令する ／ 無からしむ＝〜させない
+    </div>
+    <div class="kundoku-wrap">
+      <div class="kundoku-label">▼ 書き下し文</div>
+      <div class="kundoku-text">三軍に令して、釐負羈の里に入ること無からしむ。</div>
+    </div>
+    <div class="question-zone" id="q7">
+      <div class="q-label">問７</div>
+      <div class="q-text"><span class="hl">三軍に令して</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q7',false,'「令す」は「命令する」の意。三軍が命令したのではなく、重耳が三軍に命じたのです。')"><span class="cnum">①</span><span>三軍（大軍）が（重耳に）命令して</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「三軍」は軍全体を指す言葉。釐負羈の息子たちではありません。')"><span class="cnum">②</span><span>釐負羈の三人の息子に命じて</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',true,'正解！「令す」は「命令する」。重耳が自軍の全軍（三軍）に対して命令を下したのです。')"><span class="cnum">③</span><span>（重耳が）大軍に命令して</span></button>
+        <button class="cbtn" onclick="ans(this,'q7',false,'「令して」は命令すること。軍が感謝して解散したのではありません。')"><span class="cnum">④</span><span>三軍に感謝して（軍を解散して）</span></button>
+      </div>
+      <div class="feedback" id="f_q7"></div>
+    </div>
+
+    <div class="question-zone" id="q8" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問８</div>
+      <div class="q-text"><span class="hl">釐負羈の里に入ること無からしむ</span><br>この部分の意味として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q8',false,'命令したのは重耳。釐負羈が禁じたのではありません。')"><span class="cnum">①</span><span>釐負羈が自分の住む区域に軍が入るのを禁じた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'「無からしむ」は「〜させない（禁止）」の意。入るよう命じたのではありません。')"><span class="cnum">②</span><span>釐負羈の一族の住む区域に軍を入れるよう命じた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',true,'正解！「無からしむ」＝〜させない。重耳は「釐負羈の住む区域には立ち入るな」と全軍に命じ、恩人の一族を守ったのです。')"><span class="cnum">③</span><span>釐負羈の住む区域に（軍が）入ることのないようにさせた。</span></button>
+        <button class="cbtn" onclick="ans(this,'q8',false,'重耳が命じる側。釐負羈の里から撤退したのではありません。')"><span class="cnum">④</span><span>釐負羈の里から重耳の軍が撤退することになった。</span></button>
+      </div>
+      <div class="feedback" id="f_q8"></div>
+    </div>
+
+    <div class="question-zone" id="q9" style="opacity:.45;pointer-events:none;">
+      <div class="q-label">問９　本文全体の内容</div>
+      <div class="q-text">本文（淮南子）全体の内容として最も適当なものを選んでください。</div>
+      <div class="choices">
+        <button class="cbtn" onclick="ans(this,'q9',false,'妻は夫に恩を施すよう進言したのであって、曹の国王に謝罪させる場面ではありません。')"><span class="cnum">①</span><span>釐負羈の妻が曹の国王の無礼を批判し、重耳に謝罪させようとした話。</span></button>
+        <button class="cbtn" onclick="ans(this,'q9',false,'重耳は璧を受け取らず返しています。')"><span class="cnum">②</span><span>重耳が釐負羈から壺飱と璧の両方を受け取り、後にその恩に報いた話。</span></button>
+        <button class="cbtn" onclick="ans(this,'q9',true,'正解！妻の先見の明→釐負羈の恩→重耳の義理堅い報恩（里を守る）。「先に徳を施せば後に報われる」という教訓の話です。')"><span class="cnum">③</span><span>釐負羈の妻の進言で恩を施した釐負羈の一族が、重耳の帰国後に守られた話。</span></button>
+        <button class="cbtn" onclick="ans(this,'q9',false,'釐負羈を新たな指導者に任命したとは書かれていません。')"><span class="cnum">④</span><span>重耳が曹を完全に滅ぼし、釐負羈を新たな曹の指導者に任命した話。</span></button>
+      </div>
+      <div class="feedback" id="f_q9"></div>
+    </div>
+
+    <div class="sum-zone" id="s3">
+      <button class="sum-btn" onclick="toggleSum('sc3',this)"><span>📖</span> 第三段落・全体まとめを見る</button>
+      <div class="sum-content" id="sc3">
+        <h4>第三段落 ／ 全体まとめ</h4>
+        <p>重耳は全軍に「釐負羈の里には入るな」と命令し、恩人の一族を守った。</p>
+        <p><strong style="color:var(--gold-light)">本文の教訓：</strong>妻の先見の明→釐負羈の先手の恩→重耳の義理堅い報恩。「先に徳を施せば、後に必ず報われる」。</p>
+        <p><strong style="color:var(--gold-light)">重要語：</strong>「令す」＝命令する ／「無からしむ」＝〜させない ／「尅つ」＝勝つ ／「反る」＝帰国する</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <h2>✨ 全問完了</h2>
+  <div class="score" id="sc">―<span> / 9問</span></div>
+  <p id="sm"></p>
+  <p style="margin-top:16px;font-size:.82rem;color:#a8b4cc;">段落まとめで本文全体の流れをもう一度確認しましょう。</p>
+</div>
+</div>
+
+<script>
+window._TOTAL=9;
+window._SEC={q1:1,q2:1,q3:1,q4:2,q5:2,q6:2,q7:3,q8:3,q9:3};
+window._NEXT={q1:'q2',q2:'q3',q3:null,q4:'q5',q5:'q6',q6:null,q7:'q8',q8:'q9',q9:null};
+window._STOT={1:3,2:3,3:3};
+function ans(btn,id,ok,msg){
+  if(window._used&&window._used[id])return;
+  if(!window._used)window._used={};
+  window._used[id]=true;
+  document.getElementById(id).querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById('f_'+id);
+  fb.textContent=(ok?'✓ 正解！　':'✗ 不正解。　')+msg;
+  fb.className='feedback show '+(ok?'ok':'ng');
+  if(ok)window._correct=(window._correct||0)+1;
+  window._done=(window._done||0)+1;
+  const s=window._SEC[id];
+  window._sdone=window._sdone||{};
+  window._sdone[s]=(window._sdone[s]||0)+1;
+  document.getElementById('p'+s).style.width=(window._sdone[s]/window._STOT[s]*100)+'%';
+  if(!(window._sopen&&window._sopen[s])){
+    if(!window._sopen)window._sopen={};
+    window._sopen[s]=true;
+    document.getElementById('s'+s).classList.add('unlocked');
+  }
+  const nxt=window._NEXT[id];
+  if(nxt){const nz=document.getElementById(nxt);nz.style.opacity='1';nz.style.pointerEvents='auto';}
+  if(window._done===window._TOTAL)setTimeout(showFin,600);
+}
+function showFin(){
+  const el=document.getElementById('fin');el.classList.add('show');
+  document.getElementById('sc').innerHTML=(window._correct||0)+'<span> / '+window._TOTAL+'問</span>';
+  const p=Math.round((window._correct||0)/window._TOTAL*100);
+  document.getElementById('sm').textContent=
+    p>=86?'素晴らしい！ 書き下し文の読解がとてもよくできています。':
+    p>=57?'よく頑張りました。間違えた問題の解説をもう一度読み返してみましょう。':
+    '難しい問題がありましたね。書き下し文と語注を照らし合わせながらもう一度取り組んでみましょう。';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function toggleSum(id,btn){
+  const el=document.getElementById(id);
+  const show=el.classList.toggle('show');
+  btn.childNodes[1].textContent=show?' 閉じる':' まとめを見る';
+}
+</script>
+</body>
+</html>
