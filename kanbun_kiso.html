@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢文の基礎 — 返り点の読み方 | 江原予備校</title>
+<style>
+:root {
+  --cream: #fdf8f0;
+  --cream-dark: #f0e8d8;
+  --navy: #001858;
+  --pink: #f582ae;
+  --pink-light: #fce4ef;
+  --kanbun: #1a3a2a;
+  --kanbun-mid: #2d6a4f;
+  --kanbun-light: #e8f5e9;
+  --kanbun-accent: #52b788;
+  --gold: #c9a84c;
+  --gold-light: #fdf6e3;
+  --red: #c0392b;
+  --text: #1a1a2e;
+  --gray: #7a7f99;
+  --radius: 16px;
+  --shadow: 0 4px 20px rgba(0,24,88,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Georgia', serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+header {
+  background: var(--kanbun);
+  color: white;
+  padding: 18px 24px 14px;
+}
+.badge {
+  display: inline-block;
+  background: var(--kanbun-accent);
+  color: white;
+  font-size: 11px; font-weight: bold;
+  padding: 3px 10px; border-radius: 20px;
+  font-family: sans-serif;
+  margin-bottom: 6px;
+}
+header h1 { font-size: 18px; letter-spacing: 0.08em; }
+header p { font-size: 11px; opacity: 0.7; margin-top: 3px; font-family: sans-serif; }
+#pbar-wrap { background: #0d2b1a; height: 5px; }
+#pbar { height: 5px; background: var(--kanbun-accent); width: 0; transition: width 0.5s; }
+main { max-width: 720px; margin: 0 auto; padding: 28px 16px; }
+
+.sec-head { display: flex; align-items: center; gap: 12px; margin: 32px 0 16px; }
+.sec-num {
+  background: var(--kanbun); color: var(--kanbun-accent);
+  font-family: sans-serif; font-size: 12px; font-weight: bold;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sec-head h2 { font-size: 18px; color: var(--kanbun); letter-spacing: 0.05em; }
+
+.card { background: white; border-radius: var(--radius); padding: 20px 22px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.card-green { border-left: 4px solid var(--kanbun-accent); }
+
+.intro-hero {
+  background: var(--kanbun); color: white;
+  border-radius: var(--radius); padding: 26px 24px;
+  text-align: center; margin-bottom: 24px;
+}
+.intro-hero::before { content: '📜'; font-size: 48px; display: block; margin-bottom: 10px; }
+.intro-hero h2 { font-size: 20px; margin-bottom: 8px; }
+.intro-hero p { font-size: 13px; opacity: 0.82; line-height: 1.8; font-family: sans-serif; }
+
+.rule-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+.rule-table th { background: var(--kanbun); color: white; padding: 10px 14px; text-align: left; }
+.rule-table td { padding: 10px 14px; border-bottom: 1px solid var(--cream-dark); line-height: 1.7; vertical-align: top; }
+.rule-table tr:last-child td { border-bottom: none; }
+.rule-table tr:nth-child(even) td { background: var(--kanbun-light); }
+.mark { font-size: 18px; font-weight: bold; color: var(--kanbun); }
+.mark-sub { font-size: 12px; color: var(--gray); font-family: sans-serif; }
+
+.point-box {
+  background: var(--gold-light); border: 1.5px solid var(--gold);
+  border-radius: 12px; padding: 14px 18px;
+  font-size: 13px; line-height: 1.85; margin: 14px 0; font-family: sans-serif;
+}
+.point-box strong { color: var(--kanbun); }
+
+.diagram-wrap {
+  background: var(--kanbun-light); border-radius: var(--radius);
+  padding: 20px; margin: 14px 0; text-align: center;
+}
+.diagram-label { font-size: 12px; color: var(--kanbun-mid); font-family: sans-serif; margin-bottom: 10px; font-weight: bold; }
+
+.step-list { display: flex; flex-direction: column; gap: 10px; }
+.step-item { background: white; border-radius: 12px; border: 1.5px solid var(--cream-dark); overflow: hidden; box-shadow: 0 2px 8px rgba(0,24,88,0.06); }
+.step-item-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; }
+.step-item-head:hover { background: var(--kanbun-light); }
+.step-badge { background: var(--kanbun); color: var(--kanbun-accent); font-family: sans-serif; font-size: 12px; font-weight: bold; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+.step-item-head h3 { font-size: 14px; color: var(--text); }
+.step-arrow { margin-left: auto; color: var(--gray); font-size: 12px; transition: transform 0.2s; }
+.step-body { display: none; padding: 0 18px 16px; font-size: 13px; line-height: 1.9; font-family: sans-serif; color: #333; border-top: 1px solid var(--cream-dark); }
+.step-body.open { display: block; }
+.step-arrow.open { transform: rotate(180deg); }
+
+.practice-header { background: var(--kanbun); color: white; border-radius: var(--radius) var(--radius) 0 0; padding: 14px 20px; font-family: sans-serif; }
+.practice-header h3 { font-size: 15px; font-weight: bold; }
+.practice-header p { font-size: 12px; opacity: 0.75; margin-top: 3px; }
+.practice-body { background: white; border-radius: 0 0 var(--radius) var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; overflow-x: auto; }
+
+.ab {
+  position: absolute; width: 32px; height: 32px;
+  font-size: 14px; text-align: center;
+  border: 1px solid #aaa; border-radius: 3px;
+  background: white; color: #222; padding: 0; font-family: sans-serif;
+}
+.ab.correct { background: #d4f7d4; border-color: #2d7a2d; color: #1a5c1a; }
+.ab.wrong   { background: #fdd; border-color: #cc0000; color: #cc0000; }
+.quiz-btn { margin-top: 10px; padding: 8px 24px; font-size: 13px; font-family: sans-serif; background: var(--kanbun); color: white; border: none; border-radius: 8px; cursor: pointer; }
+.quiz-btn:hover { background: var(--kanbun-mid); }
+.reset-btn { background: #888; margin-left: 8px; padding: 8px 18px; font-size: 13px; font-family: sans-serif; color: white; border: none; border-radius: 8px; cursor: pointer; }
+.score-msg { margin-left: 14px; font-size: 14px; font-weight: bold; font-family: sans-serif; color: var(--kanbun); }
+
+.tab-nav { display: flex; gap: 6px; margin-bottom: 0; flex-wrap: wrap; }
+.tab-btn { padding: 8px 18px; font-size: 13px; font-family: sans-serif; background: var(--cream-dark); color: var(--gray); border: none; border-radius: 10px 10px 0 0; cursor: pointer; font-weight: bold; transition: all 0.15s; }
+.tab-btn.active { background: var(--kanbun); color: white; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.tip { background: var(--pink-light); border-left: 3px solid var(--pink); border-radius: 8px; padding: 10px 14px; font-size: 12px; font-family: sans-serif; color: #6a1a3a; margin-top: 10px; line-height: 1.7; }
+
+.summary-card { background: var(--kanbun); color: white; border-radius: var(--radius); padding: 22px 24px; margin-top: 32px; }
+.summary-card h3 { font-size: 16px; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; font-family: sans-serif; }
+.summary-card li { font-size: 13px; line-height: 2; list-style: none; font-family: sans-serif; }
+.summary-card li::before { content: '✦ '; color: var(--kanbun-accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">高認 国語 ／ 漢文</div>
+  <h1>漢文の基礎 — 返り点の読み方</h1>
+  <p>レ点・一二三点・上中下点のしくみをていねいに学びましょう</p>
+</header>
+<div id="pbar-wrap"><div id="pbar"></div></div>
+
+<main>
+
+<div class="intro-hero">
+  <h2>漢文って何だろう？</h2>
+  <p>漢文とは、昔の中国語で書かれた文章のことです。<br>
+  日本語の語順と違うので、<strong>返り点</strong>というルールを使って<br>
+  日本語として読み直すことができます。</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="sec-head"><div class="sec-num">1</div><h2>日本語と漢文の語順のちがい</h2></div>
+<div class="card card-green">
+  <p style="font-size:14px; line-height:1.9; font-family:sans-serif;">
+    日本語では「私は　本を　読む」という語順ですが、<br>
+    漢文（中国語）では <strong>「我　読　書」</strong>（私・読む・本）の順に書かれています。<br><br>
+    このまま読むと意味が変わってしまいます。そこで登場するのが<strong>返り点</strong>です。<br>
+    返り点は「この字はあとで読んでね」というサインの役割をします。
+  </p>
+  <div class="diagram-wrap" style="margin-top:14px;">
+    <div class="diagram-label">語順の比較</div>
+    <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; font-family:sans-serif;">
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--gray); margin-bottom:6px;">日本語</div>
+        <div style="font-size:15px; background:white; padding:10px 16px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">私は → 本を → 読む</div>
+      </div>
+      <div style="text-align:center; font-size:22px; align-self:center; color:var(--gray);">≠</div>
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--gray); margin-bottom:6px;">漢文（中国語の語順）</div>
+        <div style="font-size:15px; background:white; padding:10px 16px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">我 → 読 → 書</div>
+      </div>
+    </div>
+  </div>
+  <div class="point-box">💡 <strong>返り点</strong>とは、漢文を日本語の語順で読むための「道案内」です。<br>返り点のついた文字は、いったん飛ばして、あとから戻って読みます。</div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="sec-head"><div class="sec-num">2</div><h2>返り点の種類と読み方のルール</h2></div>
+<div class="card card-green">
+  <table class="rule-table">
+    <tbody><tr><th>記号</th><th>名前</th><th>読み方のルール</th></tr>
+    <tr>
+      <td><span class="mark">レ</span><br><span class="mark-sub">レ点</span></td>
+      <td style="font-family:sans-serif;">レ点</td>
+      <td style="font-family:sans-serif;">すぐ下の1文字を先に読んでから、レのついた字に戻ります。<br><span style="color:var(--kanbun-mid); font-size:12px;">→ 1文字だけ「ひとつ下に先に行く」イメージです</span></td>
+    </tr>
+    <tr>
+      <td><span class="mark">一　二　三</span><br><span class="mark-sub">一二三点</span></td>
+      <td style="font-family:sans-serif;">一二三点</td>
+      <td style="font-family:sans-serif;">「一」のついた字を先に読み、次に「二」、次に「三」の順に戻ります。<br><span style="color:var(--kanbun-mid); font-size:12px;">→ 2文字以上を飛び越えて戻るときに使います</span></td>
+    </tr>
+    <tr>
+      <td><span class="mark">上　中　下</span><br><span class="mark-sub">上中下点</span></td>
+      <td style="font-family:sans-serif;">上中下点</td>
+      <td style="font-family:sans-serif;">一二三点と同じしくみです。一二三点と混在するときに使います。<br><span style="color:var(--kanbun-mid); font-size:12px;">→ 二重に飛び越えが必要なときに登場します</span></td>
+    </tr>
+  </tbody></table>
+</div>
+
+<!-- SECTION 3 -->
+<div class="sec-head"><div class="sec-num">3</div><h2>レ点のしくみ</h2></div>
+<div class="card card-green">
+  <p style="font-size:14px; line-height:1.9; font-family:sans-serif; margin-bottom:12px;">
+    レ点は<strong>「すぐ下の1文字だけ先に読む」</strong>記号です。<br>
+    レ点のついた字はいったん飛ばして、下の字を読んでから戻ります。
+  </p>
+
+  <!-- 例1: 読レ書（縦書き） -->
+  <div class="diagram-wrap">
+    <div class="diagram-label">例① 読<span style="color:#c0392b; font-weight:bold;">ﾚ</span>書　（2文字の基本）</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <!-- 縦書き漢文 -->
+      <svg width="80" height="160" viewBox="0 0 80 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- 読 -->
+        <rect x="18" y="8" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="38" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">読</text>
+        <text x="10" y="20" font-size="8" fill="#555" font-family="serif">よ</text>
+        <text x="10" y="30" font-size="8" fill="#555" font-family="serif">み</text>
+        <circle cx="57" cy="14" r="10" fill="#2d6a4f"/>
+        <text x="57" y="18" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- レ点 -->
+        <text x="40" y="65" text-anchor="middle" font-size="16" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+        <!-- 書 -->
+        <rect x="18" y="72" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="102" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">書</text>
+        <text x="10" y="84" font-size="8" fill="#555" font-family="serif">ふ</text>
+        <text x="62" y="112" font-size="8" fill="#888" font-family="serif">ヲ</text>
+        <circle cx="57" cy="78" r="10" fill="#c0392b"/>
+        <text x="57" y="82" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 矢印 -->
+      </svg>
+      <!-- 説明 -->
+      <div style="font-family:sans-serif; font-size:13px; line-height:2; padding-top:10px;">
+        <div>① 「書」を先に読みます <span style="color:#c0392b;">（1番目）</span></div>
+        <div>② 「読」に戻って読みます <span style="color:#2d6a4f;">（2番目）</span></div>
+        <div style="margin-top:8px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>書を読む。</strong><br>
+          <span style="color:#888; font-size:11px;">（本を読む）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 例2: 春眠不レ覚レ暁（縦書き） -->
+  <div class="diagram-wrap" style="margin-top:14px;">
+    <div class="diagram-label">例② 春眠不<span style="color:#c0392b; font-weight:bold;">ﾚ</span>覚<span style="color:#c0392b; font-weight:bold;">ﾚ</span>暁　（孟浩然）レ点が連続する場合</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <svg width="80" height="330" viewBox="0 0 80 330" xmlns="http://www.w3.org/2000/svg">
+        <!-- 春(1) -->
+        <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">春</text>
+        <text x="10" y="17" font-size="8" fill="#555" font-family="serif">しゅん</text>
+        <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+        <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 眠(2) -->
+        <rect x="18" y="57" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="87" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">眠</text>
+        <text x="10" y="69" font-size="8" fill="#555" font-family="serif">ねむり</text>
+        <circle cx="57" cy="63" r="10" fill="#2d6a4f"/>
+        <text x="57" y="67" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- 不(5) レ点 -->
+        <rect x="18" y="109" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="139" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">不</text>
+        <text x="62" y="149" font-size="8" fill="#888" font-family="serif">ズ</text>
+        <text x="40" y="164" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+        <circle cx="57" cy="115" r="10" fill="#2d6a4f"/>
+        <text x="57" y="119" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+        <!-- 覚(4) レ点 -->
+        <rect x="18" y="172" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="202" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">覚</text>
+        <text x="10" y="184" font-size="8" fill="#555" font-family="serif">おぼえ</text>
+        <text x="40" y="228" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+        <circle cx="57" cy="178" r="10" fill="#2d6a4f"/>
+        <text x="57" y="182" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+        <!-- 暁(3) -->
+        <rect x="18" y="236" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="266" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">暁</text>
+        <text x="10" y="248" font-size="8" fill="#555" font-family="serif">あか</text>
+        <text x="10" y="258" font-size="8" fill="#555" font-family="serif">つきを</text>
+        <circle cx="57" cy="242" r="10" fill="#c0392b"/>
+        <text x="57" y="246" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+        <!-- 矢印：暁→覚 -->
+        <!-- 矢印：覚→不 -->
+      </svg>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2.1; padding-top:10px;">
+        <div>① 春（1番目）</div>
+        <div>② 眠（2番目）</div>
+        <div style="color:#c0392b;">③ 暁 → 覚のレ点で「暁」を先読み（3番目）</div>
+        <div style="color:#c0392b;">④ 覚 に戻る（4番目）</div>
+        <div style="color:#2d6a4f;">⑤ 不 に戻る（5番目）</div>
+        <div style="margin-top:10px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>春眠暁を覚えず。</strong><br>
+          <span style="color:#888; font-size:11px;">（孟浩然「春暁」／春の夜の眠りは気持ちよく、夜明けに気づかない）</span>
+        </div>
+        <div class="tip" style="margin-top:10px;">💡 レ点が2つ続く場合は<br><strong>下から順番に</strong>上へ返ります。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 例3: 速やかならんと欲する無かれ（縦書き） -->
+  <div class="diagram-wrap" style="margin-top:14px;">
+    <div class="diagram-label">例③ 無<span style="color:#c0392b; font-weight:bold;">ﾚ</span>欲<span style="color:#c0392b; font-weight:bold;">ﾚ</span>速　無<span style="color:#c0392b; font-weight:bold;">ﾚ</span>見<span style="color:#c0392b; font-weight:bold;">ﾚ</span>小利　（論語）応用</div>
+    <div style="display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <!-- 縦書き前半：無レ欲レ速 -->
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:#666; font-family:sans-serif; margin-bottom:6px;">前半</div>
+        <svg width="80" height="245" viewBox="0 0 80 245" xmlns="http://www.w3.org/2000/svg">
+          <!-- 無(3) レ点 -->
+          <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">無</text>
+          <text x="10" y="17" font-size="8" fill="#555" font-family="serif">なかれ</text>
+          <text x="40" y="60" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+          <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+          <!-- 欲(2) レ点 -->
+          <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">欲</text>
+          <text x="10" y="80" font-size="8" fill="#555" font-family="serif">せんと</text>
+          <text x="40" y="123" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="74" r="10" fill="#2d6a4f"/>
+          <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+          <!-- 速(1) -->
+          <rect x="18" y="131" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="161" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">速</text>
+          <text x="10" y="143" font-size="8" fill="#555" font-family="serif">すみや</text>
+          <text x="10" y="153" font-size="8" fill="#555" font-family="serif">かならん</text>
+          <text x="62" y="171" font-size="8" fill="#888" font-family="serif">ト</text>
+          <circle cx="57" cy="137" r="10" fill="#c0392b"/>
+          <text x="57" y="141" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+          <!-- 矢印 -->
+          <text x="40" y="210" text-anchor="middle" font-size="9" fill="#c0392b" font-family="sans-serif">速→欲→無</text>
+        </svg>
+      </div>
+      <!-- 縦書き後半：無レ見一レ小利 -->
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:#666; font-family:sans-serif; margin-bottom:6px;">後半</div>
+        <svg width="80" height="250" viewBox="0 0 80 250" xmlns="http://www.w3.org/2000/svg">
+          <!-- 無(7) レ点 -->
+          <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">無</text>
+          <text x="10" y="17" font-size="8" fill="#555" font-family="serif">なかれ</text>
+          <text x="40" y="60" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+          <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">7</text>
+          <!-- 見(6) 一点＋レ点（一レ複合） -->
+          <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">見</text>
+          <text x="10" y="80" font-size="8" fill="#555" font-family="serif">みる</text>
+          <line x1="22" y1="115" x2="44" y2="115" stroke="#c0392b" stroke-width="2.5"/>
+          <text x="40" y="131" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="74" r="10" fill="#2d6a4f"/>
+          <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">6</text>
+          <!-- 小(4) 返り点なし -->
+          <rect x="18" y="140" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="170" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">小</text>
+          <text x="10" y="152" font-size="8" fill="#555" font-family="serif">ちいさき</text>
+          <circle cx="57" cy="146" r="10" fill="#c0392b"/>
+          <text x="57" y="150" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+          <!-- 利(5) 一点 -->
+          <rect x="18" y="195" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="225" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">利</text>
+          <text x="62" y="235" font-size="8" fill="#888" font-family="serif">ヲ</text>
+          <line x1="22" y1="242" x2="44" y2="242" stroke="#c0392b" stroke-width="2.5"/>
+          <circle cx="57" cy="201" r="10" fill="#2d6a4f"/>
+          <text x="57" y="205" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+          <!-- 矢印：利(一)→見(一レ) -->
+          <!-- 矢印：見(レ)→無(レ) -->
+        </svg>
+      </div>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2; padding-top:10px; max-width:200px;">
+        <div style="background:#f0f5ff; padding:8px 12px; border-radius:6px; margin-bottom:8px;">
+          書き下し文：<br><strong>速やかならんと欲する無かれ。小利を見る無かれ。</strong>
+        </div>
+        <div style="color:#888; font-size:11px;">（論語・子路篇）<br>急いで結果を出そうとするな。小さな利益に目を向けるな。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="sec-head"><div class="sec-num">4</div><h2>一二三点のしくみ</h2></div>
+<div class="card card-green">
+  <p style="font-size:14px; line-height:1.9; font-family:sans-serif; margin-bottom:12px;">
+    一二三点は<strong>「2文字以上を飛び越えて上へ返る」</strong>記号です。<br>
+    「一」のついた字から先に読み始め、「二」「三」の順に戻ります。
+  </p>
+
+  <!-- 例1: 思故郷（縦書き） -->
+  <div class="diagram-wrap">
+    <div class="diagram-label">例① 思<span style="color:#c0392b; font-size:10px;">二</span>故郷<span style="color:#c0392b; font-size:10px;">一</span>　（李白）</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <svg width="80" height="250" viewBox="0 0 80 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- 思(3) 二点 -->
+        <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">思</text>
+        <text x="10" y="17" font-size="8" fill="#555" font-family="serif">おもふ</text>
+        <line x1="22" y1="52" x2="44" y2="52" stroke="#c0392b" stroke-width="2.5"/>
+        <line x1="22" y1="57" x2="44" y2="57" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+        <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+        <!-- 故(1) 返り点なし -->
+        <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">故</text>
+        <text x="10" y="80" font-size="8" fill="#555" font-family="serif">ふるさとを</text>
+        <circle cx="57" cy="74" r="10" fill="#c0392b"/>
+        <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 郷(2) 一点 -->
+        <rect x="18" y="130" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="160" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">郷</text>
+        <line x1="22" y1="177" x2="44" y2="177" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="136" r="10" fill="#2d6a4f"/>
+        <text x="57" y="140" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- 矢印：郷→思 -->
+      </svg>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2.1; padding-top:10px;">
+        <div>① 故（返り点なし・1番目）</div>
+        <div>② 郷（一点・2番目）</div>
+        <div>③ 思（二点・3番目）← 「郷」から飛び越えて戻る</div>
+        <div style="margin-top:10px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>故郷を思ふ。</strong><br>
+          <span style="color:#888; font-size:11px;">（李白「静夜思」／故郷のことを思う）</span>
+        </div>
+        <div class="tip" style="margin-top:10px;">💡 一点の字から読み始め、<br>二点の字に戻るのが基本です。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 例2: 疑心暗鬼（縦書き） -->
+  <div class="diagram-wrap" style="margin-top:14px;">
+    <div class="diagram-label">例② 疑心<span style="color:#c0392b; font-size:10px;">二</span>生暗鬼<span style="color:#c0392b; font-size:10px;">一</span>。　（列子）</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <svg width="80" height="320" viewBox="0 0 80 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- 疑(1) 返り点なし -->
+        <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">疑</text>
+        <text x="10" y="17" font-size="8" fill="#555" font-family="serif">うたがふ</text>
+        <circle cx="57" cy="11" r="10" fill="#c0392b"/>
+        <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 心(2) 返り点なし -->
+        <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">心</text>
+        <text x="10" y="80" font-size="8" fill="#555" font-family="serif">こころに</text>
+        <circle cx="57" cy="74" r="10" fill="#c0392b"/>
+        <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- 生(5) 二点 -->
+        <rect x="18" y="131" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="161" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">生</text>
+        <text x="10" y="143" font-size="8" fill="#555" font-family="serif">しょうず</text>
+        <text x="62" y="171" font-size="8" fill="#888" font-family="serif">ズ</text>
+        <line x1="22" y1="178" x2="44" y2="178" stroke="#c0392b" stroke-width="2.5"/>
+        <line x1="22" y1="183" x2="44" y2="183" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="137" r="10" fill="#2d6a4f"/>
+        <text x="57" y="141" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+        <!-- 暗(3) 返り点なし -->
+        <rect x="18" y="196" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="226" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">暗</text>
+        <text x="10" y="208" font-size="8" fill="#555" font-family="serif">くらきに</text>
+        <circle cx="57" cy="202" r="10" fill="#c0392b"/>
+        <text x="57" y="206" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+        <!-- 鬼(4) 一点 -->
+        <rect x="18" y="259" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="289" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">鬼</text>
+        <text x="10" y="271" font-size="8" fill="#555" font-family="serif">おにを</text>
+        <line x1="22" y1="306" x2="44" y2="306" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="265" r="10" fill="#2d6a4f"/>
+        <text x="57" y="269" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+        <!-- 矢印：鬼(一)→生(二) -->
+      </svg>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2.1; padding-top:10px;">
+        <div>① 疑（返り点なし・1番目）</div>
+        <div>② 心（返り点なし・2番目）</div>
+        <div>③ 暗（返り点なし・3番目）</div>
+        <div>④ 鬼（一点・4番目）→ 生へ戻る</div>
+        <div>⑤ 生（二点・5番目）</div>
+        <div style="margin-top:10px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>疑心暗鬼を生ず。</strong><br>
+          <span style="color:#888; font-size:11px;">（列子／疑いの心があると、暗闇の中に鬼が見えてくる）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="point-box">
+    <strong>一二三点のポイント</strong><br>
+    ✦ 返り点のない字から先に読み始めます<br>
+    ✦ 「一」→「二」→「三」の順に戻っていきます<br>
+    ✦ 2文字以上を飛び越えるときに使います（1文字だけならレ点）
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="sec-head"><div class="sec-num">5</div><h2>上中下点のしくみ</h2></div>
+<div class="card card-green">
+  <p style="font-size:14px; line-height:1.9; font-family:sans-serif; margin-bottom:12px;">
+    上中下点は、<strong>一二三点と組み合わせて使う</strong>返り点です。<br>
+    一二三点グループの外側に、さらに大きな飛び越えが必要なときに登場します。
+  </p>
+
+  <!-- 例1: 有朋自遠方来（縦書き） -->
+  <div class="diagram-wrap">
+    <div class="diagram-label">例① 有<span style="color:#c0392b; font-size:10px;">下</span>朋自<span style="color:#c0392b; font-size:10px;">二</span>遠方<span style="color:#c0392b; font-size:10px;">一</span>来<span style="color:#c0392b; font-size:10px;">上</span>　（論語）</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <svg width="80" height="440" viewBox="0 0 80 440" xmlns="http://www.w3.org/2000/svg">
+        <!-- 有(6) 下点 -->
+        <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">有</text>
+        <text x="10" y="17" font-size="8" fill="#555" font-family="serif">あり</text>
+        <text x="28" y="53" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">下</text>
+        <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+        <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">6</text>
+        <!-- 朋(1) 返り点なし -->
+        <rect x="18" y="70" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="100" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">朋</text>
+        <text x="10" y="82" font-size="8" fill="#555" font-family="serif">とも</text>
+        <circle cx="57" cy="76" r="10" fill="#c0392b"/>
+        <text x="57" y="80" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 自(4) 二点 -->
+        <rect x="18" y="135" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="165" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">自</text>
+        <text x="10" y="147" font-size="8" fill="#555" font-family="serif">より</text>
+        <line x1="22" y1="182" x2="44" y2="182" stroke="#c0392b" stroke-width="2.5"/>
+        <line x1="22" y1="187" x2="44" y2="187" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="141" r="10" fill="#2d6a4f"/>
+        <text x="57" y="145" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+        <!-- 遠(2) 返り点なし -->
+        <rect x="18" y="200" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="230" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">遠</text>
+        <text x="10" y="212" font-size="8" fill="#555" font-family="serif">とほき</text>
+        <circle cx="57" cy="206" r="10" fill="#c0392b"/>
+        <text x="57" y="210" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- 方(3) 一点 -->
+        <rect x="18" y="253" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="283" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">方</text>
+        <line x1="22" y1="300" x2="44" y2="300" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="259" r="10" fill="#2d6a4f"/>
+        <text x="57" y="263" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+        <!-- 来(5) 上点 -->
+        <rect x="18" y="313" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="343" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">来</text>
+        <text x="10" y="325" font-size="8" fill="#555" font-family="serif">きたる</text>
+        <text x="28" y="362" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">上</text>
+        <circle cx="57" cy="319" r="10" fill="#2d6a4f"/>
+        <text x="57" y="323" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+        <!-- 矢印：方(一)→自(二) -->
+        <!-- 矢印：来(上)→有(下) -->
+      </svg>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2.1; padding-top:10px;">
+        <div>① 朋（返り点なし・1番目）</div>
+        <div>② 遠（返り点なし・2番目）</div>
+        <div>③ 方（一点・3番目）→ 自へ戻る</div>
+        <div>④ 自（二点・4番目）</div>
+        <div>⑤ 来（上点・5番目）→ 有へ戻る</div>
+        <div>⑥ 有（下点・6番目・最後）</div>
+        <div style="margin-top:10px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>朋遠方より来たる有り。</strong><br>
+          <span style="color:#888; font-size:11px;">（論語・学而篇／友が遠くから訪ねてくる）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 例2: 悪称人之悪者（縦書き） -->
+  <div class="diagram-wrap" style="margin-top:14px;">
+    <div class="diagram-label">例② 悪<span style="color:#c0392b; font-size:10px;">下</span>称<span style="color:#c0392b; font-size:10px;">二</span>人之悪<span style="color:#c0392b; font-size:10px;">一</span>者<span style="color:#c0392b; font-size:10px;">上</span>　（礼記）</div>
+    <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+      <svg width="80" height="440" viewBox="0 0 80 440" xmlns="http://www.w3.org/2000/svg">
+        <!-- 悪(下) -->
+        <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">悪</text>
+        <text x="10" y="17" font-size="8" fill="#555" font-family="serif">にくむ</text>
+        <text x="28" y="53" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">下</text>
+        <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+        <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">6</text>
+        <!-- 称(二) -->
+        <rect x="18" y="70" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="100" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">称</text>
+        <text x="10" y="82" font-size="8" fill="#555" font-family="serif">しょう</text>
+        <text x="10" y="92" font-size="8" fill="#555" font-family="serif">する</text>
+        <line x1="22" y1="117" x2="44" y2="117" stroke="#c0392b" stroke-width="2.5"/>
+        <line x1="22" y1="122" x2="44" y2="122" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="76" r="10" fill="#2d6a4f"/>
+        <text x="57" y="80" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+        <!-- 人(返り点なし) -->
+        <rect x="18" y="135" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="165" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">人</text>
+        <text x="10" y="147" font-size="8" fill="#555" font-family="serif">ひとの</text>
+        <circle cx="57" cy="141" r="10" fill="#c0392b"/>
+        <text x="57" y="145" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+        <!-- 之(返り点なし) -->
+        <rect x="18" y="200" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="230" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">之</text>
+        <text x="10" y="212" font-size="8" fill="#555" font-family="serif">の</text>
+        <circle cx="57" cy="206" r="10" fill="#c0392b"/>
+        <text x="57" y="210" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+        <!-- 悪(一) -->
+        <rect x="18" y="253" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="283" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">悪</text>
+        <text x="10" y="265" font-size="8" fill="#555" font-family="serif">あくを</text>
+        <line x1="22" y1="300" x2="44" y2="300" stroke="#c0392b" stroke-width="2.5"/>
+        <circle cx="57" cy="259" r="10" fill="#2d6a4f"/>
+        <text x="57" y="263" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+        <!-- 者(上) -->
+        <rect x="18" y="313" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+        <text x="40" y="343" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">者</text>
+        <text x="10" y="325" font-size="8" fill="#555" font-family="serif">ものを</text>
+        <text x="28" y="362" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">上</text>
+        <circle cx="57" cy="319" r="10" fill="#2d6a4f"/>
+        <text x="57" y="323" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+        <!-- 矢印：悪(一)→称 -->
+        <!-- 矢印：者→悪(下) -->
+      </svg>
+      <div style="font-family:sans-serif; font-size:13px; line-height:2.1; padding-top:10px;">
+        <div>① 人（1番目）</div>
+        <div>② 之（2番目）</div>
+        <div>③ 悪（一点・3番目）→ 称へ戻る</div>
+        <div>④ 称（二点・4番目）</div>
+        <div>⑤ 者（上点・5番目）→ 悪(下)へ</div>
+        <div>⑥ 悪（下点・6番目・最後）</div>
+        <div style="margin-top:10px; background:#f0f5ff; padding:8px 12px; border-radius:6px;">
+          書き下し文：<strong>人の悪を称する者をにくむ。</strong><br>
+          <span style="color:#888; font-size:11px;">（礼記）他人の悪口を言う者を憎む）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="point-box">
+    💡 <strong>上中下点のポイント</strong>：上→中→下の順に戻ります。<br>
+    一二三点グループをすべて読み終えてから、上中下点グループに戻ります。<br>
+    「下」点のついた字が最後に読まれます。
+  </div>
+</div>
+    <svg width="100%" viewBox="0 0 520 230" xmlns="http://www.w3.org/2000/svg">
+
+<!-- SECTION 6：練習問題 -->
+<div class="sec-head"><div class="sec-num">6</div><h2>読み順練習問題</h2></div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(&#39;t1&#39;,this)">レ点 練習</button>
+  <button class="tab-btn" onclick="switchTab(&#39;t2&#39;,this)">一二三点 練習</button>
+  <button class="tab-btn" onclick="switchTab(&#39;t3&#39;,this)">複合 練習</button>
+</div>
+
+<!-- タブ1 -->
+<div id="t1" class="tab-panel active">
+  <div class="practice-header">
+    <h3>🔵 レ点 — 読み順を数字で入れてみましょう</h3>
+    <p>各文字を読む順番（1・2・3…）を入力欄に入れてみましょう。</p>
+  </div>
+  <div class="practice-body">
+    <div style="font-size:13px; font-family:sans-serif; color:#555; margin-bottom:14px; line-height:1.7;">
+      ✦ フォークリフトのマークがレ点のイメージです。<br>
+      ✦ 読み順の数字を入力して「答え合わせ」を押してみましょう。
+    </div>
+    <div style="position:relative; display:inline-block; width:100%;">
+<svg width="100%" viewBox="0 0 600 310" xmlns="http://www.w3.org/2000/svg">
+<defs>
+</defs>
+
+<!-- 問1：春眠不レ覚レ暁（孟浩然） -->
+<text x="20" y="22" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問1　春眠不覚暁（孟浩然）</text>
+
+<!-- 春(a) 返り点なし -->
+<rect x="20" y="30" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="41" y="58" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">春</text>
+<text x="14" y="43" font-size="8" fill="#555" font-family="serif">しゅん</text>
+<foreignobject x="64" y="32" width="30" height="30"><input class="ab" data-set="r1" data-r="a" type="number" min="1" max="5"></foreignobject>
+
+<!-- 眠(b) 返り点なし -->
+<rect x="20" y="80" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="41" y="108" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">眠</text>
+<text x="14" y="93" font-size="8" fill="#555" font-family="serif">ねむり</text>
+<foreignobject x="64" y="82" width="30" height="30"><input class="ab" data-set="r1" data-r="b" type="number" min="1" max="5"></foreignobject>
+
+<!-- 不(c) レ点あり -->
+<rect x="20" y="130" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="41" y="158" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">不</text>
+<text x="55" y="168" font-size="8" fill="#888" font-family="serif">ズ</text>
+<text x="41" y="182" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+<foreignobject x="64" y="132" width="30" height="30"><input class="ab" data-set="r1" data-r="c" type="number" min="1" max="5"></foreignobject>
+
+<!-- 覚(d) レ点あり -->
+<rect x="20" y="188" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="41" y="216" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">覚</text>
+<text x="14" y="201" font-size="8" fill="#555" font-family="serif">おぼえ</text>
+<text x="41" y="240" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+<foreignobject x="64" y="190" width="30" height="30"><input class="ab" data-set="r1" data-r="d" type="number" min="1" max="5"></foreignobject>
+
+<!-- 暁(e) 返り点なし -->
+<rect x="20" y="246" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="41" y="274" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">暁</text>
+<text x="14" y="259" font-size="8" fill="#555" font-family="serif">あかつきを</text>
+<foreignobject x="64" y="248" width="30" height="30"><input class="ab" data-set="r1" data-r="e" type="number" min="1" max="5"></foreignobject>
+
+<!-- 返り矢印：暁→覚 -->
+<!-- 返り矢印：覚→不 -->
+
+<!-- 問2：百戦不レ殆（孫子） -->
+<text x="190" y="22" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問2　百戦不殆（孫子）</text>
+
+<!-- 百(f) 返り点なし -->
+<rect x="190" y="30" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="211" y="58" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">百</text>
+<text x="184" y="43" font-size="8" fill="#555" font-family="serif">ひゃく</text>
+<foreignobject x="234" y="32" width="30" height="30"><input class="ab" data-set="r1" data-r="f" type="number" min="1" max="4"></foreignobject>
+
+<!-- 戦(g) 返り点なし -->
+<rect x="190" y="80" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="211" y="108" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">戦</text>
+<text x="184" y="93" font-size="8" fill="#555" font-family="serif">せんして</text>
+<foreignobject x="234" y="82" width="30" height="30"><input class="ab" data-set="r1" data-r="g" type="number" min="1" max="4"></foreignobject>
+
+<!-- 不(h) レ点あり -->
+<rect x="190" y="130" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="211" y="158" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">不</text>
+<text x="225" y="168" font-size="8" fill="#888" font-family="serif">ず</text>
+<text x="211" y="182" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+<foreignobject x="234" y="132" width="30" height="30"><input class="ab" data-set="r1" data-r="h" type="number" min="1" max="4"></foreignobject>
+
+<!-- 殆(i) 返り点なし -->
+<rect x="190" y="188" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="211" y="216" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">殆</text>
+<text x="184" y="201" font-size="8" fill="#555" font-family="serif">あやうから</text>
+<foreignobject x="234" y="190" width="30" height="30"><input class="ab" data-set="r1" data-r="i" type="number" min="1" max="4"></foreignobject>
+
+<!-- 返り矢印：殆→不 -->
+
+<!-- 問3：不レ可レ悔（史記） -->
+<text x="360" y="22" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問3　不可悔（史記）</text>
+
+<!-- 不(j) レ点あり -->
+<rect x="360" y="30" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="381" y="58" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">不</text>
+<text x="395" y="68" font-size="8" fill="#888" font-family="serif">ず</text>
+<text x="381" y="82" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+<foreignobject x="404" y="32" width="30" height="30"><input class="ab" data-set="r1" data-r="j" type="number" min="1" max="3"></foreignobject>
+
+<!-- 可(k) レ点あり -->
+<rect x="360" y="88" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="381" y="116" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">可</text>
+<text x="354" y="101" font-size="8" fill="#555" font-family="serif">べから</text>
+<text x="381" y="140" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+<foreignobject x="404" y="90" width="30" height="30"><input class="ab" data-set="r1" data-r="k" type="number" min="1" max="3"></foreignobject>
+
+<!-- 悔(l) 返り点なし -->
+<rect x="360" y="146" width="42" height="42" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+<text x="381" y="174" text-anchor="middle" font-size="22" fill="#1a3a2a" font-family="serif">悔</text>
+<text x="354" y="159" font-size="8" fill="#555" font-family="serif">くやむを</text>
+<foreignobject x="404" y="148" width="30" height="30"><input class="ab" data-set="r1" data-r="l" type="number" min="1" max="3"></foreignobject>
+
+<!-- 返り矢印：悔→可 -->
+<!-- 返り矢印：可→不 -->
+
+<!-- 書き下し文ヒント -->
+<rect x="4" y="295" width="580" height="18" rx="3" fill="#e8f5e9"/>
+<text x="10" y="308" font-size="10" fill="#1a3a2a" font-family="sans-serif" font-weight="bold">書き下し文ヒント：</text>
+<text x="95" y="308" font-size="10" fill="#555" font-family="sans-serif">問1：春眠暁を覚えず　問2：百戦して殆からず　問3：悔ゆべからず</text>
+</svg>
+    </div>
+    <div>
+      <button class="quiz-btn" onclick="chkSet(&#39;r1&#39;,&#39;sm1&#39;)">答え合わせ</button>
+      <button class="reset-btn" onclick="rstSet(&#39;r1&#39;,&#39;sm1&#39;)">リセット</button>
+      <span id="sm1" class="score-msg"></span>
+    </div>
+  </div>
+</div>
+
+<!-- タブ2 -->
+<div id="t2" class="tab-panel">
+  <div class="practice-header">
+    <h3>🟢 一二三点 — 読み順を数字で入れてみましょう</h3>
+    <p>エレベーターのマーク（緑のボックス）が、飛び越えポイントです。</p>
+  </div>
+  <div class="practice-body">
+    <div style="font-size:13px; font-family:sans-serif; color:#555; margin-bottom:14px; line-height:1.7;">
+      ✦ 一点のついた字から先に読みます。次に二点、三点の順に戻ります。
+    </div>
+    <div style="position:relative; display:inline-block; width:100%;">
+<svg width="100%" viewBox="0 0 600 395" xmlns="http://www.w3.org/2000/svg">
+<defs>
+</defs>
+
+<!-- 問1：学二而習一之 -->
+<text x="20" y="28" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問1</text>
+
+<!-- 学(a) 二点：読み「まな」左、送り「ぶ」右下 -->
+<rect x="20" y="36" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="67" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">学</text>
+<text x="12" y="48" font-size="9" fill="#555" font-family="serif">ま</text>
+<text x="12" y="58" font-size="9" fill="#555" font-family="serif">な</text>
+<text x="57" y="76" font-size="9" fill="#888" font-family="serif">ブ</text>
+<line x1="28" y1="83" x2="50" y2="83" stroke="#c0392b" stroke-width="2.5"></line>
+<line x1="28" y1="88" x2="50" y2="88" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 而(b) 返り点なし：読み「しか」左、送り「して」右下 -->
+<rect x="20" y="145" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="176" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">而</text>
+<text x="12" y="155" font-size="9" fill="#555" font-family="serif">し</text>
+<text x="12" y="165" font-size="9" fill="#555" font-family="serif">か</text>
+<text x="57" y="182" font-size="9" fill="#888" font-family="serif">シ</text>
+<text x="57" y="192" font-size="9" fill="#888" font-family="serif">テ</text>
+
+<!-- 習(c) 一点：読み「なら」左、送り「ふ」右下 -->
+<rect x="20" y="198" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="229" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">習</text>
+<text x="12" y="208" font-size="9" fill="#555" font-family="serif">な</text>
+<text x="12" y="218" font-size="9" fill="#555" font-family="serif">ら</text>
+<text x="57" y="238" font-size="9" fill="#888" font-family="serif">フ</text>
+<line x1="28" y1="245" x2="50" y2="245" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 之(d)：読み「これ」左 -->
+<rect x="20" y="303" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="334" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">之</text>
+<text x="12" y="313" font-size="9" fill="#555" font-family="serif">こ</text>
+<text x="12" y="323" font-size="9" fill="#555" font-family="serif">れ</text>
+
+<foreignobject x="68" y="38" width="34" height="34"><input class="ab" data-set="r2" data-r="a" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="68" y="147" width="34" height="34"><input class="ab" data-set="r2" data-r="b" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="68" y="200" width="34" height="34"><input class="ab" data-set="r2" data-r="c" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="68" y="305" width="34" height="34"><input class="ab" data-set="r2" data-r="d" type="number" min="1" max="4"></foreignobject>
+
+<!-- 問2：知二新故一温 -->
+<text x="170" y="28" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問2</text>
+
+<!-- 知(e) 二点：読み「し」左、送り「る」右下 -->
+<rect x="160" y="36" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="67" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">知</text>
+<text x="152" y="53" font-size="9" fill="#555" font-family="serif">し</text>
+<text x="197" y="76" font-size="9" fill="#888" font-family="serif">ル</text>
+<line x1="168" y1="83" x2="190" y2="83" stroke="#c0392b" stroke-width="2.5"></line>
+<line x1="168" y1="88" x2="190" y2="88" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 新(f)：読み「あたら」左、送り「し」右下 -->
+<rect x="160" y="145" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="176" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">新</text>
+<text x="152" y="152" font-size="9" fill="#555" font-family="serif">あ</text>
+<text x="152" y="162" font-size="9" fill="#555" font-family="serif">た</text>
+<text x="152" y="172" font-size="9" fill="#555" font-family="serif">ら</text>
+<text x="197" y="185" font-size="9" fill="#888" font-family="serif">シ</text>
+
+<!-- 故(g) 一点：読み「ふる」左、送り「き」右下 -->
+<rect x="160" y="198" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="229" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">故</text>
+<text x="152" y="208" font-size="9" fill="#555" font-family="serif">ふ</text>
+<text x="152" y="218" font-size="9" fill="#555" font-family="serif">る</text>
+<text x="197" y="238" font-size="9" fill="#888" font-family="serif">キ</text>
+<line x1="168" y1="245" x2="190" y2="245" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 温(h)：読み「あたた」左、送り「む」右下 -->
+<rect x="160" y="303" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="334" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">温</text>
+<text x="152" y="310" font-size="9" fill="#555" font-family="serif">あ</text>
+<text x="152" y="320" font-size="9" fill="#555" font-family="serif">た</text>
+<text x="152" y="330" font-size="9" fill="#555" font-family="serif">た</text>
+<text x="197" y="343" font-size="9" fill="#888" font-family="serif">ム</text>
+
+<foreignobject x="208" y="38" width="34" height="34"><input class="ab" data-set="r2" data-r="e" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="208" y="147" width="34" height="34"><input class="ab" data-set="r2" data-r="f" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="208" y="200" width="34" height="34"><input class="ab" data-set="r2" data-r="g" type="number" min="1" max="4"></foreignobject>
+<foreignobject x="208" y="305" width="34" height="34"><input class="ab" data-set="r2" data-r="h" type="number" min="1" max="4"></foreignobject>
+
+<!-- ヒント -->
+<rect x="280" y="36" width="290" height="165" rx="8" fill="white" stroke="#2d6a4f" stroke-width="1"></rect>
+<text x="292" y="58" font-size="12" fill="#1a3a2a" font-family="sans-serif" font-weight="bold">ヒント</text>
+<text x="292" y="78" font-size="11" fill="#555" font-family="sans-serif">問1「学二而習一之」</text>
+<text x="292" y="96" font-size="11" fill="#555" font-family="sans-serif">之(1)→習(2)→而(3)→学(4)</text>
+<text x="292" y="112" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">書き下し：学びて而して之を習ふ</text>
+<text x="292" y="132" font-size="11" fill="#555" font-family="sans-serif">問2「知二新故一温」</text>
+<text x="292" y="150" font-size="11" fill="#555" font-family="sans-serif">温(1)→故(2)→新(3)→知(4)</text>
+<text x="292" y="166" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">書き下し：故きを温めて新しきを知る</text>
+<text x="292" y="186" font-size="11" fill="#2d6a4f" font-family="sans-serif" font-weight="bold">読み順のコツ</text>
+<text x="292" y="202" font-size="11" fill="#555" font-family="sans-serif">① 返り点のない字が最初</text>
+<text x="292" y="218" font-size="11" fill="#555" font-family="sans-serif">② 「一」→「二」→「三」の順に戻る</text>
+</svg>
+    </div>
+    <div>
+      <button class="quiz-btn" onclick="chkSet(&#39;r2&#39;,&#39;sm2&#39;)">答え合わせ</button>
+      <button class="reset-btn" onclick="rstSet(&#39;r2&#39;,&#39;sm2&#39;)">リセット</button>
+      <span id="sm2" class="score-msg"></span>
+    </div>
+  </div>
+</div>
+
+<!-- タブ3 -->
+<div id="t3" class="tab-panel">
+  <div class="practice-header">
+    <h3>🟡 一レ点・上レ点 — 複合返り点の練習です</h3>
+    <p>レ点と一二点・上中下点が組み合わさった複合返り点です。</p>
+  </div>
+  <div class="practice-body">
+    <!-- 例：有鬻盾与矛者（縦書き） -->
+    <div style="background:#e8f5e9; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+      <div style="font-size:12px; font-family:sans-serif; font-weight:bold; color:#1a3a2a; margin-bottom:8px;">
+        例① 有<span style="color:#c0392b;">下</span>鬻<span style="color:#c0392b; font-size:10px;">二</span>盾与<span style="color:#c0392b; font-size:10px;">レ</span>矛<span style="color:#c0392b; font-size:10px;">一</span>者<span style="color:#c0392b;">上</span>　（韓非子）
+      </div>
+      <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+        <svg width="80" height="380" viewBox="0 0 80 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- 有(下) -->
+          <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">有</text>
+          <text x="10" y="17" font-size="8" fill="#555" font-family="serif">あり</text>
+          <text x="28" y="53" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">下</text>
+          <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+          <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">6</text>
+          <!-- 鬻(二) -->
+          <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">鬻</text>
+          <text x="10" y="80" font-size="8" fill="#555" font-family="serif">ひさぐ</text>
+          <line x1="22" y1="115" x2="44" y2="115" stroke="#c0392b" stroke-width="2.5"/>
+          <line x1="22" y1="120" x2="44" y2="120" stroke="#c0392b" stroke-width="2.5"/>
+          <circle cx="57" cy="74" r="10" fill="#2d6a4f"/>
+          <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+          <!-- 盾(返り点なし) -->
+          <rect x="18" y="131" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="161" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">盾</text>
+          <text x="10" y="143" font-size="8" fill="#555" font-family="serif">たてと</text>
+          <circle cx="57" cy="137" r="10" fill="#c0392b"/>
+          <text x="57" y="141" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+          <!-- 与(一レ) -->
+          <rect x="18" y="194" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="224" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">与</text>
+          <text x="10" y="206" font-size="8" fill="#555" font-family="serif">と</text>
+          <line x1="22" y1="241" x2="40" y2="241" stroke="#c0392b" stroke-width="2.5"/>
+          <text x="33" y="254" text-anchor="middle" font-size="13" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="200" r="10" fill="#2d6a4f"/>
+          <text x="57" y="204" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+          <!-- 矛(返り点なし) -->
+          <rect x="18" y="262" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="292" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">矛</text>
+          <text x="10" y="274" font-size="8" fill="#555" font-family="serif">ほこを</text>
+          <circle cx="57" cy="268" r="10" fill="#c0392b"/>
+          <text x="57" y="272" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+          <!-- 者(上) -->
+          <rect x="18" y="314" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="344" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">者</text>
+          <text x="10" y="326" font-size="8" fill="#555" font-family="serif">ものあり</text>
+          <text x="28" y="362" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">上</text>
+          <circle cx="57" cy="320" r="10" fill="#2d6a4f"/>
+          <text x="57" y="324" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+          <!-- 矢印：矛→与 -->
+          <!-- 矢印：与(一レ)→鬻 -->
+          <!-- 矢印：者→有 -->
+        </svg>
+        <div style="font-family:sans-serif; font-size:12px; line-height:2.1; padding-top:6px;">
+          <div>① 盾（返り点なし・1番目）</div>
+          <div>② 矛（返り点なし・2番目）</div>
+          <div style="color:#c0392b;">③ 与（一レ点）← 矛をレ点で先読み後、与→鬻へ戻る（3番目）</div>
+          <div>④ 鬻（二点・4番目）</div>
+          <div>⑤ 者（上点・5番目）→ 有へ</div>
+          <div>⑥ 有（下点・最後）</div>
+          <div style="margin-top:8px; background:#f0f5ff; padding:6px 10px; border-radius:6px; font-size:11px;">
+            書き下し文：<strong>盾と矛とをひさぐ者有り。</strong><br>
+            <span style="color:#888;">（韓非子／盾と矛を売る者がいた）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 例：勿以悪小而為之（縦書き） -->
+    <div style="background:#e8f5e9; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+      <div style="font-size:12px; font-family:sans-serif; font-weight:bold; color:#1a3a2a; margin-bottom:8px;">
+        例② 勿<span style="color:#c0392b;">下</span>以<span style="color:#c0392b; font-size:10px;">二</span>悪<span style="color:#c0392b; font-size:10px;">ノ</span>小<span style="color:#c0392b; font-size:10px;">一</span>為<span style="color:#c0392b; font-size:10px;">上<br>レ</span>之　（蜀志・劉備遺詔）
+      </div>
+      <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+        <svg width="80" height="445" viewBox="0 0 80 445" xmlns="http://www.w3.org/2000/svg">
+          <!-- 勿(下) -->
+          <rect x="18" y="5" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="35" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">勿</text>
+          <text x="10" y="17" font-size="8" fill="#555" font-family="serif">なかれ</text>
+          <text x="28" y="53" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">下</text>
+          <circle cx="57" cy="11" r="10" fill="#2d6a4f"/>
+          <text x="57" y="15" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">7</text>
+          <!-- 以(二) -->
+          <rect x="18" y="68" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="98" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">以</text>
+          <text x="10" y="80" font-size="8" fill="#555" font-family="serif">もっ</text>
+          <text x="10" y="90" font-size="8" fill="#555" font-family="serif">て</text>
+          <line x1="22" y1="115" x2="44" y2="115" stroke="#c0392b" stroke-width="2.5"/>
+          <line x1="22" y1="120" x2="44" y2="120" stroke="#c0392b" stroke-width="2.5"/>
+          <circle cx="57" cy="74" r="10" fill="#2d6a4f"/>
+          <text x="57" y="78" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">5</text>
+          <!-- 悪(返り点なし) -->
+          <rect x="18" y="131" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="161" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">悪</text>
+          <text x="10" y="143" font-size="8" fill="#555" font-family="serif">あくの</text>
+          <circle cx="57" cy="137" r="10" fill="#c0392b"/>
+          <text x="57" y="141" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">1</text>
+          <!-- 小(一) -->
+          <rect x="18" y="194" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="224" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">小</text>
+          <text x="10" y="206" font-size="8" fill="#555" font-family="serif">ちいさき</text>
+          <text x="10" y="216" font-size="8" fill="#555" font-family="serif">をもって</text>
+          <line x1="22" y1="241" x2="44" y2="241" stroke="#c0392b" stroke-width="2.5"/>
+          <circle cx="57" cy="200" r="10" fill="#2d6a4f"/>
+          <text x="57" y="204" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">2</text>
+          <!-- 為(上レ) -->
+          <rect x="18" y="257" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="287" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">為</text>
+          <text x="10" y="269" font-size="8" fill="#555" font-family="serif">なす</text>
+          <text x="28" y="305" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">上</text>
+          <text x="33" y="320" text-anchor="middle" font-size="13" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+          <circle cx="57" cy="263" r="10" fill="#2d6a4f"/>
+          <text x="57" y="267" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">4</text>
+          <!-- 之(返り点なし) -->
+          <rect x="18" y="328" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"/>
+          <text x="40" y="358" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">之</text>
+          <text x="10" y="340" font-size="8" fill="#555" font-family="serif">これを</text>
+          <circle cx="57" cy="334" r="10" fill="#c0392b"/>
+          <text x="57" y="338" text-anchor="middle" font-size="10" fill="white" font-family="sans-serif" font-weight="bold">3</text>
+          <!-- 矢印：小→以 -->
+          <!-- 矢印：之→為(上レ) -->
+          <!-- 矢印：為→勿 -->
+        </svg>
+        <div style="font-family:sans-serif; font-size:12px; line-height:2.1; padding-top:6px;">
+          <div>① 悪（返り点なし・1番目）</div>
+          <div>② 小（一点・2番目）→ 以へ戻る</div>
+          <div>③ 以（二点・3番目 ※飛び越えて）</div>
+          <div style="color:#c0392b;">④ 之（返り点なし）→ 為(上レ)へ（4番目）</div>
+          <div style="color:#c0392b;">⑤ 為（上レ点）← 之をレ点で先読み後、為→勿へ（5番目）</div>
+          <div>⑥ 勿（下点・最後 7番目）</div>
+          <div style="margin-top:8px; background:#f0f5ff; padding:6px 10px; border-radius:6px; font-size:11px;">
+            書き下し文：<strong>悪の小なるをもってこれをなすことなかれ。</strong><br>
+            <span style="color:#888;">（蜀志・劉備遺詔／悪事は小さいからといってしてはいけない）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:13px; font-family:sans-serif; color:#555; margin-bottom:14px; line-height:1.7;">
+      ✦ 「一レ」はレ点で1文字下へ先に読んでから、一点の字に戻る2段階の返りです。<br>
+      ✦ 「上レ」はレ点で1文字下へ先に読んでから、上中下点グループに戻ります。
+    </div>
+    <div style="position:relative; display:inline-block; width:100%;">
+<svg width="100%" viewBox="0 0 580 420" xmlns="http://www.w3.org/2000/svg">
+
+<!-- 問1：能二為一レ善 -->
+<text x="20" y="28" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問1</text>
+
+<!-- 能(a) 二点：読み「よ」左、送り「く」右下 -->
+<rect x="20" y="36" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="67" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">能</text>
+<text x="12" y="53" font-size="9" fill="#555" font-family="serif">よ</text>
+<text x="57" y="76" font-size="9" fill="#888" font-family="serif">ク</text>
+<line x1="28" y1="83" x2="50" y2="83" stroke="#c0392b" stroke-width="2.5"></line>
+<line x1="28" y1="88" x2="50" y2="88" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 為(b) 一レ複合：読み「な」左、送り「す」右下 -->
+<rect x="20" y="98" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="129" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">為</text>
+<text x="12" y="115" font-size="9" fill="#555" font-family="serif">な</text>
+<text x="57" y="138" font-size="9" fill="#888" font-family="serif">ス</text>
+<line x1="28" y1="145" x2="44" y2="145" stroke="#c0392b" stroke-width="2.5"></line>
+<text x="36" y="160" text-anchor="middle" font-size="15" fill="#c0392b" font-family="serif" font-weight="bold">レ</text>
+
+<!-- 善(c)：読み「よ」左 -->
+<rect x="20" y="165" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="42" y="196" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">善</text>
+<text x="12" y="181" font-size="9" fill="#555" font-family="serif">よ</text>
+
+<foreignobject x="68" y="38" width="34" height="34"><input class="ab" data-set="r3" data-r="a" type="number" min="1" max="3"></foreignobject>
+<foreignobject x="68" y="100" width="34" height="34"><input class="ab" data-set="r3" data-r="b" type="number" min="1" max="3"></foreignobject>
+<foreignobject x="68" y="167" width="34" height="34"><input class="ab" data-set="r3" data-r="c" type="number" min="1" max="3"></foreignobject>
+
+<!-- 問2：悪下称二人之悪一者上 -->
+<text x="170" y="28" font-size="12" font-family="sans-serif" fill="#1a3a2a" font-weight="bold">問2</text>
+
+<!-- 悪(d) 下点 -->
+<rect x="160" y="36" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="67" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">悪</text>
+<text x="152" y="53" font-size="9" fill="#555" font-family="serif">にくむ</text>
+<text x="170" y="86" font-size="13" fill="#c0392b" font-family="sans-serif" font-weight="bold">下</text>
+
+<!-- 称(e) 二点 -->
+<rect x="160" y="98" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="129" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">称</text>
+<text x="152" y="108" font-size="9" fill="#555" font-family="serif">しょう</text>
+<text x="152" y="118" font-size="9" fill="#555" font-family="serif">する</text>
+<line x1="168" y1="145" x2="190" y2="145" stroke="#c0392b" stroke-width="2.5"></line>
+<line x1="168" y1="150" x2="190" y2="150" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 人(f) 返り点なし -->
+<rect x="160" y="160" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="191" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">人</text>
+<text x="152" y="173" font-size="9" fill="#555" font-family="serif">ひとの</text>
+
+<!-- 之(g) 返り点なし -->
+<rect x="160" y="213" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="243" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">之</text>
+<text x="152" y="226" font-size="9" fill="#555" font-family="serif">の</text>
+
+<!-- 悪(h) 一点 -->
+<rect x="160" y="265" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="295" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">悪</text>
+<text x="152" y="277" font-size="9" fill="#555" font-family="serif">あくを</text>
+<line x1="168" y1="312" x2="190" y2="312" stroke="#c0392b" stroke-width="2.5"></line>
+
+<!-- 者(i) 上点 -->
+<rect x="160" y="322" width="44" height="44" rx="4" fill="white" stroke="#aaa" stroke-width="1.5"></rect>
+<text x="182" y="352" text-anchor="middle" font-size="24" fill="#1a3a2a" font-family="serif">者</text>
+<text x="152" y="334" font-size="9" fill="#555" font-family="serif">ものを</text>
+<text x="170" y="370" font-size="13" fill="#c0392b" font-family="sans-serif" font-weight="bold">上</text>
+
+<foreignobject x="208" y="38" width="34" height="34"><input class="ab" data-set="r3" data-r="d" type="number" min="1" max="6"></foreignobject>
+<foreignobject x="208" y="100" width="34" height="34"><input class="ab" data-set="r3" data-r="e" type="number" min="1" max="6"></foreignobject>
+<foreignobject x="208" y="162" width="34" height="34"><input class="ab" data-set="r3" data-r="f" type="number" min="1" max="6"></foreignobject>
+<foreignobject x="208" y="215" width="34" height="34"><input class="ab" data-set="r3" data-r="g" type="number" min="1" max="6"></foreignobject>
+<foreignobject x="208" y="267" width="34" height="34"><input class="ab" data-set="r3" data-r="h" type="number" min="1" max="6"></foreignobject>
+<foreignobject x="208" y="324" width="34" height="34"><input class="ab" data-set="r3" data-r="i" type="number" min="1" max="6"></foreignobject>
+
+<!-- ヒントボックス -->
+<rect x="270" y="36" width="280" height="200" rx="8" fill="#e8f5e9" stroke="#2d6a4f" stroke-width="1"></rect>
+<text x="282" y="58" font-size="12" fill="#1a3a2a" font-family="sans-serif" font-weight="bold">複合返り点の読み方</text>
+<text x="282" y="78" font-size="11" fill="#555" font-family="sans-serif">問1「能二為一レ善」</text>
+<text x="282" y="96" font-size="11" fill="#555" font-family="sans-serif">善(1)→為(2)→能(3)</text>
+<text x="282" y="114" font-size="11" fill="#555" font-family="sans-serif">一レは「レ点で下へ→一点で戻る」</text>
+<text x="282" y="132" font-size="11" fill="#555" font-family="sans-serif">という2段階の飛び越えです。</text>
+<text x="282" y="150" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">書き下し：よく善を為す能はず</text>
+<text x="282" y="173" font-size="11" fill="#555" font-family="sans-serif">問2「悪下称二人之悪一者上」</text>
+<text x="282" y="191" font-size="11" fill="#555" font-family="sans-serif">人(1)→之(2)→悪(3)→称(4)→者(5)→悪(6)</text>
+<text x="282" y="209" font-size="11" fill="#555" font-family="sans-serif">一→二→上→下の順に戻ります。</text>
+<text x="282" y="227" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">書き下し：人の悪を称する者をにくむ</text>
+</svg>
+    </div>
+    <div>
+      <button class="quiz-btn" onclick="chkSet(&#39;r3&#39;,&#39;sm3&#39;)">答え合わせ</button>
+      <button class="reset-btn" onclick="rstSet(&#39;r3&#39;,&#39;sm3&#39;)">リセット</button>
+      <span id="sm3" class="score-msg"></span>
+    </div>
+  </div>
+</div>
+
+<!-- まとめ -->
+<div class="summary-card">
+  <h3>📌 返り点 まとめ</h3>
+  <ul>
+    <li>漢文は中国語の語順で書かれているため、返り点で日本語の順に読み直します</li>
+    <li>レ点：すぐ下の1文字だけを先に読んで戻ります（フォークリフトのイメージ）</li>
+    <li>一二三点：「一」の字から先に読み、「二」「三」の順に戻ります（エレベーターのイメージ）</li>
+    <li>上中下点：一二三点と同じしくみです。さらに複雑な飛び越えのとき登場します</li>
+    <li>「一レ」などの複合返り点は、レ点で1文字下へ→一点で元に戻る2段構えです</li>
+  </ul>
+</div>
+
+
+
+</main>
+
+<script>
+// ─── 正解データ ───
+const ANS = {
+  // レ点練習
+  // 問1: 春眠不レ覚レ暁（孟浩然）
+  //   春(a=1) 眠(b=2) 暁(e=3) 覚(d=4) 不(c=5)  → 暁→覚→不の順
+  // 問2: 百戦不レ殆（孫子）
+  //   百(f=1) 戦(g=2) 殆(i=3) 不(h=4)
+  // 問3: 不レ可レ悔（史記）
+  //   悔(l=1) 可(k=2) 不(j=3)
+  r1: { a:1, b:2, c:5, d:4, e:3,   f:1, g:2, h:4, i:3,   j:3, k:2, l:1 },
+
+  // 一二三点練習
+  // 問1: 学二而習一之 → 之(d=1) 習(c=2) 而(b=3) 学(a=4)
+  // 問2: 知二新故一温 → 温(h=1) 故(g=2) 新(f=3) 知(e=4)
+  r2: { a:4, b:3, c:2, d:1, e:4, f:3, g:2, h:1 },
+
+  // 複合練習
+  // 問1: 能二為一レ善 → 善(c=1) 為(b=2) 能(a=3)
+  // 問2: 悪下称二人之悪一者上 → 人(f=1) 之(g=2) 悪(h=3) 称(e=4) 者(i=5) 悪(d=6)
+  r3: { a:3, b:2, c:1, d:6, e:4, f:1, g:2, h:3, i:5 }
+};
+
+function chkSet(setId, scoreId) {
+  let ok = 0, tot = 0;
+  document.querySelectorAll(`.ab[data-set="${setId}"]`).forEach(inp => {
+    const r = inp.dataset.r;
+    const v = parseInt(inp.value);
+    inp.classList.remove('correct', 'wrong');
+    if (!inp.value) return;
+    tot++;
+    if (v === ANS[setId][r]) { inp.classList.add('correct'); ok++; }
+    else inp.classList.add('wrong');
+  });
+  document.getElementById(scoreId).textContent = tot ? `${ok} / ${tot} 正解` : '';
+}
+
+function rstSet(setId, scoreId) {
+  document.querySelectorAll(`.ab[data-set="${setId}"]`).forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct', 'wrong');
+  });
+  document.getElementById(scoreId).textContent = '';
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  const tabs = ['t1','t2','t3'];
+  document.getElementById('pbar').style.width = ((tabs.indexOf(id)+1)/tabs.length*100) + '%';
+}
+
+function toggleStep(head) {
+  const body = head.nextElementSibling;
+  const arrow = head.querySelector('.step-arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+</script>
+
+
+</body></html>

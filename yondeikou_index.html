@@ -532,46 +532,25 @@ canvas#cnf{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;display:
       <div class="group-label">🔰 漢文基礎ユニット</div>
       <div class="sec-grid" id="grid-kanbun-unit"><div class="sec-card" data-id="kn_u01">
       <div class="sc-hd">
-        <span class="sc-num">基礎①</span>
-        <span class="sc-title">返り点・レ点の読み方</span>
+        <span class="sc-num">基礎</span>
+        <span class="sc-title">漢文基礎　句形</span>
         <span class="sc-status studying" id="st-kn_u01">学習中</span>
       </div>
       <div class="sc-body">
-        <ul class="sc-topics"><li>レ点・一二点の仕組みを理解する</li><li>読む順番を番号で入力する練習</li><li>返り点入門</li></ul>
+        <ul class="sc-topics"><li>レ点・一二三点・上中下点の仕組みを理解する</li><li>読む順番を番号で入力する練習</li><li>複合した返り点も含めて実例で練習</li></ul>
       </div>
       <div class="sc-meta">
         <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_u01">1</span></div>
         <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_u01">6/22</span></div>
       </div>
       <div class="sc-btn-row">
-        <a href="kanbun_kaeriten.html" class="sc-btn" onclick="touch(&#39;kn_u01&#39;)">📖 学習する</a>
+        <a href="kanbun_kiso.html" class="sc-btn" onclick="touch(&#39;kn_u01&#39;)">📖 学習する</a>
       </div>
       <div class="abc-row">
         <span class="abc-lbl">理解度：</span>
         <button class="abc-btn abc-a" onclick="rate(&#39;kn_u01&#39;,&#39;a&#39;,this)">A 完璧</button>
         <button class="abc-btn abc-b" onclick="rate(&#39;kn_u01&#39;,&#39;b&#39;,this)">B 良好</button>
         <button class="abc-btn abc-c" onclick="rate(&#39;kn_u01&#39;,&#39;c&#39;,this)">C 要復習</button>
-      </div></div><div class="sec-card" data-id="kn_u02">
-      <div class="sc-hd">
-        <span class="sc-num">基礎②</span>
-        <span class="sc-title">一二点・上中下点</span>
-        <span class="sc-status studying" id="st-kn_u02">学習中</span>
-      </div>
-      <div class="sc-body">
-        <ul class="sc-topics"><li>一二三点と上中下点の使い方</li><li>複合した返り点の読み順</li><li>実例で練習</li></ul>
-      </div>
-      <div class="sc-meta">
-        <div class="sc-meta-item">📖 学習回数 <span class="sc-meta-val" id="cnt-kn_u02">1</span></div>
-        <div class="sc-meta-item">📅 最終日 <span class="sc-meta-val" id="last-kn_u02">6/22</span></div>
-      </div>
-      <div class="sc-btn-row">
-        <a href="kanbun_kiso.html" class="sc-btn" onclick="touch(&#39;kn_u02&#39;)">📖 学習する</a>
-      </div>
-      <div class="abc-row">
-        <span class="abc-lbl">理解度：</span>
-        <button class="abc-btn abc-a" onclick="rate(&#39;kn_u02&#39;,&#39;a&#39;,this)">A 完璧</button>
-        <button class="abc-btn abc-b" onclick="rate(&#39;kn_u02&#39;,&#39;b&#39;,this)">B 良好</button>
-        <button class="abc-btn abc-c" onclick="rate(&#39;kn_u02&#39;,&#39;c&#39;,this)">C 要復習</button>
       </div></div></div>
       <div class="group-label">📝 高認過去問 — 書き下し文読解</div>
       <div class="sec-grid" id="grid-kanbun-kako"><div class="sec-card" data-id="kn_r51">
@@ -1095,11 +1074,8 @@ const UNITS = [
    sub:['光源氏の世界に入る','場面の情景を読む','敬語から人物関係を読み取る'],
    href:'kobun_kouryaku_04.html'},
   // ── 漢文ユニット（基礎） ──
-  {id:'kn_u01',num:'基礎①',title:'返り点・レ点の読み方',group:'kanbun-unit',
-   sub:['レ点・一二点の仕組みを理解する','読む順番を番号で入力する練習','返り点入門'],
-   href:'kanbun_kaeriten.html'},
-  {id:'kn_u02',num:'基礎②',title:'一二点・上中下点',group:'kanbun-unit',
-   sub:['一二三点と上中下点の使い方','複合した返り点の読み順','実例で練習'],
+  {id:'kn_u01',num:'基礎',title:'漢文基礎　句形',group:'kanbun-unit',
+   sub:['レ点・一二三点・上中下点の仕組みを理解する','読む順番を番号で入力する練習','複合した返り点も含めて実例で練習'],
    href:'kanbun_kiso.html'},
   // ── 漢文過去問 ──
   {id:'kn_r51',num:'R5-1',title:'伝習録「樹を種ゑる者」',group:'kanbun-kako',
@@ -1182,6 +1158,7 @@ function touch(id){
 
 function buildCards(){
   const grids={sousa:'grid-sousa',basic:'grid-basic',practice:'grid-practice',advanced:'grid-advanced','kobun-kiso':'grid-kobun-kiso','kobun-attack':'grid-kobun-attack','kanbun-unit':'grid-kanbun-unit','kanbun-kako':'grid-kanbun-kako',keigo1:'grid-keigo1','kaiwa-nyumon':'grid-kaiwa-nyumon','kaiwa-kiso':'grid-kaiwa-kiso','kaiwa-hyojun':'grid-kaiwa-hyojun','kaiwa-jissen':'grid-kaiwa-jissen'};
+  Object.values(grids).forEach(gid=>{const g=document.getElementById(gid); if(g) g.innerHTML='';});
   UNITS.forEach(u=>{
     const el=document.createElement('div');
     el.className='sec-card'; el.dataset.id=u.id;
