@@ -166,4 +166,5 @@ function quizClick(q,i){var s=elimState[q];if(s&&s.mode==='elim'){var c=correctA
 function enterAnswerMode(q){document.getElementById(q+'_answerbtn').style.display='none';}
 function answerQuiz(q,i){var c=correctAnswers[q],bs=document.querySelectorAll('#'+q+'c .cb');disableAllBtns(q);if(i===c){bs[i].classList.add('cb-ok');document.getElementById(q+'ok').classList.add('on');}else{bs[i].classList.add('cb-ng');bs[c].classList.add('cb-ok');document.getElementById(q+'ng').classList.add('on');}if(q==='quiz3'){document.getElementById('prog').style.width='100%';setTimeout(function(){hideAllPopups();showFinal();},2000);return;}setTimeout(function(){waiting=false;document.getElementById('btnNext').style.display='block';},1500);}
 function showFinal(){document.getElementById('btnNext').style.display='none';if(prevFocus)document.getElementById(prevFocus).classList.remove('focus-glow');document.getElementById('final').style.display='block';document.getElementById('final').scrollIntoView({behavior:'smooth',block:'center'});}
-</script></body></html>
+</script><script src="https://realizefield.github.io/gamba-kounin-seito/gamba-ai.js" defer></script>
+</body></html>
